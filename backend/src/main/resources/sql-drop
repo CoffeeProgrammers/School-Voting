@@ -1,0 +1,2 @@
+docker exec -it postgres-backend psql -U postgres -d backend
+

@@ -8,7 +8,7 @@ public interface PetitionService {
     Petition create(Petition petition);
 
     void delete(long id);
-    void support(long petitionId, long userId);
+    long support(long petitionId, long userId);
 
     void approve(long petitionId);
 

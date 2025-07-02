@@ -2,8 +2,10 @@ package com.project.backend.services.impl;
 
 import com.project.backend.models.enums.Status;
 import com.project.backend.models.petitions.Petition;
+import com.project.backend.models.voting.Voting;
 import com.project.backend.repositories.petitions.PetitionRepository;
 import com.project.backend.repositories.specification.PetitionSpecification;
+import com.project.backend.repositories.specification.VotingSpecification;
 import com.project.backend.services.inter.PetitionService;
 import com.project.backend.services.inter.UserService;
 import jakarta.persistence.EntityNotFoundException;
@@ -35,10 +37,10 @@ public class PetitionServiceImpl implements PetitionService {
     }
 
     @Override
-    public void support(long petitionId, long userId) {
+    public long support(long petitionId, long userId) {
         Petition petition = findById(petitionId);
         petition.incrementCount();
-        petitionRepository.save(petition);
+        return petitionRepository.save(petition).getCount();
     }
 
     @Override
@@ -62,6 +64,8 @@ public class PetitionServiceImpl implements PetitionService {
 
     @Override
     public Page<Petition> findAllMy(String name, String status, int page, int size, Authentication auth) {
+        Specification<Voting> specification = null;
+        addSpecification(specification, VotingSpecification::ended);
         return petitionRepository.findAll(
                 createSpecification(name, status)
                         .and(PetitionSpecification.byCreator(

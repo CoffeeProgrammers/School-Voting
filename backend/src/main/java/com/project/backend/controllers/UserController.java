@@ -88,23 +88,4 @@ public class UserController {
         log.info("Controller: Get my user");
         return userMapper.fromUserToFullResponse(userService.findUserByAuth(auth));
     }
-
-    @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    public PaginationListResponse<UserListResponse> getAllUsers(
-            @RequestParam int page,
-            @RequestParam int size,
-            @RequestParam(required = false) String email,
-            @RequestParam(required = false) String firstName,
-            @RequestParam(required = false) String lastName,
-            @RequestParam(required = false) String role,
-            Authentication auth
-    ) {
-        log.info("Controller: Get all users");
-        Page<User> users = userService.findAll(email, firstName, lastName, role, page, size, auth);
-        PaginationListResponse<UserListResponse> responses = new PaginationListResponse<>();
-        responses.setContent(users.getContent().stream().map(userMapper::fromUserToListResponse).toList());
-        responses.setTotalPages(users.getTotalPages());
-        return responses;
-    }
 }

@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -28,7 +29,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import java.net.URI;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -205,19 +205,35 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Page<User> findAll(
-            String email, String firstName, String lastName, String role, int page, int size, Authentication auth) {
-
-        Map<String, Object> filters = createFilters(email, firstName, lastName, role);
-        User user = findUserByAuth(auth);
-
-        log.info("Service: Finding all users with filters {}", filters);
-
+    public Page<User> findAllByVoting(long votingId, String email, String firstName, String lastName, String role, int page, int size, Authentication auth) {
         return userRepository.findAll(
-//                UserSpecification.filterUsers(filters)
-                        /*.and(*/UserSpecification.notUser(user.getId())//)
-                        .and(UserSpecification.notIncludeDeleted()),
-                PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "lastName", "firstName")));
+                createSpecification(email, firstName, lastName, null)
+                        .and(UserSpecification.usersByVotingSortedByAnswer(votingId)),
+                PageRequest.of(
+                        page, size
+                )
+        );
+    }
+
+    @Override
+    public Page<User> findAllByRole(String role, String email, String firstName, String lastName, int page, int size, Authentication auth) {
+        return userRepository.findAll(
+                createSpecification(email, firstName, lastName, role),
+                PageRequest.of(
+                        page, size, Sort.by(Sort.Direction.ASC, "lastName", "firstName")
+                )
+        );
+    }
+
+    @Override
+    public Page<User> findAllByClass(long classId, String email, String firstName, String lastName, int page, int size, Authentication auth) {
+        return userRepository.findAll(
+                createSpecification(email, firstName, lastName, null)
+                        .and(UserSpecification.byClass(classId)),
+                PageRequest.of(
+                        page, size, Sort.by(Sort.Direction.ASC, "lastName", "firstName")
+                )
+        );
     }
 
     @Override
@@ -247,25 +263,34 @@ public class UserServiceImpl implements UserService {
                 () -> new EntityNotFoundException("User not found with email " + email));
     }
 
-    private Map<String, Object> createFilters(String email, String firstName, String lastName, String role) {
-        log.info("Service: Creating filters for user with email {}, first name {}, last name {} and role {}",
-                email, firstName, lastName, role);
+    private boolean isValid(String value) {
+        return value != null && !value.isBlank() && !value.equals("null");
+    }
 
-        Map<String, Object> filters = new HashMap<>();
-        if (email != null && !email.isBlank() && !email.equals("null")) {
-            filters.put("email", email);
-        }
-        if (firstName != null && !firstName.isBlank() && !firstName.equals("null")) {
-            filters.put("firstName", firstName);
-        }
-        if (lastName != null && !lastName.isBlank() && !lastName.equals("null")) {
-            filters.put("lastName", lastName);
-        }
-        if (role != null && !role.isBlank() && !role.equals("null")) {
-            filters.put("role", role.toUpperCase());
-        }
+    private Specification<User> createSpecification(String email, String firstName, String lastName, String role) {
+        Specification<User> specification = null;
 
-        return filters;
+        if (isValid(email)) {
+            specification = (specification == null)
+                    ? UserSpecification.byEmail(email)
+                    : specification.and(UserSpecification.byEmail(email));
+        }
+        if (isValid(firstName)) {
+            specification = (specification == null)
+                    ? UserSpecification.byFirstName(firstName)
+                    : specification.and(UserSpecification.byFirstName(firstName));
+        }
+        if (isValid(lastName)) {
+            specification = (specification == null)
+                    ? UserSpecification.byLastName(lastName)
+                    : specification.and(UserSpecification.byLastName(lastName));
+        }
+        if (isValid(role)) {
+            specification = (specification == null)
+                    ? UserSpecification.byRole(role)
+                    : specification.and(UserSpecification.byRole(role));
+        }
+        return specification;
     }
 
     private void checkForDeletedUser(User user) {

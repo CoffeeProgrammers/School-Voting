@@ -64,8 +64,8 @@ public class UserSpecification {
 
             query.orderBy(
                     cb.asc(cb.isNull(votingUserJoin.get("answer"))),
-                    cb.asc(root.get("firstName")),
-                    cb.asc(root.get("lastName"))
+                    cb.asc(root.get("lastName")),
+                    cb.asc(root.get("firstName"))
             );
 
             return votingFilter;

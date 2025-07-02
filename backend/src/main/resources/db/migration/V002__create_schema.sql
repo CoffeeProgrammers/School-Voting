@@ -5,7 +5,7 @@ CREATE TABLE "users"
     "last_name"        VARCHAR(255) NOT NULL,
     "email"            VARCHAR(255) NOT NULL UNIQUE,
     "keycloak_user_id" VARCHAR(255) NOT NULL UNIQUE,
-    "role"             VARCHAR(255) NOT NULL
+    "role"             VARCHAR(255) NOT NULL,
 );
 
 CREATE TABLE "schools"
@@ -34,6 +34,14 @@ CREATE TABLE "classes"
     FOREIGN KEY ("school_id") REFERENCES "schools" ("id") ON DELETE CASCADE
 );
 
+
+ALTER TABLE "users"
+    ADD COLUMN "class_id" BIGINT;
+
+ALTER TABLE "users"
+    ADD CONSTRAINT fk_user_school
+        FOREIGN KEY ("class_id") REFERENCES "classes" ("id") ON DELETE SET NULL;
+
 CREATE TABLE "students_class"
 (
     "class_id" BIGINT NOT NULL,
@@ -41,15 +49,6 @@ CREATE TABLE "students_class"
     PRIMARY KEY ("class_id", "user_id"),
     FOREIGN KEY ("class_id") REFERENCES "classes" ("id") ON DELETE CASCADE,
     FOREIGN KEY ("user_id") REFERENCES "users" ("id") ON DELETE CASCADE
-);
-
-CREATE TABLE "teacher_school"
-(
-    "teacher_id" BIGINT NOT NULL UNIQUE,
-    "school_id"  BIGINT NOT NULL,
-    PRIMARY KEY ("teacher_id", "school_id"),
-    FOREIGN KEY ("teacher_id") REFERENCES "users" ("id") ON DELETE CASCADE,
-    FOREIGN KEY ("school_id") REFERENCES "schools" ("id") ON DELETE CASCADE
 );
 
 CREATE TABLE "votings"

@@ -3,6 +3,8 @@ package com.project.backend.models;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Set;
+
 @Entity
 @Table(name = "schools")
 @Getter
@@ -17,4 +19,6 @@ public class School {
     private String name;
     @OneToOne
     private User director;
+    @OneToMany
+    private Set<Class> classes;
 }

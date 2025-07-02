@@ -5,8 +5,6 @@ import com.project.backend.models.petitions.Petition;
 import jakarta.persistence.criteria.Join;
 import org.springframework.data.jpa.domain.Specification;
 
-import java.time.LocalDateTime;
-
 public class PetitionSpecification {
     public static Specification<Petition> bySchool(long schoolId) {
         return (root, criteriaQuery, criteriaBuilder) ->
@@ -30,8 +28,12 @@ public class PetitionSpecification {
         return (root, query, cb) ->
                 cb.equal(root.get("creator").get("id"), userId);
     }
-    public static  Specification<Petition> byStatus(String status) {
+    public static Specification<Petition> byStatus(String status) {
         return (root, query, cb) ->
                 cb.equal(root.get("status"), status);
+    }
+    public static Specification<Petition> byName(String name) {
+        return (root, query, cb) ->
+                cb.like(root.get("name"), name);
     }
 }

@@ -40,4 +40,8 @@ public class Petition {
     @ManyToOne
     @JoinColumn(name = "class_id")
     private Class myClass;
+
+    public long incrementCount() {
+        return ++this.count;
+    }
 }

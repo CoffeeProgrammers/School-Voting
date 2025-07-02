@@ -32,6 +32,9 @@ import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
+import static com.project.backend.utils.SpecificationUtil.addSpecification;
+import static com.project.backend.utils.SpecificationUtil.isValid;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -263,32 +266,20 @@ public class UserServiceImpl implements UserService {
                 () -> new EntityNotFoundException("User not found with email " + email));
     }
 
-    private boolean isValid(String value) {
-        return value != null && !value.isBlank() && !value.equals("null");
-    }
-
     private Specification<User> createSpecification(String email, String firstName, String lastName, String role) {
         Specification<User> specification = null;
 
         if (isValid(email)) {
-            specification = (specification == null)
-                    ? UserSpecification.byEmail(email)
-                    : specification.and(UserSpecification.byEmail(email));
+            specification = addSpecification(specification, UserSpecification::byEmail, email);
         }
         if (isValid(firstName)) {
-            specification = (specification == null)
-                    ? UserSpecification.byFirstName(firstName)
-                    : specification.and(UserSpecification.byFirstName(firstName));
+            specification = addSpecification(specification, UserSpecification::byFirstName, firstName);
         }
         if (isValid(lastName)) {
-            specification = (specification == null)
-                    ? UserSpecification.byLastName(lastName)
-                    : specification.and(UserSpecification.byLastName(lastName));
+            addSpecification(specification, UserSpecification::byLastName, lastName);
         }
         if (isValid(role)) {
-            specification = (specification == null)
-                    ? UserSpecification.byRole(role)
-                    : specification.and(UserSpecification.byRole(role));
+            addSpecification(specification, UserSpecification::byRole, role);
         }
         return specification;
     }

@@ -5,9 +5,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 
 public interface CommentService {
-    Comment create(Comment commentRequest, Authentication authentication,
-                   long eventId);
-    Comment update(Comment commentRequest, long id);
+    Comment create(Comment comment, Authentication authentication,
+                   long petitionId);
+    Comment update(Comment comment, long id);
     void delete (long id);
     Page<Comment> findAllByPetition(long petitionId, int page, int size);
 }

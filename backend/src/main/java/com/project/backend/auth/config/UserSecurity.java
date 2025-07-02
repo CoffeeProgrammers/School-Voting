@@ -1,24 +1,28 @@
-package com.project.backend.auth.config;//package com.calendar.backend.auth.config;
-//
-//import com.calendar.backend.models.User;
-//import com.calendar.backend.services.inter.*;
-//import lombok.RequiredArgsConstructor;
-//import lombok.extern.slf4j.Slf4j;
-//import org.springframework.security.core.Authentication;
-//import org.springframework.security.core.userdetails.UserDetails;
-//import org.springframework.stereotype.Component;
-//
-//@Slf4j
-//@Component("userSecurity")
-//@RequiredArgsConstructor
-//public class UserSecurity {
-//
-//    private final UserService userService;
-//
-//    private boolean checkUser(Authentication authentication, String username) {
-//        log.info("preAuth: Checking user {}", username);
-//        UserDetails user = (UserDetails) authentication.getPrincipal();
-//        String authenticatedUserEmail = user.getUsername();
-//        return authenticatedUserEmail.equals(username);
-//    }
-//}
+package com.project.backend.auth.config;
+
+import com.project.backend.models.School;
+import com.project.backend.services.inter.UserService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Component;
+
+@Slf4j
+@Component("userSecurity")
+@RequiredArgsConstructor
+public class UserSecurity {
+
+    private final UserService userService;
+
+    private boolean checkUser(Authentication authentication, String username) {
+        log.info("preAuth: Checking user {}", username);
+        String authenticatedUserEmail = userService.findUserByAuth(authentication).getEmail();
+        return authenticatedUserEmail.equals(username);
+    }
+
+    private boolean checkUserSchool(Authentication authentication, long schoolId) {
+        log.info("preAuth: Checking if user in school {}", schoolId);
+        School school = userService.findUserByAuth(authentication).getSchool();
+        return school.getId() == schoolId;
+    }
+}

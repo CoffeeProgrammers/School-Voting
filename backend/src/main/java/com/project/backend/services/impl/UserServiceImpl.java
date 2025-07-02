@@ -276,10 +276,10 @@ public class UserServiceImpl implements UserService {
             specification = addSpecification(specification, UserSpecification::byFirstName, firstName);
         }
         if (isValid(lastName)) {
-            addSpecification(specification, UserSpecification::byLastName, lastName);
+            specification = addSpecification(specification, UserSpecification::byLastName, lastName);
         }
         if (isValid(role)) {
-            addSpecification(specification, UserSpecification::byRole, role);
+            specification = addSpecification(specification, UserSpecification::byRole, role);
         }
         return specification;
     }

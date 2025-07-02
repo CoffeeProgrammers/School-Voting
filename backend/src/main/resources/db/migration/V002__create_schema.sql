@@ -11,10 +11,20 @@ CREATE TABLE "users"
 CREATE TABLE "schools"
 (
     "id"          BIGSERIAL PRIMARY KEY,
-    "director_id" BIGINT       NOT NULL,
     "name"        VARCHAR(255) NOT NULL,
-    FOREIGN KEY ("director_id") REFERENCES "users" ("id") ON DELETE SET NULL
+    "director_id" BIGINT,
+
+    CONSTRAINT fk_school_director
+        FOREIGN KEY ("director_id") REFERENCES "users" ("id") ON DELETE SET NULL
 );
+
+ALTER TABLE "users"
+    ADD COLUMN "school_id" BIGINT;
+
+ALTER TABLE "users"
+    ADD CONSTRAINT fk_user_school
+        FOREIGN KEY ("school_id") REFERENCES "schools" ("id") ON DELETE SET NULL;
+
 
 CREATE TABLE "classes"
 (

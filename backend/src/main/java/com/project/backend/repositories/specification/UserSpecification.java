@@ -1,46 +1,39 @@
 package com.project.backend.repositories.specification;
 
 import com.project.backend.models.User;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
 import org.springframework.data.jpa.domain.Specification;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 public class UserSpecification {
-    public static Specification<User> filterUsers(Map<String, Object> filters) {
-        return (Root<User> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) -> {
-            if (filters == null || filters.isEmpty()) {
-                return null;
-            }
-            List<Predicate> predicates = new ArrayList<>();
 
-            if (filters.containsKey("firstName")) {
-                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("firstName")),
-                        "%" + filters.get("firstName").toString().toLowerCase() + "%"));
-            }
+    public static Specification<User> byRole(String role) {
+        return ((root, query, criteriaBuilder) ->
+                criteriaBuilder.equal(root.get("role"), role));
+    }
 
-            if (filters.containsKey("lastName")) {
-                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("lastName")),
-                        "%" + filters.get("lastName").toString().toLowerCase() + "%"));
-            }
+    public static Specification<User> byFirstName(String firstName) {
+        return ((root, query, criteriaBuilder) ->
+                criteriaBuilder.like(root.get("firstName"), firstName));
+    }
 
-            if (filters.containsKey("email")) {
-                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("email")),
-                        "%" + filters.get("email").toString().toLowerCase() + "%"));
-            }
+    public static Specification<User> byLastName(String lastName) {
+        return ((root, query, criteriaBuilder) ->
+                criteriaBuilder.like(root.get("lastName"), lastName));
+    }
 
-            if (filters.containsKey("role")) {
-                String role = filters.get("role").toString();
-                predicates.add(criteriaBuilder.equal(root.get("role"), role));
-            }
+    public static Specification<User> byEmail(String email) {
+        return ((root, query, criteriaBuilder) ->
+                criteriaBuilder.like(root.get("email"), email));
+    }
 
-            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
-        };
+    public static Specification<User> byClass(long classId){
+        return ((root, query, criteriaBuilder) ->
+                criteriaBuilder.equal(root.get("class_id"), classId));
+    }
+
+    public static Specification<User> bySchool(long schoolId) {
+        return ((root, query, criteriaBuilder) ->
+                criteriaBuilder.equal(root.get("school_id"), schoolId));
     }
 
     public static Specification<User> notUser(Long userId) {

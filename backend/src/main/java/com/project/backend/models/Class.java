@@ -15,4 +15,6 @@ public class Class {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String name;
+    @ManyToOne
+    private School school;
 }

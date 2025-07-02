@@ -15,8 +15,8 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import theme from "../../../assets/theme";
 import FolderIcon from '@mui/icons-material/Folder';
-import BalanceIcon from '@mui/icons-material/Balance';
-import HistoryEduIcon from '@mui/icons-material/HistoryEdu';
+import BalanceRoundedIcon from '@mui/icons-material/BalanceRounded';
+import HistoryEduRoundedIcon from '@mui/icons-material/HistoryEduRounded';
 
 const drawerWidth = 240;
 
@@ -79,8 +79,8 @@ const MUIStyledDrawer = styled(MuiDrawer, {shouldForwardProp: (prop) => prop !==
 const Drawer = ({open, handleDrawerClose}) => {
 
     const navigation = [
-        {type: "navigation", icon: <HistoryEduIcon sx={{fontSize: 28, ml: -0.5}}/>, title: "Petition", path: "/first"},
-        {type: "navigation", icon: <BalanceIcon sx={{fontSize: 25}}/>, title: "Voting", path: "/second"},
+        {type: "navigation", icon: <HistoryEduRoundedIcon sx={{fontSize: 28, ml: -0.25}}/>, title: "Petitions", path: "/petitions"},
+        {type: "navigation", icon: <BalanceRoundedIcon sx={{fontSize: 25}}/>, title: "Voting", path: "/second"},
 
         {type: "divider"},
         {type: "navigation", icon: <AccountCircleIcon/>, title: "Profile", path: "/profile"},

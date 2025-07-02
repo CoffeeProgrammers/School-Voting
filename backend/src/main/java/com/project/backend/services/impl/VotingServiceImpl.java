@@ -107,7 +107,7 @@ public class VotingServiceImpl implements VotingService {
     public void vote(long votingId, long answerId, Authentication auth) {
         log.info("Vote voting with id {}", votingId);
         Voting voting = findById(votingId);
-        checkTimeForChanges(voting);
+        checkTimeForVote(voting);
         votingUserService.create(voting, userService.findUserByAuth(auth), answerService.findById(answerId));
         answerService.vote(answerId);
     }

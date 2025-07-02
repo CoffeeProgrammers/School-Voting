@@ -1,11 +1,14 @@
 package com.project.backend.models.voting;
 
 import com.project.backend.models.User;
+import com.project.backend.models.VotingUser;
 import com.project.backend.models.enums.LevelType;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "votings")
@@ -26,4 +29,6 @@ public class Voting {
     private LocalDateTime endTime;
     @ManyToOne
     private User creator;
+    @OneToMany(mappedBy = "voting")
+    private Set<VotingUser> votingUsers = new HashSet<>();
 }

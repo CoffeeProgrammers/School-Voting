@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -22,6 +24,15 @@ public class User {
     private String firstName;
     private String lastName;
     private String role;
+    @ManyToOne
+    @JoinColumn(name = "school_id")
+    private School school;
+    @ManyToOne
+    @JoinColumn(name = "class_id")
+    private Class myClass;
+    @OneToMany(mappedBy = "user")
+    private Set<VotingUser> votingUsers = new HashSet<>();
+
 
     public User(String keycloakUserId, String email, String firstName,
                 String lastName, String role) {

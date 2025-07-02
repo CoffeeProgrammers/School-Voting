@@ -1,6 +1,10 @@
 package com.project.backend.repositories.specification;
 
 import com.project.backend.models.User;
+import com.project.backend.models.VotingUser;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.JoinType;
+import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
 
 
@@ -28,12 +32,17 @@ public class UserSpecification {
 
     public static Specification<User> byClass(long classId){
         return ((root, query, criteriaBuilder) ->
-                criteriaBuilder.equal(root.get("class_id"), classId));
+                criteriaBuilder.equal(root.get("myClass").get("id"), classId));
+    }
+
+    public static Specification<User> notInAnyClass() {
+        return ((root, query, criteriaBuilder) ->
+                criteriaBuilder.isNull(root.get("myClass").get("id")));
     }
 
     public static Specification<User> bySchool(long schoolId) {
         return ((root, query, criteriaBuilder) ->
-                criteriaBuilder.equal(root.get("school_id"), schoolId));
+                criteriaBuilder.equal(root.get("school").get("id"), schoolId));
     }
 
     public static Specification<User> notUser(Long userId) {
@@ -46,4 +55,21 @@ public class UserSpecification {
         return (root, query, cb) ->
                 cb.notEqual(root.get("email"), emailOfDeletedUser);
     }
+
+    public static Specification<User> usersByVotingSortedByAnswer(Long votingId) {
+        return (root, query, cb) -> {
+            Join<User, VotingUser> votingUserJoin = root.join("votingUsers", JoinType.LEFT);
+
+            Predicate votingFilter = cb.equal(votingUserJoin.get("voting").get("id"), votingId);
+
+            query.orderBy(
+                    cb.asc(cb.isNull(votingUserJoin.get("answer"))),
+                    cb.asc(root.get("firstName")),
+                    cb.asc(root.get("lastName"))
+            );
+
+            return votingFilter;
+        };
+    }
+
 }

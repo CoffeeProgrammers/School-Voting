@@ -15,6 +15,8 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import theme from "../../../assets/theme";
 import FolderIcon from '@mui/icons-material/Folder';
+import BalanceIcon from '@mui/icons-material/Balance';
+import HistoryEduIcon from '@mui/icons-material/HistoryEdu';
 
 const drawerWidth = 240;
 
@@ -77,15 +79,11 @@ const MUIStyledDrawer = styled(MuiDrawer, {shouldForwardProp: (prop) => prop !==
 const Drawer = ({open, handleDrawerClose}) => {
 
     const navigation = [
-        {type: "navigation", icon: <Filter1Icon/>, title: "First", path: "/first"},
-        {type: "navigation", icon: <Filter2Icon/>, title: "Second", path: "/second"},
-        {type: "navigation", icon: <Filter3Icon/>, title: "Third", path: "/third"},
-        {type: "navigation", icon: <FolderIcon/>, title: "Files", path: "/files/1"},
-        {type: "navigation", icon: <PeopleAltIcon/>, title: "Users", path: "/users"},
-        {type: "navigation", icon: <AccountCircleIcon/>, title: "Profile", path: "/profile"},
+        {type: "navigation", icon: <HistoryEduIcon sx={{fontSize: 28, ml: -0.5}}/>, title: "Petition", path: "/first"},
+        {type: "navigation", icon: <BalanceIcon sx={{fontSize: 25}}/>, title: "Voting", path: "/second"},
+
         {type: "divider"},
-        {type: "navigation", icon: <ChevronRightIcon/>, title: "AppBar", path: "/first"},
-        {type: "navigation", icon: <ChevronRightIcon/>, title: "TeacherPanel", path: "/teacher-panel"},
+        {type: "navigation", icon: <AccountCircleIcon/>, title: "Profile", path: "/profile"},
     ]
 
     return (

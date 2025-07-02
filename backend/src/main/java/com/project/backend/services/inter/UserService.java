@@ -17,9 +17,19 @@ public interface UserService {
 
     void delete(long id);
     User findById(long id);
-    Page<User> findAll(
-            String email, String firstName, String lastName, String role,
+
+    Page<User> findAllByVoting(
+            long votingId, String email, String firstName, String lastName, String role,
             int page, int size, Authentication auth);
+
+    Page<User> findAllByRole(
+            String role, String email, String firstName, String lastName,
+            int page, int size, Authentication auth);
+
+    Page<User> findAllByClass(
+            long classId, String email, String firstName, String lastName,
+            int page, int size, Authentication auth);
+
     User findUserByAuth(Authentication authentication);
     User findUserByEmail(String email);
 

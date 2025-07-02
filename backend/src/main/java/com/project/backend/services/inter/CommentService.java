@@ -9,5 +9,5 @@ public interface CommentService {
                    long eventId);
     Comment update(Comment commentRequest, long id);
     void delete (long id);
-    Page<Comment> getAllByPetition(long petitionId, long page, long size);
+    Page<Comment> findAllByPetition(long petitionId, long page, long size);
 }

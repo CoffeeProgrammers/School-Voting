@@ -35,7 +35,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public Page<Comment> getAllByPetition(long petitionId, long page, long size) {
+    public Page<Comment> findAllByPetition(long petitionId, long page, long size) {
         return null;
     }
 }

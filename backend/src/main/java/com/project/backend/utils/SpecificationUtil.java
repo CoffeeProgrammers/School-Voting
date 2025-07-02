@@ -10,6 +10,10 @@ public class SpecificationUtil {
         return value != null && !value.isBlank() && !value.equals("null");
     }
 
+    public static boolean isValid(Boolean value) {
+        return value != null;
+    }
+
     public static <T, R> Specification<T> addSpecification(Specification<T> specification, Function<R, Specification<T>> addFunction, R value) {
         Specification<T> newSpec = addFunction.apply(value);
         return (specification == null) ? newSpec : specification.and(newSpec);

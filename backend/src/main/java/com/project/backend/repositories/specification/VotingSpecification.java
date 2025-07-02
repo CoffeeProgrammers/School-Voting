@@ -9,17 +9,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class VotingSpecification {
-    public Specification<Voting> byUser(long userId) {
+    public static Specification<Voting> bySchool(long schoolId) {
+        return (root, criteriaQuery, criteriaBuilder) ->
+                criteriaBuilder.equal(root.get("school").get("id"), schoolId);
+    }
+
+    public static Specification<Voting> byUser(long userId) {
         return ((root, query, criteriaBuilder) ->
                 criteriaBuilder.equal(root.join("votingUsers").get("user").get("id"), userId));
     }
 
-    public Specification<Voting> byName(String name) {
+    public static Specification<Voting> byName(String name) {
         return ((root, query, criteriaBuilder) ->
                 criteriaBuilder.equal(root.get("name"), name));
     }
 
-    public Specification<Voting> byStartDateAndEndDate() {
+    public static Specification<Voting> byStartDateAndEndDate() {
         return (root, query, criteriaBuilder) -> {
             LocalDate today = LocalDate.now();
             Predicate startDatePredicate = criteriaBuilder.lessThanOrEqualTo(root.get("startDate"), today);
@@ -28,17 +33,17 @@ public class VotingSpecification {
         };
     }
 
-    public Specification<Voting> ended() {
+    public static Specification<Voting> ended() {
         return ((root, query, criteriaBuilder) ->
                 criteriaBuilder.greaterThan(root.get("endDate"), LocalDate.now()));
     }
 
-    public Specification<Voting> canVote(long userId) {
+    public static Specification<Voting> canVote(long userId) {
         return ((root, query, criteriaBuilder) ->
                 criteriaBuilder.isNull(root.join("votingUsers").get("answer")));
     }
 
-    public Specification<Voting> cantVote(long userId) {
+    public static Specification<Voting> cantVote(long userId) {
         return ((root, query, criteriaBuilder) ->
                 criteriaBuilder.isNotNull(root.join("votingUsers").get("answer")));
     }

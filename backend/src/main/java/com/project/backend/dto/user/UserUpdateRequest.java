@@ -6,7 +6,6 @@ import lombok.Data;
 
 @Data
 public class UserUpdateRequest {
-    private String role;
     @Size(min = 3, max = 255, message = "First name must be between 3 and 255 characters")
     @Pattern(regexp = "[A-Z][a-z]+",
             message = "First name must start with a capital letter " +

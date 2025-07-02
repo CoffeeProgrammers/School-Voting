@@ -73,9 +73,9 @@ const AppBar = () => {
                             <MenuIcon/>
                         </IconButton>
 
-                        <AccountBalanceIcon color='primary' sx={{mt: '3px', mr: '4px', fontSize: '27px'}}/>
+                        <AccountBalanceIcon color='primary' sx={{mt: '3px', mr: '6px', fontSize: '27px'}}/>
                         <Typography variant="h6" fontWeight='bold' noWrap>
-                            Preparations
+                            School Voting
                         </Typography>
                     </Stack>
 

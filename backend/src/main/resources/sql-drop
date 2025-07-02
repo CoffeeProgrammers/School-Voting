@@ -1,2 +1,14 @@
 docker exec -it postgres-backend psql -U postgres -d backend
 
+DROP TABLE IF EXISTS "files" CASCADE;
+DROP TABLE IF EXISTS "petitions_user" CASCADE;
+DROP TABLE IF EXISTS "petitions" CASCADE;
+DROP TABLE IF EXISTS "voting_user" CASCADE;
+DROP TABLE IF EXISTS "answer" CASCADE;
+DROP TABLE IF EXISTS "votings" CASCADE;
+DROP TABLE IF EXISTS "students_class" CASCADE;
+DROP TABLE IF EXISTS "classes" CASCADE;
+DROP TABLE IF EXISTS "schools" CASCADE;
+DROP TABLE IF EXISTS "parents" CASCADE;
+DROP TABLE IF EXISTS "user" CASCADE;
+DROP TABLE IF EXISTS "flyway_schema_history" CASCADE;

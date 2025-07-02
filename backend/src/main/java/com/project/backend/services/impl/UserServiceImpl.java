@@ -240,6 +240,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<User> findAllBySchool(long schoolId, Authentication auth) {
+        return userRepository.findAll(UserSpecification.bySchool(schoolId).and(UserSpecification.notUser(findUserByAuth(auth).getId())));
+    }
+
+    @Override
+    public List<User> findAllByClass(long classId, Authentication auth) {
+        return userRepository.findAll(UserSpecification.byClass(classId).and(UserSpecification.notUser(findUserByAuth(auth).getId())));
+    }
+
+    @Override
     public User findUserByAuth(Authentication authentication) {
         log.info("Service: Finding user by authentication {}", authentication);
         return findUserByKeycloakUserId(authentication.getName());

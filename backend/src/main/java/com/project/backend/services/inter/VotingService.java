@@ -7,7 +7,8 @@ import org.springframework.security.core.Authentication;
 import java.util.List;
 
 public interface VotingService {
-    Voting create(Voting votingRequest, List<String> answer);
+    Voting create(Voting votingRequest, List<String> answer, List<Long> targetIds, long schoolId, Authentication authentication);
+
     Voting update(Voting votingRequest, List<String> answer, long id);
     void delete(long id);
     Voting findById(long id);

@@ -15,6 +15,17 @@ import java.io.Serializable;
 @ToString
 @EqualsAndHashCode
 public class VotingUser {
+    public VotingUser(Voting voting, User user) {
+        VotingUserId votingUserId = new VotingUserId(voting.getId(), user.getId());
+        this.setUser(user);
+        this.setVoting(voting);
+        this.setId(votingUserId);
+    }
+
+    public VotingUser(Voting voting, User user, Answer answer) {
+        this(voting, user);
+        this.setAnswer(answer);
+    }
 
     @EmbeddedId
     private VotingUserId id;
@@ -32,10 +43,13 @@ public class VotingUser {
     @ManyToOne
     @JoinColumn(name = "answer_id")
     private Answer answer;
-}
 
-@Embeddable
-class VotingUserId implements Serializable {
-    private Long userId;
-    private Long votingId;
+    @Embeddable
+    @Setter
+    @Getter
+    @AllArgsConstructor
+    public static class VotingUserId implements Serializable {
+        private Long userId;
+        private Long votingId;
+    }
 }

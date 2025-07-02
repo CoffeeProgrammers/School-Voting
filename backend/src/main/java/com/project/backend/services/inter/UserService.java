@@ -1,10 +1,11 @@
 package com.project.backend.services.inter;
 
-import com.project.backend.dto.wrapper.PaginationListResponse;
 import com.project.backend.dto.wrapper.PasswordRequest;
 import com.project.backend.models.User;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
+
+import java.util.List;
 
 public interface UserService {
     User createUserKeycloak(User user);
@@ -29,6 +30,12 @@ public interface UserService {
     Page<User> findAllByClass(
             long classId, String email, String firstName, String lastName,
             int page, int size, Authentication auth);
+
+    List<User> findAllBySchool(
+            long schoolId, Authentication auth);
+
+    List<User> findAllByClass(
+            long classId, Authentication auth);
 
     User findUserByAuth(Authentication authentication);
     User findUserByEmail(String email);

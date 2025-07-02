@@ -5,7 +5,11 @@ import com.project.backend.models.VotingUser;
 import com.project.backend.models.voting.Answer;
 import com.project.backend.models.voting.Voting;
 
+import java.util.List;
+
 public interface VotingUserService {
-    VotingUser create(Voting voting, User user);
-    VotingUser create(Voting voting, User user, Answer answer);
+    List<VotingUser> create(Voting voting, List<User> user);
+    VotingUser update(Voting voting, User user, Answer answer);
+
+    VotingUser findById(long votingId, long userId);
 }

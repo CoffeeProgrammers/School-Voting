@@ -2,7 +2,6 @@ package com.project.backend.services.impl;
 
 import com.project.backend.models.User;
 import com.project.backend.models.voting.Voting;
-import com.project.backend.repositories.specification.UserSpecification;
 import com.project.backend.repositories.specification.VotingSpecification;
 import com.project.backend.repositories.voting.VotingRepository;
 import com.project.backend.services.inter.AnswerService;
@@ -21,7 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.function.Function;
+import java.util.stream.Stream;
 
 import static com.project.backend.utils.SpecificationUtil.addSpecification;
 import static com.project.backend.utils.SpecificationUtil.isValid;
@@ -37,10 +36,29 @@ public class VotingServiceImpl implements VotingService {
     private final VotingUserService votingUserService;
 
     @Override
-    public Voting create(Voting votingRequest, List<String> answer) {
+    public Voting create(Voting votingRequest, List<String> answer, List<Long> targetIds, long schoolId, Authentication authentication) {
         log.info("Creating voting {}", votingRequest);
         Voting voting = votingRepository.save(votingRequest);
         answerService.create(answer, voting);
+        Stream<User> users = null;
+        switch (voting.getLevelType()) {
+            case SCHOOL -> {
+                users = userService.findAllBySchool(schoolId, authentication).stream();
+            }
+            case CLASS -> {
+                Long classId = targetIds.getFirst();
+                users = userService.findAllByClass(classId, authentication).stream();
+            }
+            case GROUP_OF_TEACHERS -> {
+                users = targetIds.stream().map(userService::findById).filter(u -> u.getRole().equalsIgnoreCase("TEACHER"));
+            }
+            case GROUP_OF_PARENTS_AND_STUDENTS -> {
+                users = targetIds.stream().map(userService::findById).filter(u -> u.getRole().equalsIgnoreCase("PARENT") || u.getRole().equalsIgnoreCase("STUDENT"));
+            }
+        }
+        List<User> usersToAdd = users.filter(u -> u.getSchool().getId() == schoolId).toList();
+        log.info("Service: Users to add: {}, before filters: {}", usersToAdd.stream().map(User::getId).toList(), targetIds);
+        votingUserService.create(voting, usersToAdd);
         return voting;
     }
 
@@ -108,7 +126,7 @@ public class VotingServiceImpl implements VotingService {
         log.info("Vote voting with id {}", votingId);
         Voting voting = findById(votingId);
         checkTimeForVote(voting);
-        votingUserService.create(voting, userService.findUserByAuth(auth), answerService.findById(answerId));
+        votingUserService.update(voting, userService.findUserByAuth(auth), answerService.findById(answerId));
         answerService.vote(answerId);
     }
 

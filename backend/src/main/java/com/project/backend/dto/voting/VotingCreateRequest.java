@@ -12,4 +12,5 @@ public class VotingCreateRequest {
     private String startTime;
     private String endTime;
     private List<String> answers;
+    private List<Long> targetIds;
 }

@@ -9,10 +9,10 @@ import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
-    UserFullResponse fromUserToUserResponse(User user);
+    UserFullResponse fromUserToFullResponse(User user);
 
-    UserListResponse fromUserToUserListResponse(User user);
+    UserListResponse fromUserToListResponse(User user);
 
-    User fromUserRequestToUser(UserCreateRequest userCreateRequest);
-    User fromUserRequestToUser(UserUpdateRequest userUpdateRequest);
+    User fromRequestToUser(UserCreateRequest userCreateRequest);
+    User fromRequestToUser(UserUpdateRequest userUpdateRequest);
 }

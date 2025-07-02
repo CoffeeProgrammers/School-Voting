@@ -8,5 +8,5 @@ public class CommentResponse {
     private Long id;
     private UserListResponse creator;
     private String text;
-    private String date;
+    private String createdTime;
 }

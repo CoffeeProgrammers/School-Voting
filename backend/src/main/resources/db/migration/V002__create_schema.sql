@@ -5,7 +5,7 @@ CREATE TABLE "users"
     "last_name"        VARCHAR(255) NOT NULL,
     "email"            VARCHAR(255) NOT NULL UNIQUE,
     "keycloak_user_id" VARCHAR(255) NOT NULL UNIQUE,
-    "role"             VARCHAR(255) NOT NULL,
+    "role"             VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE "schools"
@@ -37,10 +37,6 @@ CREATE TABLE "classes"
 
 ALTER TABLE "users"
     ADD COLUMN "class_id" BIGINT;
-
-ALTER TABLE "users"
-    ADD CONSTRAINT fk_user_school
-        FOREIGN KEY ("class_id") REFERENCES "classes" ("id") ON DELETE SET NULL;
 
 CREATE TABLE "students_class"
 (
@@ -97,7 +93,7 @@ CREATE TABLE "petitions"
     "class_id"    BIGINT       NOT NULL,
     FOREIGN KEY ("creator_id") REFERENCES "users" ("id") ON DELETE SET NULL,
     FOREIGN KEY ("school_id") REFERENCES "schools" ("id") ON DELETE SET NULL,
-    FOREIGN KEY ("class_id") REFERENCES "classes" ("id") ON DELETE SET NULL,
+    FOREIGN KEY ("class_id") REFERENCES "classes" ("id") ON DELETE SET NULL
 );
 
 CREATE TABLE "petition_user"

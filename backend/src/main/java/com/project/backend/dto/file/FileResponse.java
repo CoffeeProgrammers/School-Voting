@@ -3,7 +3,7 @@ package com.project.backend.dto.file;
 import lombok.Data;
 
 @Data
-public class FileSimpleResponse {
+public class FileResponse {
     private long id;
     private String fileRealName;
     private String fileType;

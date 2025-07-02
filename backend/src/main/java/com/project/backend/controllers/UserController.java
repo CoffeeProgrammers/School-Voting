@@ -32,8 +32,8 @@ public class UserController {
     @ResponseStatus(HttpStatus.CREATED)
     public UserFullResponse createUser(@Valid @RequestBody UserCreateRequest request) {
         log.info("Controller: Create user with body: {}", request);
-        User user = userMapper.fromUserRequestToUser(request);
-        return userMapper.fromUserToUserResponse(userService.createUser(user, request.getPassword()));
+        User user = userMapper.fromRequestToUser(request);
+        return userMapper.fromUserToFullResponse(userService.createUser(user, request.getPassword()));
     }
 
     @PreAuthorize("hasRole('TEACHER')")
@@ -43,8 +43,8 @@ public class UserController {
             @PathVariable Long id,
             @Valid @RequestBody UserUpdateRequest request) {
         log.info("Controller: Update user with id: {} with body: {}", id, request);
-        User user = userMapper.fromUserRequestToUser(request);
-        return userMapper.fromUserToUserResponse(userService.updateUser(user, id));
+        User user = userMapper.fromRequestToUser(request);
+        return userMapper.fromUserToFullResponse(userService.updateUser(user, id));
     }
 
     @PutMapping("/update")
@@ -54,8 +54,8 @@ public class UserController {
             Authentication auth) {
         log.info("Controller: Update my user with body: {}", request);
         long userId = userService.findUserByAuth(auth).getId();
-        User user = userMapper.fromUserRequestToUser(request);
-        return userMapper.fromUserToUserResponse(userService.updateUser(user, userId));
+        User user = userMapper.fromRequestToUser(request);
+        return userMapper.fromUserToFullResponse(userService.updateUser(user, userId));
     }
 
     @PreAuthorize("hasRole('TEACHER')")
@@ -79,14 +79,14 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     public UserFullResponse getUser(@PathVariable Long id) {
         log.info("Controller: Get user with id: {}", id);
-        return userMapper.fromUserToUserResponse(userService.findById(id));
+        return userMapper.fromUserToFullResponse(userService.findById(id));
     }
 
     @GetMapping("/my")
     @ResponseStatus(HttpStatus.OK)
     public UserFullResponse getMyUser(Authentication auth) {
         log.info("Controller: Get my user");
-        return userMapper.fromUserToUserResponse(userService.findUserByAuth(auth));
+        return userMapper.fromUserToFullResponse(userService.findUserByAuth(auth));
     }
 
     @GetMapping
@@ -103,7 +103,7 @@ public class UserController {
         log.info("Controller: Get all users");
         Page<User> users = userService.findAll(email, firstName, lastName, role, page, size, auth);
         PaginationListResponse<UserListResponse> responses = new PaginationListResponse<>();
-        responses.setContent(users.getContent().stream().map(userMapper::fromUserToUserListResponse).toList());
+        responses.setContent(users.getContent().stream().map(userMapper::fromUserToListResponse).toList());
         responses.setTotalPages(users.getTotalPages());
         return responses;
     }

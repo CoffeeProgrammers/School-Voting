@@ -1,6 +1,5 @@
 package com.project.backend.services.impl;
 
-import com.project.backend.dto.wrapper.PaginationListResponse;
 import com.project.backend.dto.wrapper.PasswordRequest;
 import com.project.backend.models.User;
 import com.project.backend.repositories.UserRepository;
@@ -29,7 +28,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import java.net.URI;
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -216,8 +214,8 @@ public class UserServiceImpl implements UserService {
         log.info("Service: Finding all users with filters {}", filters);
 
         return userRepository.findAll(
-                UserSpecification.filterUsers(filters)
-                        .and(UserSpecification.notUser(user.getId()))
+//                UserSpecification.filterUsers(filters)
+                        /*.and(*/UserSpecification.notUser(user.getId())//)
                         .and(UserSpecification.notIncludeDeleted()),
                 PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "lastName", "firstName")));
     }

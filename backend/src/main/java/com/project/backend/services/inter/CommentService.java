@@ -1,0 +1,13 @@
+package com.project.backend.services.inter;
+
+import com.project.backend.models.petitions.Comment;
+import org.springframework.data.domain.Page;
+import org.springframework.security.core.Authentication;
+
+public interface CommentService {
+    Comment create(Comment commentRequest, Authentication authentication,
+                   long eventId);
+    Comment update(Comment commentRequest, long id);
+    void delete (long id);
+    Page<Comment> getAllByPetition(long petitionId, long page, long size);
+}

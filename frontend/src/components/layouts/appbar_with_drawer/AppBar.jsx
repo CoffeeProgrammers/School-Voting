@@ -12,6 +12,7 @@ import {Stack} from "@mui/material";
 import Box from "@mui/material/Box";
 import AccountMenu from "./AccountMenu";
 import theme from "../../../assets/theme";
+import PsychologyAltIcon from '@mui/icons-material/PsychologyAlt';
 
 const drawerWidth = 240;
 
@@ -61,7 +62,7 @@ const AppBar = () => {
                             onClick={handleDrawerOpen}
                             edge="start"
                             sx={[
-                                {marginRight: 5,},
+                                {marginRight: 3,},
                                 open && {display: 'none'},
                                 theme.palette.mode === 'dark' ? {
                                     color: theme.palette.grey[50]
@@ -73,7 +74,7 @@ const AppBar = () => {
                             <MenuIcon/>
                         </IconButton>
 
-                        <AccountBalanceIcon color='primary' sx={{mt: '3px', mr: '6px', fontSize: '27px'}}/>
+                        <PsychologyAltIcon color='primary' sx={{mt: '3px', mr: '6px', fontSize: '35px'}}/>
                         <Typography variant="h6" fontWeight='bold' noWrap>
                             School Voting
                         </Typography>

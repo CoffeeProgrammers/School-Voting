@@ -18,4 +18,14 @@ public class Answer {
     @ManyToOne
     private Voting voting;
     private long count;
+
+    public Answer(String name, Voting voting) {
+        this.name = name;
+        this.voting = voting;
+        this.count = 0;
+    }
+
+    public long incrementCount() {
+        return ++this.count;
+    }
 }

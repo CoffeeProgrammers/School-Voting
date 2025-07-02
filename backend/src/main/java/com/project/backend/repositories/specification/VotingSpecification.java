@@ -9,9 +9,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class VotingSpecification {
-    public static Specification<Voting> bySchool(long schoolId) {
+    public static Specification<Voting> byCreator(long creatorId) {
         return (root, criteriaQuery, criteriaBuilder) ->
-                criteriaBuilder.equal(root.get("school").get("id"), schoolId);
+                criteriaBuilder.equal(root.get("creator").get("id"), creatorId);
+    }
+
+    public static Specification<Voting> byDirector(long directorId) {
+        return (root, criteriaQuery, criteriaBuilder) ->
+                criteriaBuilder.equal(root.get("creator").get("school").get("director").get("id"), directorId);
     }
 
     public static Specification<Voting> byUser(long userId) {

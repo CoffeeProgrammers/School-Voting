@@ -10,7 +10,7 @@ public class SpecificationUtil {
         return value != null && !value.isBlank() && !value.equals("null");
     }
 
-    public static <T> Specification<T> addSpecification(Specification<T> specification, Function<String, Specification<T>> addFunction, String value) {
+    public static <T, R> Specification<T> addSpecification(Specification<T> specification, Function<R, Specification<T>> addFunction, R value) {
         Specification<T> newSpec = addFunction.apply(value);
         return (specification == null) ? newSpec : specification.and(newSpec);
     }

@@ -36,7 +36,7 @@ public class ClassController {
                                          Authentication auth) {
         log.info("Controller: Creating a new class");
         return classMapper.fromClassToFullResponse(
-                classService.create(classMapper.fromRequestToClass(classCreateRequest)));
+                classService.create(classMapper.fromRequestToClass(classCreateRequest), classCreateRequest.getUserIds(), schoolId));
     }
 
     @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasAnyRole('DIRECTOR', 'TEACHER')")

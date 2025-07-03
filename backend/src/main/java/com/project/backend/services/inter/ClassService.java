@@ -6,7 +6,8 @@ import org.springframework.data.domain.Page;
 import java.util.List;
 
 public interface ClassService {
-    Class create(Class classRequest);
+    Class create(Class classRequest, List<Long> userIds, long schoolId);
+
     Class update(Class classRequest, long id);
     void delete(long id);
     Class findById(long id);

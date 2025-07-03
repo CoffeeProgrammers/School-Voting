@@ -3,10 +3,9 @@ package com.project.backend.services.impl;
 import com.project.backend.models.Class;
 import com.project.backend.models.User;
 import com.project.backend.repositories.ClassRepository;
-import com.project.backend.repositories.UserRepository;
 import com.project.backend.repositories.specification.ClassSpecification;
-import com.project.backend.repositories.specification.UserSpecification;
 import com.project.backend.services.inter.ClassService;
+import com.project.backend.services.inter.SchoolService;
 import com.project.backend.services.inter.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -15,9 +14,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.project.backend.utils.SpecificationUtil.isValid;
 
@@ -28,10 +27,13 @@ public class ClassServiceImpl implements ClassService {
 
     private final ClassRepository classRepository;
     private final UserService userService;
+    private final SchoolService schoolService;
 
     @Override
-    public Class create(Class classRequest) {
-        log.info("Service: Creating Class");
+    public Class create(Class classRequest, List<Long> userIds, long schoolId) {
+        log.info("Service: Creating Class {} with users {} for school {}", classRequest.getName(), userIds, schoolId);
+        classRequest.setSchool(schoolService.findById(schoolId));
+        classRequest.setUsers(userIds.stream().map(userService::findById).collect(Collectors.toSet()));
         return classRepository.save(classRequest);
     }
 

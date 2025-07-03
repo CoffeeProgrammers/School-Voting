@@ -60,6 +60,10 @@ public class PetitionServiceImpl implements PetitionService {
         long userId = userService.findUserByAuth(auth).getId();
         log.info("Service: Support for petition {} by user {}", petitionId, userId);
         Petition petition = findById(petitionId);
+        boolean ifCanSupport = petition.getUsers().add(userService.findUserByAuth(auth));
+        if (!ifCanSupport) {
+            throw new IllegalArgumentException("Cannot support petition because user is already petition");
+        }
         petition.incrementCount();
         return petitionRepository.save(petition).getCount();
     }

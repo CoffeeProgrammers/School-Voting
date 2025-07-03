@@ -102,7 +102,7 @@ public class VotingController {
         Page<Voting> votingPage = votingService.findAllByCreator(user.getId(), name, now, notStarted, page, size);
         PaginationListResponse<VotingListResponse> response = new PaginationListResponse<>();
         response.setTotalPages(votingPage.getTotalPages());
-        response.setContent(votingPage.getContent().stream().map(votingMapper::fromVotingToListResponse).toList());
+        response.setContent(votingPage.getContent().stream().map(this::fromVotingToListResponseWithStatistics).toList());
         return response;
     }
 
@@ -149,13 +149,24 @@ public class VotingController {
 
     private VotingFullResponse fromVotingToFullResponseWithStatistics(Voting voting) {
         log.info("Controller: Mapping voting {} to voting full response with statistics", voting.getId());
-        long votingId = voting.getId();
         VotingFullResponse response = votingMapper.fromVotingToFullResponse(voting);
+        response.setStatistics(fromVotingToStatisticsResponse(voting));
+        return response;
+    }
+
+    private VotingListResponse fromVotingToListResponseWithStatistics(Voting voting) {
+        log.info("Controller: Mapping voting {} to voting list response with statistics", voting.getId());
+        VotingListResponse response = votingMapper.fromVotingToListResponse(voting);
+        response.setStatistics(fromVotingToStatisticsResponse(voting));
+        return response;
+    }
+
+    private VotingStatisticsResponse fromVotingToStatisticsResponse(Voting voting) {
+        long votingId = voting.getId();
         VotingStatisticsResponse votingStatisticsResponse = new VotingStatisticsResponse();
         votingStatisticsResponse.setAnswers(answerService.findAllByVoting(votingId).stream().map(answerMapper::fromAnswerToResponse).toList());
         votingStatisticsResponse.setCountAll(votingUserService.countAllByVoting(votingId));
         votingStatisticsResponse.setCountAnswered(votingUserService.countAllByVotingAnswered(votingId));
-        response.setStatistics(votingStatisticsResponse);
-        return response;
+        return votingStatisticsResponse;
     }
 }

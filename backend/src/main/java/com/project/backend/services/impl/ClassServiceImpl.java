@@ -68,6 +68,7 @@ public class ClassServiceImpl implements ClassService {
             user = userService.findById(userId);
             if(user.getRole().equals("STUDENT")) {
                 clazz.getUsers().add(user);
+                userService.assignClassToUser(clazz, user);
             }
         }
         classRepository.save(clazz);
@@ -82,6 +83,7 @@ public class ClassServiceImpl implements ClassService {
             user = userService.findById(userId);
             if(user.getRole().equals("STUDENT")) {
                 clazz.getUsers().remove(user);
+                userService.unassignClassFromUser(user);
             }
         }
         classRepository.save(clazz);

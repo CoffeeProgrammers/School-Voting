@@ -1,6 +1,7 @@
 package com.project.backend.services.impl;
 
 import com.project.backend.dto.wrapper.PasswordRequest;
+import com.project.backend.models.Class;
 import com.project.backend.models.User;
 import com.project.backend.models.petitions.Petition;
 import com.project.backend.repositories.UserRepository;
@@ -311,6 +312,18 @@ public class UserServiceImpl implements UserService {
     @Override
     public long countAllByPetition(Petition petition) {
         return userRepository.countAllByPetitionsContaining(petition);
+    }
+
+    @Override
+    public void assignClassToUser(Class clazz, User user) {
+        user.setMyClass(clazz);
+        userRepository.save(user);
+    }
+
+    @Override
+    public void unassignClassFromUser(User user) {
+        user.setMyClass(null);
+        userRepository.save(user);
     }
 
     @Override

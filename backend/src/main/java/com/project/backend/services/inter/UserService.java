@@ -1,9 +1,9 @@
 package com.project.backend.services.inter;
 
 import com.project.backend.dto.wrapper.PasswordRequest;
+import com.project.backend.models.Class;
 import com.project.backend.models.User;
 import com.project.backend.models.petitions.Petition;
-import org.keycloak.jose.jwk.JWK;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 
@@ -34,6 +34,9 @@ public interface UserService {
     List<User> findAllByClass(long classId, long userId);
 
     User findUserByAuth(Authentication authentication);
+
+    void unassignClassFromUser(User user);
+
     User findUserByEmail(String email);
 
     User findUserByKeycloakUserId(String keycloakUserId);
@@ -41,4 +44,6 @@ public interface UserService {
     boolean isNotExistByEmail(String email);
 
     long countAllByPetition(Petition petition);
+
+    void assignClassToUser(Class clazz, User user);
 }

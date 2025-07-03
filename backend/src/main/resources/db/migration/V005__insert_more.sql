@@ -15,11 +15,11 @@ VALUES ('Some', 'More', 2, '1975-11-10 00:00:00', '2025-11-10 00:00:00',
        ('New', 'New', 1, '1995-12-10 00:00:00', '2025-11-10 00:00:00',
         (SELECT id FROM users WHERE email = 'bulakovskijvladislav@gmail.com'));
 
-INSERT INTO answer (id, name, voting_id, count)
+INSERT INTO answers (id, name, voting_id, count)
 VALUES (1, 'Варіант A', (SELECT id FROM votings WHERE name = 'Some' LIMIT 1), 0),
 (2, 'Варіант B', (SELECT id FROM votings WHERE name = 'Some' LIMIT 1), 0);
 
-INSERT INTO answer (id, name, voting_id, count)
+INSERT INTO answers (id, name, voting_id, count)
 VALUES (3, 'Варіант 1', (SELECT id FROM votings WHERE name = 'New' LIMIT 1), 0),
 (4, 'Варіант 2', (SELECT id FROM votings WHERE name = 'New' LIMIT 1), 0),
 (5, 'Варіант 3', (SELECT id FROM votings WHERE name = 'New' LIMIT 1), 0);
@@ -27,13 +27,13 @@ VALUES (3, 'Варіант 1', (SELECT id FROM votings WHERE name = 'New' LIMIT 
 INSERT INTO voting_user (user_id, voting_id, answer_id)
 VALUES ((SELECT id FROM users WHERE email = 'ivan.fr@example.com'),
         (SELECT id FROM votings WHERE name = 'New' LIMIT 1),
-       (SELECT id FROM answer WHERE name = 'Варіант 2' AND voting_id = (SELECT id FROM votings WHERE name = 'New' LIMIT 1)) ),
+       (SELECT id FROM answers WHERE name = 'Варіант 2' AND voting_id = (SELECT id FROM votings WHERE name = 'New' LIMIT 1)) ),
 ((SELECT id FROM users WHERE email = 'kateryna.b@example.com'),
 (SELECT id FROM votings WHERE name = 'New' LIMIT 1),
-(SELECT id FROM answer WHERE name = 'Варіант 1' AND voting_id = (SELECT id FROM votings WHERE name = 'New' LIMIT 1))),
+(SELECT id FROM answers WHERE name = 'Варіант 1' AND voting_id = (SELECT id FROM votings WHERE name = 'New' LIMIT 1))),
 ((SELECT id FROM users WHERE email = 'taras.sh@example.com'),
 (SELECT id FROM votings WHERE name = 'New' LIMIT 1),
-(SELECT id FROM answer WHERE name = 'Варіант 3' AND voting_id = (SELECT id FROM votings WHERE name = 'New' LIMIT 1)));
+(SELECT id FROM answers WHERE name = 'Варіант 3' AND voting_id = (SELECT id FROM votings WHERE name = 'New' LIMIT 1)));
 
 INSERT INTO petitions
 (name, description, end_time, level_type, creator_id, status, count, school_id)

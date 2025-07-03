@@ -59,7 +59,7 @@ CREATE TABLE "votings"
     FOREIGN KEY ("creator_id") REFERENCES "users" ("id") ON DELETE SET NULL
 );
 
-CREATE TABLE "answer"
+CREATE TABLE "answers"
 (
     "id"        BIGSERIAL PRIMARY KEY,
     "name"      VARCHAR(255) NOT NULL,
@@ -76,7 +76,7 @@ CREATE TABLE "voting_user"
     PRIMARY KEY ("user_id", "voting_id"),
     FOREIGN KEY ("voting_id") REFERENCES "votings" ("id") ON DELETE CASCADE,
     FOREIGN KEY ("user_id") REFERENCES "users" ("id") ON DELETE CASCADE,
-    FOREIGN KEY ("answer_id") REFERENCES "answer" ("id") ON DELETE SET NULL
+    FOREIGN KEY ("answer_id") REFERENCES "answers" ("id") ON DELETE SET NULL
 );
 
 CREATE TABLE "petitions"

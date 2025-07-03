@@ -94,9 +94,9 @@ public class VotingServiceImpl implements VotingService {
 
     @Override
     public Page<Voting> findAllByUser(
-            long userId, String name, Boolean now, Boolean canVote, int page, int size) {
+            long userId, String name, Boolean now, Boolean isNotVoted, int page, int size) {
         log.info("Service: Finding all votings by user {}", userId);
-        Specification<Voting> voitingSpecification = createSpecification(name, false, now, null, canVote, userId);
+        Specification<Voting> voitingSpecification = createSpecification(name, false, now, null, isNotVoted, userId);
         Specification<Voting> fullSpecification = voitingSpecification == null ? VotingSpecification.byUser(userId) : voitingSpecification.and(VotingSpecification.byUser(userId));
 
         return votingRepository.findAll(
@@ -177,7 +177,7 @@ public class VotingServiceImpl implements VotingService {
         }
 
         if (isValid(canVote)) {
-            specification = addSpecification(specification, canVote ? VotingSpecification::canVote : VotingSpecification::cantVote, userId);
+            specification = addSpecification(specification, canVote ? VotingSpecification::isNotVoted : VotingSpecification::isVoted, userId);
         }
 
         return specification;

@@ -39,7 +39,7 @@ INSERT INTO petitions
 VALUES ('Some',
         'new',
         '2045-12-10 00:00:00',
-        1,
+        0,
         (SELECT id FROM users WHERE email = 'oleh@example.com'),
         0,
         0,

@@ -32,7 +32,7 @@ public class PetitionController {
     private final CommentMapper commentMapper;
     private final UserService userService;
 
-    @PreAuthorize("hasRole('STUDENT')")
+    @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasRole('STUDENT')")
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
     public PetitionFullResponse createPetition(
@@ -44,7 +44,7 @@ public class PetitionController {
                 petitionService.create(petitionMapper.fromRequestToPetition(petitionRequest), petitionRequest.getLevelId(), userService.findUserByAuth(auth)));
     }
 
-    @PreAuthorize("hasRole('STUDENT')")
+    @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasAnyRole('DIRECTOR', 'STUDENT')")
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public PetitionFullResponse getPetition(
@@ -57,7 +57,7 @@ public class PetitionController {
                 petitionService.findById(id));
     }
 
-    @PreAuthorize("hasRole('STUDENT')")
+    @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasRole('STUDENT')")
     @GetMapping("/my")
     @ResponseStatus(HttpStatus.OK)
     public PaginationListResponse<PetitionFullResponse> getMyPetitions(
@@ -75,7 +75,7 @@ public class PetitionController {
         return response;
     }
 
-    @PreAuthorize("hasRole('STUDENT')")
+    @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasRole('STUDENT')")
     @GetMapping("/created")
     @ResponseStatus(HttpStatus.OK)
     public PaginationListResponse<PetitionFullResponse> getMyOwnPetitions(
@@ -93,7 +93,7 @@ public class PetitionController {
         return response;
     }
 
-    @PreAuthorize("hasRole('DIRECTOR')")
+    @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasRole('DIRECTOR')")
     @GetMapping("/director")
     @ResponseStatus(HttpStatus.OK)
     public PaginationListResponse<PetitionFullResponse> getPetitionsForDirector(
@@ -111,7 +111,7 @@ public class PetitionController {
         return response;
     }
 
-    @PreAuthorize("hasRole('STUDENT') and @userSecurity.checkUserPetition(#auth, #schoolId)")
+    @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasRole('STUDENT') and @userSecurity.checkUserPetition(#auth, #schoolId)")
     @PostMapping("/support/{petition_id}")
     @ResponseStatus(HttpStatus.OK)
     public void supportPetition(@PathVariable(name = "school_id") long schoolId,
@@ -121,7 +121,7 @@ public class PetitionController {
         petitionService.support(petitionId, userService.findUserByAuth(auth));
     }
 
-    @PreAuthorize("hasRole('DIRECTOR') and @userSecurity.checkDirectorOfSchool(#auth, #schoolId)")
+    @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasRole('DIRECTOR') and @userSecurity.checkDirectorOfSchool(#auth, #schoolId)")
     @PostMapping("/approve/{petition_id}")
     @ResponseStatus(HttpStatus.OK)
     public void approvePetition(@PathVariable(name = "school_id") long schoolId,
@@ -131,7 +131,7 @@ public class PetitionController {
         petitionService.approve(petitionId);
     }
 
-    @PreAuthorize("hasRole('DIRECTOR') and @userSecurity.checkDirectorOfSchool(#auth, #schoolId)")
+    @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasRole('DIRECTOR') and @userSecurity.checkDirectorOfSchool(#auth, #schoolId)")
     @PostMapping("/reject/{petition_id}")
     @ResponseStatus(HttpStatus.OK)
     public void rejectPetition(@PathVariable(name = "school_id") long schoolId,
@@ -141,7 +141,7 @@ public class PetitionController {
         petitionService.reject(petitionId);
     }
 
-    @PreAuthorize("hasRole('STUDENT') and @userSecurity.checkUserPetition(#auth, #petitionId)")
+    @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasRole('STUDENT') and @userSecurity.checkUserPetition(#auth, #petitionId)")
     @PostMapping("/{petition_id}/comments/create")
     @ResponseStatus(HttpStatus.CREATED)
     public CommentResponse createComment(@PathVariable(name = "school_id") long schoolId,
@@ -153,7 +153,7 @@ public class PetitionController {
                 commentService.create(commentMapper.fromRequestToComment(commentRequest), userService.findUserByAuth(auth), petitionId));
     }
 
-    @PreAuthorize("hasRole('STUDENT') and @userSecurity.checkCreatorComment(#auth, #commentId)")
+    @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasRole('STUDENT') and @userSecurity.checkCreatorComment(#auth, #commentId)")
     @PostMapping("/{petition_id}/comments/update/{comment_id}")
     @ResponseStatus(HttpStatus.OK)
     public CommentResponse updateComment(@PathVariable(name = "school_id") long schoolId,
@@ -166,7 +166,7 @@ public class PetitionController {
                 commentService.update(commentMapper.fromRequestToComment(commentRequest), commentId));
     }
 
-    @PreAuthorize("hasRole('STUDENT') and @userSecurity.checkCreatorComment(#auth, #commentId)")
+    @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasRole('STUDENT') and @userSecurity.checkCreatorComment(#auth, #commentId)")
     @PostMapping("/{petition_id}/comments/delete/{comment_id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteComment(@PathVariable(name = "school_id") long schoolId,
@@ -178,7 +178,7 @@ public class PetitionController {
         commentService.delete(commentId);
     }
 
-    @PreAuthorize("hasRole('STUDENT') and @userSecurity.checkUserPetition(#auth, #petitionId)")
+    @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasRole('STUDENT') and @userSecurity.checkUserPetition(#auth, #petitionId)")
     @GetMapping("/{petition_id}/comments")
     @ResponseStatus(HttpStatus.OK)
     public PaginationListResponse<CommentResponse> getAllByPetition(

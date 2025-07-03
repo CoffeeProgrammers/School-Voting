@@ -28,7 +28,7 @@ public class UserController {
     private final UserService userService;
     private final UserMapper userMapper;
 
-    @PreAuthorize("hasAnyRole('DIRECTOR', 'TEACHER')")
+    @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasAnyRole('DIRECTOR', 'TEACHER')")
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
     public UserFullResponse createUser(@PathVariable(value = "school_id") long schoolId,
@@ -38,7 +38,7 @@ public class UserController {
         return userMapper.fromUserToFullResponse(userService.createUser(user, request.getPassword(), schoolId));
     }
 
-    @PreAuthorize("hasAnyRole('DIRECTOR', 'TEACHER')")
+    @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasAnyRole('DIRECTOR', 'TEACHER')")
     @PutMapping("/update/{id}")
     @ResponseStatus(HttpStatus.OK)
     public UserFullResponse updateUser(
@@ -57,10 +57,10 @@ public class UserController {
             @RequestBody PasswordRequest password,
             Authentication auth) {
         log.info("Controller: Update my password");
-        return userService.updatePassword(password, auth);
+        return userService.updatePassword(password, userService.findUserByAuth(auth));
     }
 
-    @PreAuthorize("hasAnyRole('DIRECTOR', 'TEACHER')")
+    @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasAnyRole('DIRECTOR', 'TEACHER')")
     @DeleteMapping("/delete/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteUser(@PathVariable(value = "school_id") long schoolId, @PathVariable long id) {
@@ -75,7 +75,7 @@ public class UserController {
         return userMapper.fromUserToFullResponse(userService.findUserByAuth(auth));
     }
 
-    @PreAuthorize("@userSecurity.checkUserVoting(#auth, #votingId)")
+    @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and @userSecurity.checkUserVoting(#auth, #votingId)")
     @GetMapping("/voting/{voting_id}")
     @ResponseStatus(HttpStatus.OK)
     public PaginationListResponse<UserListResponse> getUsersByVoting(
@@ -95,7 +95,7 @@ public class UserController {
         return userListResponse;
     }
 
-    @PreAuthorize("hasAnyRole('DIRECTOR', 'TEACHER')")
+    @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasAnyRole('DIRECTOR', 'TEACHER')")
     @GetMapping("/role/{role}")
     @ResponseStatus(HttpStatus.OK)
     public PaginationListResponse<UserListResponse> getUsersByRole(
@@ -115,7 +115,7 @@ public class UserController {
         return userListResponse;
     }
 
-    @PreAuthorize("hasAnyRole('DIRECTOR', 'TEACHER')")
+    @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasAnyRole('DIRECTOR', 'TEACHER')")
     @GetMapping("/class/{class_id}")
     @ResponseStatus(HttpStatus.OK)
     public PaginationListResponse<UserListResponse> getUsersByClass(
@@ -135,7 +135,7 @@ public class UserController {
         return userListResponse;
     }
 
-    @PreAuthorize("hasAnyRole('DIRECTOR', 'TEACHER')")
+    @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasAnyRole('DIRECTOR', 'TEACHER')")
     @GetMapping("/without-class")
     @ResponseStatus(HttpStatus.OK)
     public PaginationListResponse<UserListResponse> getUsersWithoutClass(

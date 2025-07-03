@@ -27,7 +27,7 @@ public class ClassController {
     private final ClassService classService;
     private final ClassMapper classMapper;
 
-    @PreAuthorize("hasAnyRole('DIRECTOR', 'TEACHER')")
+    @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasAnyRole('DIRECTOR', 'TEACHER')")
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
     public ClassFullResponse createClass(@PathVariable(value = "school_id") long schoolId,
@@ -38,7 +38,7 @@ public class ClassController {
                 classService.create(classMapper.fromRequestToClass(classCreateRequest)));
     }
 
-    @PreAuthorize("hasAnyRole('DIRECTOR', 'TEACHER')")
+    @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasAnyRole('DIRECTOR', 'TEACHER')")
     @PutMapping("/update/{id}")
     @ResponseStatus(HttpStatus.OK)
     public ClassFullResponse updateClass(@PathVariable(value = "school_id") long schoolId,
@@ -50,7 +50,7 @@ public class ClassController {
                 classService.update(classMapper.fromRequestToClass(classCreateRequest), id));
     }
 
-    @PreAuthorize("hasAnyRole('DIRECTOR', 'TEACHER')")
+    @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasAnyRole('DIRECTOR', 'TEACHER')")
     @DeleteMapping("/delete/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteClass(@PathVariable(value = "school_id") long schoolId,
@@ -60,7 +60,7 @@ public class ClassController {
         classService.delete(id);
     }
 
-    @PreAuthorize("hasAnyRole('DIRECTOR', 'TEACHER')")
+    @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasAnyRole('DIRECTOR', 'TEACHER')")
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public ClassFullResponse getClassById(@PathVariable(value = "school_id") long schoolId,
@@ -70,7 +70,7 @@ public class ClassController {
         return classMapper.fromClassToFullResponse(classService.findById(id));
     }
 
-    @PreAuthorize("hasAnyRole('DIRECTOR', 'TEACHER')")
+    @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasAnyRole('DIRECTOR', 'TEACHER')")
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public PaginationListResponse<ClassListResponse> getClasses(
@@ -87,7 +87,7 @@ public class ClassController {
         return paginationListResponse;
     }
 
-    @PreAuthorize("hasAnyRole('DIRECTOR', 'TEACHER')")
+    @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasAnyRole('DIRECTOR', 'TEACHER')")
     @PostMapping("/{class_id}/assign-users")
     @ResponseStatus(HttpStatus.OK)
     public void assignUsers(@PathVariable(value = "school_id") long schoolId,
@@ -98,7 +98,7 @@ public class ClassController {
         classService.assignUserToClass(classId, userIds);
     }
 
-    @PreAuthorize("hasAnyRole('DIRECTOR', 'TEACHER')")
+    @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasAnyRole('DIRECTOR', 'TEACHER')")
     @PostMapping("/{class_id}/unassign-users")
     @ResponseStatus(HttpStatus.OK)
     public void unassignUsers(@PathVariable(value = "school_id") long schoolId,

@@ -14,7 +14,7 @@ public interface UserService {
     User updateUser(User user, long userId);
     User updateUserKeycloak(User user, long userId);
 
-    boolean updatePassword(PasswordRequest passwordRequest, Authentication authentication);
+    boolean updatePassword(PasswordRequest passwordRequest, User user);
 
     void delete(long id);
     User findById(long id);

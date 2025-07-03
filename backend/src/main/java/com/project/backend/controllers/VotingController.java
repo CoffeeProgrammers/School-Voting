@@ -32,6 +32,7 @@ public class VotingController {
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId)")
     public VotingFullResponse create(@PathVariable("school_id") Long schoolId,
                                      VotingCreateRequest votingCreateRequest,
                                      Authentication authentication) {
@@ -40,7 +41,7 @@ public class VotingController {
         return fromVotingToFullResponseWithStatistics(createdVoting);
     }
 
-    @PreAuthorize("@userSecurity.checkUserVoting(#auth, #votingId)")
+    @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and @userSecurity.checkUserVoting(#auth, #votingId)")
     @PutMapping("/update/{voting_id}")
     @ResponseStatus(HttpStatus.OK)
     public VotingFullResponse update(@PathVariable("school_id") Long schoolId,
@@ -52,7 +53,7 @@ public class VotingController {
         return fromVotingToFullResponseWithStatistics(updatedVoting);
     }
 
-    @PreAuthorize("@userSecurity.checkUserVoting(#auth, #votingId)")
+    @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and @userSecurity.checkUserVoting(#auth, #votingId)")
     @DeleteMapping("/delete/{voting_id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable("school_id") Long schoolId,
@@ -103,7 +104,7 @@ public class VotingController {
         return response;
     }
 
-    @PreAuthorize("hasRole('DIRECTOR')")
+    @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasRole('DIRECTOR')")
     @GetMapping("/forDirector")
     @ResponseStatus(HttpStatus.OK)
     public PaginationListResponse<VotingListResponse> getAllForDirector(
@@ -122,7 +123,7 @@ public class VotingController {
         return response;
     }
 
-    @PreAuthorize("@userSecurity.checkUserVoting(#auth, #votingId)")
+    @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and @userSecurity.checkUserVoting(#auth, #votingId)")
     @GetMapping("/{voting_id}")
     @ResponseStatus(HttpStatus.OK)
     public VotingFullResponse getById(@PathVariable("school_id") Long schoolId,
@@ -134,7 +135,7 @@ public class VotingController {
         return response;
     }
 
-    @PreAuthorize("@userSecurity.checkUserVoting(#auth, #votingId)")
+    @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and @userSecurity.checkUserVoting(#auth, #votingId)")
     @PostMapping("/{voting_id}/vote/{answer_id}")
     @ResponseStatus(HttpStatus.OK)
     public void vote(@PathVariable("school_id") Long schoolId,

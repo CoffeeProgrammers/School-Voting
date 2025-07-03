@@ -170,9 +170,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean updatePassword(PasswordRequest passwordRequest, Authentication authentication) {
-        String keycloakUserId = authentication.getName();
-        String email = findUserByKeycloakUserId(keycloakUserId).getEmail();
+    public boolean updatePassword(PasswordRequest passwordRequest, User user) {
+        String keycloakUserId = user.getKeycloakUserId();
+        String email = user.getEmail();
 
         log.info("Service: Updating password for user with email {}", email);
 

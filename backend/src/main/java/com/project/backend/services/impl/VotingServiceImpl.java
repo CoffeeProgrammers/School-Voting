@@ -2,7 +2,6 @@ package com.project.backend.services.impl;
 
 import com.project.backend.models.User;
 import com.project.backend.models.voting.Voting;
-import com.project.backend.repositories.specification.UserSpecification;
 import com.project.backend.repositories.specification.VotingSpecification;
 import com.project.backend.repositories.voting.VotingRepository;
 import com.project.backend.services.inter.AnswerService;
@@ -161,13 +160,13 @@ public class VotingServiceImpl implements VotingService {
         }
 
         if (isValid(now)) {
-            specification = addSpecification(specification, now ? VotingSpecification::byStartDateAndEndDate : VotingSpecification::ended);
+            specification = addSpecification(specification, now ? VotingSpecification::byStartTimeAndEndTime : VotingSpecification::ended);
         } else {
             if (!my) {
-                specification = addSpecification(specification, VotingSpecification::byStartDate);
+                specification = addSpecification(specification, VotingSpecification::byStartTime);
             }
             if(isValid(notStarted) && notStarted) {
-                specification = addSpecification(specification, VotingSpecification::byStartDateNot);
+                specification = addSpecification(specification, VotingSpecification::byStartTimeNot);
             }
         }
 

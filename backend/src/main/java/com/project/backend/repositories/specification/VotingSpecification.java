@@ -5,8 +5,7 @@ import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDateTime;
 
 public class VotingSpecification {
     public static Specification<Voting> byCreator(long creatorId) {
@@ -29,34 +28,34 @@ public class VotingSpecification {
                 criteriaBuilder.equal(root.get("name"), name));
     }
 
-    public static Specification<Voting> byStartDateAndEndDate() {
+    public static Specification<Voting> byStartTimeAndEndTime() {
         return (root, query, criteriaBuilder) -> {
             LocalDate today = LocalDate.now();
-            Predicate startDatePredicate = criteriaBuilder.lessThanOrEqualTo(root.get("startDate"), today);
-            Predicate endDatePredicate = criteriaBuilder.greaterThanOrEqualTo(root.get("endDate"), today);
+            Predicate startDatePredicate = criteriaBuilder.lessThanOrEqualTo(root.get("startTime"), today);
+            Predicate endDatePredicate = criteriaBuilder.greaterThanOrEqualTo(root.get("endTime"), today);
             return criteriaBuilder.and(startDatePredicate, endDatePredicate);
         };
     }
 
-    public static Specification<Voting> byStartDate() {
+    public static Specification<Voting> byStartTime() {
         return (root, query, criteriaBuilder) -> {
-            LocalDate today = LocalDate.now();
-            Predicate startDatePredicate = criteriaBuilder.lessThanOrEqualTo(root.get("startDate"), today);
-            return criteriaBuilder.and(startDatePredicate);
+            LocalDateTime now = LocalDateTime.now();
+            Predicate startTimePredicate = criteriaBuilder.lessThanOrEqualTo(root.get("startTime"), now);
+            return criteriaBuilder.and(startTimePredicate);
         };
     }
 
-    public static Specification<Voting> byStartDateNot() {
+    public static Specification<Voting> byStartTimeNot() {
         return (root, query, criteriaBuilder) -> {
-            LocalDate today = LocalDate.now();
-            Predicate startDatePredicate = criteriaBuilder.greaterThanOrEqualTo(root.get("startDate"), today);
-            return criteriaBuilder.and(startDatePredicate);
+            LocalDateTime now = LocalDateTime.now();
+            Predicate startTimePredicate = criteriaBuilder.greaterThanOrEqualTo(root.get("startTime"), now);
+            return criteriaBuilder.and(startTimePredicate);
         };
     }
 
     public static Specification<Voting> ended() {
         return ((root, query, criteriaBuilder) ->
-                criteriaBuilder.greaterThan(root.get("endDate"), LocalDate.now()));
+                criteriaBuilder.greaterThan(root.get("endTime"), LocalDateTime.now()));
     }
 
     public static Specification<Voting> canVote(long userId) {

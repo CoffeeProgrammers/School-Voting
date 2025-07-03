@@ -10,6 +10,7 @@ import com.project.backend.services.inter.PetitionService;
 import com.project.backend.services.inter.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 import static com.project.backend.utils.SpecificationUtil.addSpecification;
 import static com.project.backend.utils.SpecificationUtil.isValid;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PetitionServiceImpl implements PetitionService {
@@ -28,16 +30,20 @@ public class PetitionServiceImpl implements PetitionService {
 
     @Override
     public Petition create(Petition petition) {
+        log.info("Service: Creating a new petition {}", petition);
         return petitionRepository.save(petition);
     }
 
     @Override
     public void delete(long id) {
+        log.info("Service: Deleting a petition {}", id);
+        findById(id);
         petitionRepository.deleteById(id);
     }
 
     @Override
     public long support(long petitionId, long userId) {
+        log.info("Service: Support for petition {} by user {}", petitionId, userId);
         Petition petition = findById(petitionId);
         petition.incrementCount();
         return petitionRepository.save(petition).getCount();
@@ -45,6 +51,7 @@ public class PetitionServiceImpl implements PetitionService {
 
     @Override
     public void approve(long petitionId) {
+        log.info("Service: Approving a petition {}", petitionId);
         Petition petition = findById(petitionId);
         petition.setStatus(Status.APPROVED);
         petitionRepository.save(petition);
@@ -52,6 +59,7 @@ public class PetitionServiceImpl implements PetitionService {
 
     @Override
     public void reject(long petitionId) {
+        log.info("Service: Rejecting a petition {}", petitionId);
         Petition petition = findById(petitionId);
         petition.setStatus(Status.REJECTED);
         petitionRepository.save(petition);
@@ -59,13 +67,13 @@ public class PetitionServiceImpl implements PetitionService {
 
     @Override
     public Petition findById(long id) {
+        log.info("Service: Finding a petition {}", id);
         return petitionRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Petition with id " + id + " not found"));
     }
 
     @Override
     public Page<Petition> findAllMy(String name, String status, int page, int size, Authentication auth) {
-        Specification<Voting> specification = null;
-        addSpecification(specification, VotingSpecification::ended);
+        log.info("Service: Finding all my petitions with name {} and status {}", name, status);
         return petitionRepository.findAll(
                 createSpecification(name, status)
                         .and(PetitionSpecification.byCreator(
@@ -81,6 +89,7 @@ public class PetitionServiceImpl implements PetitionService {
 
     @Override
     public Page<Petition> findAllByCreator(String name, String status, int page, int size, long creatorId) {
+        log.info("Service: Finding all petitions by creator {}, name {} and status {}", creatorId, name, status);
         return petitionRepository.findAll(
                 createSpecification(name, status)
                         .and(PetitionSpecification.byCreator(
@@ -95,6 +104,7 @@ public class PetitionServiceImpl implements PetitionService {
 
     @Override
     public Page<Petition> findAllForDirector(String name, String status, int page, int size, Authentication auth) {
+        log.info("Service: Finding all petitions for director, name {} and status {}", name, status);
         return petitionRepository.findAll(
                 createSpecification(name, status), PageRequest.of(
                         page, size, Sort.by(
@@ -105,6 +115,7 @@ public class PetitionServiceImpl implements PetitionService {
     }
 
     private Specification<Petition> createSpecification(String name, String status) {
+        log.info("Service: Creating a petition {}", name + " " + status);
         Specification<Petition> specification = null;
 
         if (isValid(name)) {

@@ -4,6 +4,7 @@ import com.project.backend.models.voting.Answer;
 import com.project.backend.models.voting.Voting;
 import com.project.backend.repositories.voting.AnswerRepository;
 import com.project.backend.services.inter.AnswerService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ public class AnswerServiceImpl implements AnswerService {
 
     @Override
     public List<Answer> create(List<String> answerRequest, Voting voting) {
+        log.info("Service: Creating answer request {}", answerRequest);
         List<Answer> answers = new ArrayList<>();
         for(String answer : answerRequest){
             answers.add(answerRepository.save(new Answer(answer, voting)));
@@ -29,6 +31,7 @@ public class AnswerServiceImpl implements AnswerService {
 
     @Override
     public List<Answer> update(List<String> newText, Voting voting) {
+        log.info("Service: Updating answer request {}", newText);
         List<Answer> answers = findAllByVoting(voting.getId());
         Answer answer = null;
         for(int i = 0; i < newText.size(); i++){
@@ -41,6 +44,7 @@ public class AnswerServiceImpl implements AnswerService {
 
     @Override
     public long vote(long id) {
+        log.info("Service: Vote request {}", id);
         Answer answer = findById(id);
         answer.incrementCount();
         answerRepository.save(answer);
@@ -49,11 +53,13 @@ public class AnswerServiceImpl implements AnswerService {
 
     @Override
     public List<Answer> findAllByVoting(long votingId) {
+        log.info("Service: Finding all answers for voting {}", votingId);
         return answerRepository.findAllByVoting_Id(votingId);
     }
 
     @Override
     public Answer findById(long id) {
-        return answerRepository.findById(id).orElseThrow(() -> new RuntimeException("Answer not found"));
+        log.info("Service: Finding answer by id {}", id);
+        return answerRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Answer not found"));
     }
 }

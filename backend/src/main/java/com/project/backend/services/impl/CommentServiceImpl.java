@@ -25,6 +25,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Comment create(Comment comment, Authentication authentication, long petitionId) {
+        log.info("Service: Creating comment {}", comment);
         comment.setPetition(petitionService.findById(petitionId));
         comment.setCreator(userService.findUserByKeycloakUserId(authentication.getName()));
         return commentRepository.save(comment);
@@ -32,17 +33,20 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Comment update(Comment comment, long id) {
+        log.info("Service: Updating comment {}", id);
         comment.setId(id);
         return commentRepository.save(comment);
     }
 
     @Override
     public void delete(long id) {
+        log.info("Service: Deleting comment {}", id);
         commentRepository.deleteById(id);
     }
 
     @Override
     public Page<Comment> findAllByPetition(long petitionId, int page, int size) {
+        log.info("Service: Finding all comments by petition {}", petitionId);
         return commentRepository.findAllByPetition_Id(
                 petitionId, PageRequest.of(
                         page, size, Sort.by(

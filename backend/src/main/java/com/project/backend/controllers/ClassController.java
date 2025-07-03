@@ -1,11 +1,11 @@
 package com.project.backend.controllers;
 
-import com.project.backend.models.Class;
 import com.project.backend.dto.classDTO.ClassCreateRequest;
 import com.project.backend.dto.classDTO.ClassFullResponse;
 import com.project.backend.dto.classDTO.ClassListResponse;
 import com.project.backend.dto.wrapper.PaginationListResponse;
 import com.project.backend.mappers.ClassMapper;
+import com.project.backend.models.Class;
 import com.project.backend.services.inter.ClassService;
 import jakarta.ws.rs.PathParam;
 import lombok.RequiredArgsConstructor;
@@ -42,7 +42,7 @@ public class ClassController {
                 classService.update(classMapper.fromRequestToClass(classCreateRequest), id));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteClass(@PathVariable(value = "school_id") long schoolId,
                                          @PathVariable(value = "id") long id) {

@@ -45,4 +45,16 @@ public class VotingUserServiceImpl implements VotingUserService {
         return votingUserRepository.findById(votingUserId).orElseThrow(
                 () -> new EntityNotFoundException("VotingUser with votingId " + votingId + " userId " + userId + " not found"));
     }
+
+    @Override
+    public Long countAllByVoting(long votingId) {
+        log.info("Service: Counting all votingUsers by votingId {}", votingId);
+        return votingUserRepository.countAllByVoting_Id(votingId);
+    }
+
+    @Override
+    public Long countAllByVotingAnswered(long votingId) {
+        log.info("Service: Counting all votingUsers by votingId {}, answered", votingId);
+        return votingUserRepository.countAllByVoting_IdAndAnswerNotNull(votingId);
+    }
 }

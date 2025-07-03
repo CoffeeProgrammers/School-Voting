@@ -18,6 +18,7 @@ public class SpecificationUtil {
         Specification<T> newSpec = addFunction.apply(value);
         return (specification == null) ? newSpec : specification.and(newSpec);
     }
+
     public static <T> Specification<T> addSpecification(Specification<T> specification, Supplier<Specification<T>> addFunction) {
         Specification<T> newSpec = addFunction.get();
         return (specification == null) ? newSpec : specification.and(newSpec);

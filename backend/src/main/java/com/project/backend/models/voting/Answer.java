@@ -2,7 +2,9 @@ package com.project.backend.models.voting;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Entity
 @Table(name = "answers")
 @Getter
@@ -26,6 +28,7 @@ public class Answer {
     }
 
     public long incrementCount() {
+        log.info("Model: Increment count {} for answer {}", count, this.id);
         return ++this.count;
     }
 }

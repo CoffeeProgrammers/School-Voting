@@ -7,11 +7,13 @@ import com.project.backend.models.enums.LevelType;
 import com.project.backend.models.enums.Status;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+@Slf4j
 @Entity
 @Table(name = "petitions")
 @Getter
@@ -42,6 +44,7 @@ public class Petition {
     private Class myClass;
 
     public long incrementCount() {
+        log.info("Model: Increment count {} of petition {}", count, this.id);
         return ++this.count;
     }
 }

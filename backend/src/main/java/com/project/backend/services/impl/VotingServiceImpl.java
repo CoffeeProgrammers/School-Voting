@@ -37,22 +37,26 @@ public class VotingServiceImpl implements VotingService {
 
     @Override
     public Voting create(Voting votingRequest, List<String> answer, List<Long> targetIds, long schoolId, Authentication authentication) {
-        log.info("Creating voting {}", votingRequest);
+        log.info("Service: Creating voting {}", votingRequest);
         Voting voting = votingRepository.save(votingRequest);
         answerService.create(answer, voting);
         Stream<User> users = null;
         switch (voting.getLevelType()) {
             case SCHOOL -> {
+                log.info("Service: Adding users from school {}", schoolId);
                 users = userService.findAllBySchool(schoolId, authentication).stream();
             }
             case CLASS -> {
                 Long classId = targetIds.getFirst();
+                log.info("Service: Adding users from class {}", classId);
                 users = userService.findAllByClass(classId, authentication).stream();
             }
             case GROUP_OF_TEACHERS -> {
+                log.info("Service: Adding users from group of teachers");
                 users = targetIds.stream().map(userService::findById).filter(u -> u.getRole().equalsIgnoreCase("TEACHER"));
             }
             case GROUP_OF_PARENTS_AND_STUDENTS -> {
+                log.info("Service: Adding users from group of parents and students");
                 users = targetIds.stream().map(userService::findById).filter(u -> u.getRole().equalsIgnoreCase("PARENT") || u.getRole().equalsIgnoreCase("STUDENT"));
             }
         }
@@ -64,7 +68,7 @@ public class VotingServiceImpl implements VotingService {
 
     @Override
     public Voting update(Voting votingRequest, List<String> answer, long id) {
-        log.info("Updating voting with id {}", id);
+        log.info("Service: Updating voting with id {}", id);
         Voting oldVoting = findById(votingRequest.getId());
         checkTimeForChanges(oldVoting);
         oldVoting.setName(votingRequest.getName());
@@ -75,14 +79,14 @@ public class VotingServiceImpl implements VotingService {
 
     @Override
     public void delete(long id) {
-        log.info("Deleting voting with id {}", id);
+        log.info("Service: Deleting voting with id {}", id);
         checkTimeForChanges(findById(id));
         votingRepository.deleteById(id);
     }
 
     @Override
     public Voting findById(long id) {
-        log.info("Finding voting with id {}", id);
+        log.info("Service: Finding voting with id {}", id);
         return votingRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Voting with id: " + id + " not found"));
     }
@@ -91,7 +95,7 @@ public class VotingServiceImpl implements VotingService {
     public Page<Voting> findAllByUser(
             Authentication auth, String name, Boolean now, Boolean canVote, int page, int size) {
         long userId = userService.findUserByAuth(auth).getId();
-        log.info("Finding all votings by user {}", userId);
+        log.info("Service: Finding all votings by user {}", userId);
         return votingRepository.findAll(
                 VotingSpecification.byUser(userId)
                         .and(createSpecification(name, now, canVote, userId)),
@@ -102,7 +106,7 @@ public class VotingServiceImpl implements VotingService {
     public Page<Voting> findAllByCreator(
             Authentication auth, String name, Boolean now, int page, int size) {
         long userId = userService.findUserByAuth(auth).getId();
-        log.info("Finding all votings by creator {}", userId);
+        log.info("Service: Finding all votings by creator {}", userId);
 
         return votingRepository.findAll(
                 VotingSpecification.byCreator(userId)
@@ -114,7 +118,7 @@ public class VotingServiceImpl implements VotingService {
     public Page<Voting> findAllForDirector(
             Authentication auth, String name, int page, int size) {
         long userId = userService.findUserByAuth(auth).getId();
-        log.info("Finding all votings for director {}", userId);
+        log.info("Service: Finding all votings for director {}", userId);
         return votingRepository.findAll(
                 VotingSpecification.byDirector(userId)
                         .and(createSpecification(name, null, null, null)),
@@ -123,7 +127,7 @@ public class VotingServiceImpl implements VotingService {
 
     @Override
     public void vote(long votingId, long answerId, Authentication auth) {
-        log.info("Vote voting with id {}", votingId);
+        log.info("Service: Vote for answer with id {}", answerId);
         Voting voting = findById(votingId);
         checkTimeForVote(voting);
         votingUserService.update(voting, userService.findUserByAuth(auth), answerService.findById(answerId));
@@ -131,20 +135,21 @@ public class VotingServiceImpl implements VotingService {
     }
 
     private void checkTimeForChanges(Voting voting){
-        log.info("Checking time for changes {}", voting.getId());
+        log.info("Service: Checking time for changes {}", voting.getId());
         if(LocalDateTime.now().isAfter(voting.getStartTime())){
             throw new IllegalArgumentException("Voting start time cannot be less than now for delete or update");
         }
     }
 
     private void checkTimeForVote(Voting voting){
-        log.info("Checking time for voting {}", voting.getId());
+        log.info("Service: Checking time for voting {}", voting.getId());
         if(LocalDateTime.now().isBefore(voting.getStartTime())){
             throw new IllegalArgumentException("Voting start time cannot be less than now for vote");
         }
     }
 
     private Specification<Voting> createSpecification(String name, Boolean now, Boolean canVote, Long userId) {
+        log.info("Service: Creating specification with name {}, now {}, can vote {} and user {}", name, now, canVote, userId);
         Specification<Voting> specification = null;
 
         if(isValid(name)){

@@ -8,11 +8,13 @@ import com.project.backend.repositories.voting.VotingUserRepository;
 import com.project.backend.services.inter.VotingUserService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class VotingUserServiceImpl implements VotingUserService {
@@ -20,6 +22,7 @@ public class VotingUserServiceImpl implements VotingUserService {
 
     @Override
     public List<VotingUser> create(Voting voting, List<User> user) {
+        log.info("Service: Creating voting {} users for users", voting.getId());
         List<VotingUser> result = new ArrayList<>();
         user.forEach(u -> {
             result.add(new VotingUser(voting, u));
@@ -29,6 +32,7 @@ public class VotingUserServiceImpl implements VotingUserService {
 
     @Override
     public VotingUser update(Voting voting, User user, Answer answer) {
+        log.info("Service: Updating voting {} users for user {} with answer {}", voting.getId(), user.getId(), answer.getId());
         VotingUser votingUser = findById(voting.getId(), user.getId());
         votingUser.setAnswer(answer);
         return votingUserRepository.save(votingUser);
@@ -36,7 +40,9 @@ public class VotingUserServiceImpl implements VotingUserService {
 
     @Override
     public VotingUser findById(long votingId, long userId) {
+        log.info("Service: Finding voting user with voting {} and user {}", votingId, userId);
         VotingUser.VotingUserId votingUserId = new VotingUser.VotingUserId(votingId, userId);
-        return votingUserRepository.findById(votingUserId).orElseThrow(() -> new EntityNotFoundException("VotingUser with votingId " + votingId + " userId " + userId + " not found"));
+        return votingUserRepository.findById(votingUserId).orElseThrow(
+                () -> new EntityNotFoundException("VotingUser with votingId " + votingId + " userId " + userId + " not found"));
     }
 }

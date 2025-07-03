@@ -266,6 +266,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean isNotExistByEmail(String email) {
+        log.info("Service: Checking if user with email {} exist", email);
         return !userRepository.existsByEmail(email);
     }
 
@@ -277,6 +278,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private Specification<User> createSpecification(String email, String firstName, String lastName, String role) {
+        log.info("Service: Creating specification for user with email {}, first name {}, last name {} and role {}", email, firstName, lastName, role);
         Specification<User> specification = null;
 
         if (isValid(email)) {

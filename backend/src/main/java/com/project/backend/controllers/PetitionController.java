@@ -3,6 +3,7 @@ package com.project.backend.controllers;
 import com.project.backend.dto.comment.CommentRequest;
 import com.project.backend.dto.comment.CommentResponse;
 import com.project.backend.dto.petition.PetitionFullResponse;
+import com.project.backend.dto.petition.PetitionListResponse;
 import com.project.backend.dto.petition.PetitionRequest;
 import com.project.backend.dto.wrapper.PaginationListResponse;
 import com.project.backend.mappers.CommentMapper;
@@ -49,7 +50,6 @@ public class PetitionController {
     public PetitionFullResponse getPetition(
             @PathVariable(name = "school_id") long schoolId,
             @PathVariable(name = "petition_id") long petitionId,
-            @RequestBody PetitionRequest petitionRequest,
             Authentication auth) {
         log.info("Controller: Getting a petition with id {}", petitionId);
         return petitionMapper.fromPetitionToFullResponse(
@@ -59,7 +59,7 @@ public class PetitionController {
     @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasRole('STUDENT')")
     @GetMapping("/my")
     @ResponseStatus(HttpStatus.OK)
-    public PaginationListResponse<PetitionFullResponse> getMyPetitions(
+    public PaginationListResponse<PetitionListResponse> getMyPetitions(
             @PathVariable(name = "school_id") long schoolId,
             @RequestParam int page,
             @RequestParam int size,
@@ -68,16 +68,16 @@ public class PetitionController {
             Authentication auth) {
         log.info("Controller: Getting all my petitions");
         Page<Petition> petitionPage = petitionService.findAllMy(name, status, page, size, userService.findUserByAuth(auth).getId());
-        PaginationListResponse<PetitionFullResponse> response = new PaginationListResponse<>();
-        response.setContent(petitionPage.getContent().stream().map(petitionMapper::fromPetitionToFullResponse).toList());
+        PaginationListResponse<PetitionListResponse> response = new PaginationListResponse<>();
+        response.setContent(petitionPage.getContent().stream().map(petitionMapper::fromPetitionToListResponse).toList());
         response.setTotalPages(petitionPage.getTotalPages());
         return response;
     }
 
     @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasRole('STUDENT')")
-    @GetMapping("/created")
+    @GetMapping("/createdByMe")
     @ResponseStatus(HttpStatus.OK)
-    public PaginationListResponse<PetitionFullResponse> getMyOwnPetitions(
+    public PaginationListResponse<PetitionListResponse> getMyOwnPetitions(
             @PathVariable(name = "school_id") long schoolId,
             @RequestParam int page,
             @RequestParam int size,
@@ -86,16 +86,16 @@ public class PetitionController {
             Authentication auth) {
         log.info("Controller: Getting all my created petitions");
         Page<Petition> petitionPage = petitionService.findAllByCreator(name, status, page, size, userService.findUserByAuth(auth).getId());
-        PaginationListResponse<PetitionFullResponse> response = new PaginationListResponse<>();
-        response.setContent(petitionPage.getContent().stream().map(petitionMapper::fromPetitionToFullResponse).toList());
+        PaginationListResponse<PetitionListResponse> response = new PaginationListResponse<>();
+        response.setContent(petitionPage.getContent().stream().map(petitionMapper::fromPetitionToListResponse).toList());
         response.setTotalPages(petitionPage.getTotalPages());
         return response;
     }
 
     @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasRole('DIRECTOR')")
-    @GetMapping("/director")
+    @GetMapping("/forDirector")
     @ResponseStatus(HttpStatus.OK)
-    public PaginationListResponse<PetitionFullResponse> getPetitionsForDirector(
+    public PaginationListResponse<PetitionListResponse> getPetitionsForDirector(
             @PathVariable(name = "school_id") long schoolId,
             @RequestParam int page,
             @RequestParam int size,
@@ -104,8 +104,8 @@ public class PetitionController {
             Authentication auth) {
         log.info("Controller: Getting all petitions for director");
         Page<Petition> petitionPage = petitionService.findAllForDirector(name, status, page, size);
-        PaginationListResponse<PetitionFullResponse> response = new PaginationListResponse<>();
-        response.setContent(petitionPage.getContent().stream().map(petitionMapper::fromPetitionToFullResponse).toList());
+        PaginationListResponse<PetitionListResponse> response = new PaginationListResponse<>();
+        response.setContent(petitionPage.getContent().stream().map(petitionMapper::fromPetitionToListResponse).toList());
         response.setTotalPages(petitionPage.getTotalPages());
         return response;
     }
@@ -153,7 +153,7 @@ public class PetitionController {
     }
 
     @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasRole('STUDENT') and @userSecurity.checkCreatorComment(#auth, #commentId)")
-    @PostMapping("/{petition_id}/comments/update/{comment_id}")
+    @PutMapping("/{petition_id}/comments/update/{comment_id}")
     @ResponseStatus(HttpStatus.OK)
     public CommentResponse updateComment(@PathVariable(name = "school_id") long schoolId,
                                          @PathVariable(name = "petition_id") long petitionId,
@@ -166,7 +166,7 @@ public class PetitionController {
     }
 
     @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasRole('STUDENT') and @userSecurity.checkCreatorComment(#auth, #commentId)")
-    @PostMapping("/{petition_id}/comments/delete/{comment_id}")
+    @DeleteMapping("/{petition_id}/comments/delete/{comment_id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteComment(@PathVariable(name = "school_id") long schoolId,
                               @PathVariable(name = "petition_id") long petitionId,

@@ -25,6 +25,11 @@ public class UserSecurity {
         return authenticatedUserEmail.equals(username);
     }
 
+    public boolean checkUser(Authentication authentication, long userId) {
+        log.info("preAuth: Checking user {}", userId);
+        return userService.findById(userId).getKeycloakUserId().equals(authentication.getName());
+    }
+
     public boolean checkUserSchool(Authentication authentication, long schoolId) {
         log.info("preAuth: Checking if user in school {}", schoolId);
         School school = userService.findUserByAuth(authentication).getSchool();

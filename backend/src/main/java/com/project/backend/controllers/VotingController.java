@@ -112,7 +112,6 @@ public class VotingController {
             @RequestParam Integer page,
             @RequestParam Integer size,
             @RequestParam(required = false) String name,
-            @RequestParam(required = false) Boolean now,
             Authentication auth) {
         User user = userService.findUserByAuth(auth);
         log.info("Controller: Get all votings for director {}, role {}", user.getEmail(), user.getRole());

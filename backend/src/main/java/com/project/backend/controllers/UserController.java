@@ -38,13 +38,15 @@ public class UserController {
                 schoolId, userService.findUserByAuth(auth).getRole()));
     }
 
-    @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasAnyRole('DIRECTOR', 'TEACHER')")
+    @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) " +
+            "and (hasAnyRole('DIRECTOR', 'TEACHER') or @userSecurity.checkUser(#auth, #userId))")
     @PutMapping("/update/{user_id}")
     @ResponseStatus(HttpStatus.OK)
     public UserFullResponse updateUser(
             @PathVariable(value = "school_id") long schoolId,
             @PathVariable(value = "user_id") long userId,
-            @Valid @RequestBody UserUpdateRequest request) {
+            @Valid @RequestBody UserUpdateRequest request,
+            Authentication auth) {
         log.info("Controller: Update user with id: {} with body: {}", userId, request);
         User user = userMapper.fromRequestToUser(request);
         return userMapper.fromUserToFullResponse(userService.updateUser(user, userId));
@@ -53,7 +55,9 @@ public class UserController {
     @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasAnyRole('DIRECTOR', 'TEACHER')")
     @DeleteMapping("/delete/{user_id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteUser(@PathVariable(value = "school_id") long schoolId, @PathVariable(value = "user_id") long userId) {
+    public void deleteUser(@PathVariable(value = "school_id") long schoolId,
+                           @PathVariable(value = "user_id") long userId,
+                           Authentication auth) {
         log.info("Controller: Delete user with id: {}", userId);
         userService.delete(userId);
     }
@@ -126,7 +130,7 @@ public class UserController {
     }
 
     @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasAnyRole('DIRECTOR', 'TEACHER')")
-    @GetMapping("/without-class")
+    @GetMapping("/withoutClass")
     @ResponseStatus(HttpStatus.OK)
     public PaginationListResponse<UserListResponse> getUsersWithoutClass(
             @PathVariable(value = "school_id") long schoolId,

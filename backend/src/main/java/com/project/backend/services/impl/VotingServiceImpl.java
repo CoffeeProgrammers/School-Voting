@@ -98,7 +98,7 @@ public class VotingServiceImpl implements VotingService {
         log.info("Service: Finding all votings by user {}", userId);
         return votingRepository.findAll(
                 VotingSpecification.byUser(userId)
-                        .and(createSpecification(name, now, canVote, userId)),
+                        .and(createSpecification(name, true, now, canVote, userId)),
                 PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "endTime")));
     }
 
@@ -110,7 +110,7 @@ public class VotingServiceImpl implements VotingService {
 
         return votingRepository.findAll(
                 VotingSpecification.byCreator(userId)
-                        .and(createSpecification(name, now, null, null)),
+                        .and(createSpecification(name, false, now, null, null)),
                 PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "endTime")));
     }
 
@@ -121,7 +121,7 @@ public class VotingServiceImpl implements VotingService {
         log.info("Service: Finding all votings for director {}", userId);
         return votingRepository.findAll(
                 VotingSpecification.byDirector(userId)
-                        .and(createSpecification(name, null, null, null)),
+                        .and(createSpecification(name, false, null, null, null)),
                 PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "endTime")));
     }
 
@@ -134,32 +134,38 @@ public class VotingServiceImpl implements VotingService {
         answerService.vote(answerId);
     }
 
-    private void checkTimeForChanges(Voting voting){
+    private void checkTimeForChanges(Voting voting) {
         log.info("Service: Checking time for changes {}", voting.getId());
-        if(LocalDateTime.now().isAfter(voting.getStartTime())){
+        if (LocalDateTime.now().isAfter(voting.getStartTime())) {
             throw new IllegalArgumentException("Voting start time cannot be less than now for delete or update");
         }
     }
 
-    private void checkTimeForVote(Voting voting){
+    private void checkTimeForVote(Voting voting) {
         log.info("Service: Checking time for voting {}", voting.getId());
-        if(LocalDateTime.now().isBefore(voting.getStartTime())){
+        if (LocalDateTime.now().isBefore(voting.getStartTime())) {
             throw new IllegalArgumentException("Voting start time cannot be less than now for vote");
         }
     }
 
-    private Specification<Voting> createSpecification(String name, Boolean now, Boolean canVote, Long userId) {
+    private Specification<Voting> createSpecification(String name, boolean my, Boolean now, Boolean canVote, Long userId) {
         log.info("Service: Creating specification with name {}, now {}, can vote {} and user {}", name, now, canVote, userId);
         Specification<Voting> specification = null;
 
-        if(isValid(name)){
+        if (isValid(name)) {
             specification = addSpecification(specification, VotingSpecification::byName, name);
         }
-        if(isValid(now)){
-            specification =  addSpecification(specification, now ? VotingSpecification::byStartDateAndEndDate : VotingSpecification::ended);
+
+        if (isValid(now)) {
+            specification = addSpecification(specification, now ? VotingSpecification::byStartDateAndEndDate : VotingSpecification::ended);
+        } else {
+            if (my) {
+                specification = addSpecification(specification, VotingSpecification::byStartDate);
+            }
         }
-        if(isValid(canVote)){
-            specification =  addSpecification(specification, canVote ? VotingSpecification::canVote : VotingSpecification::cantVote, userId);
+
+        if (isValid(canVote)) {
+            specification = addSpecification(specification, canVote ? VotingSpecification::canVote : VotingSpecification::cantVote, userId);
         }
 
         return specification;

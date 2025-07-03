@@ -44,6 +44,7 @@ public class PetitionServiceImpl implements PetitionService {
         }
         petition.setEndTime(LocalDateTime.now().plusDays(45));
         petition.setCreator(creator);
+        petition.setStatus(Status.ACTIVE);
         if (petition.getLevelType().equals(LevelType.SCHOOL)) {
             petition.setSchool(schoolService.findById(levelId));
         } else {

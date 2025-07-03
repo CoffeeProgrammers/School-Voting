@@ -10,4 +10,6 @@ public interface CommentService {
     Comment update(Comment comment, long id);
     void delete (long id);
     Page<Comment> findAllByPetition(long petitionId, int page, int size);
+
+    Comment findById(long id);
 }

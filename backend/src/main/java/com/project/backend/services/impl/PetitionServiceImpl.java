@@ -36,6 +36,10 @@ public class PetitionServiceImpl implements PetitionService {
     @Override
     public Petition create(Petition petition, long levelId, User creator) {
         log.info("Service: Creating a new petition {}", petition);
+        if(petition.getLevelType().equals(LevelType.GROUP_OF_PARENTS_AND_STUDENTS)
+                || petition.getLevelType().equals(LevelType.GROUP_OF_TEACHERS)) {
+            throw new IllegalArgumentException("Cannot create a petition with such level type.");
+        }
         petition.setEndTime(LocalDateTime.now().plusDays(45));
         petition.setCreator(creator);
         if (petition.getLevelType().equals(LevelType.SCHOOL)) {

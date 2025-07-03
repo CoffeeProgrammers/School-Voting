@@ -134,9 +134,13 @@ public class VotingServiceImpl implements VotingService {
     public void vote(long votingId, long answerId, User user) {
         log.info("Service: Vote for answer with id {}", answerId);
         Voting voting = findById(votingId);
+        Answer answer = answerService.findById(answerId);
+        if(answer.getVoting().getId() == votingId){
+            throw new EntityNotFoundException("Cant answer answer with id: " + answerId + " because it`s not in voting");
+        }
         checkTimeForVote(voting);
         answerService.vote(answerId);
-        votingUserService.update(voting, user, answerService.findById(answerId));
+        votingUserService.update(voting, user, answer);
     }
 
     private void checkTimeForChanges(Voting voting) {

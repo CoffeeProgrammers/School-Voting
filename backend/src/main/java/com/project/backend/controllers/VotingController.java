@@ -34,6 +34,7 @@ public class VotingController {
     public VotingFullResponse create(@PathVariable("school_id") Long schoolId,
                                      VotingCreateRequest votingCreateRequest,
                                      Authentication authentication) {
+        log.info("Controller: Create vote with body {}", votingCreateRequest);
         Voting createdVoting = votingService.create(votingMapper.fromRequestToVoting(votingCreateRequest), votingCreateRequest.getAnswers(), votingCreateRequest.getTargetIds(), schoolId, authentication);
         return fromVotingToFullResponseWithStatistics(createdVoting);
     }
@@ -43,6 +44,7 @@ public class VotingController {
     public VotingFullResponse update(@PathVariable("school_id") Long schoolId,
                                      @PathVariable("voting_id") Long votingId,
                                      VotingUpdateRequest votingUpdateRequest) {
+        log.info("Controller: Update vote with id {} with body {}", votingId, votingUpdateRequest);
         Voting updatedVoting = votingService.update(votingMapper.fromRequestToVoting(votingUpdateRequest), votingUpdateRequest.getAnswers(), votingId);
         return fromVotingToFullResponseWithStatistics(updatedVoting);
     }
@@ -51,6 +53,7 @@ public class VotingController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable("school_id") Long schoolId,
                        @PathVariable("voting_id") Long votingId) {
+        log.info("Controller: Delete voting with id {}", votingId);
         votingService.delete(votingId);
     }
 
@@ -64,6 +67,7 @@ public class VotingController {
                                                                @RequestParam(required = false) Boolean canVote,
                                                                Authentication authentication) {
         User user = userService.findUserByAuth(authentication);
+        log.info("Controller: Get all votings for user {}", user.getEmail());
         Page<Voting> votingPage = votingService.findAllByUser(user.getId(), name, now, canVote, page, size);
         PaginationListResponse<VotingListResponse> response = new PaginationListResponse<>();
         response.setTotalPages(votingPage.getTotalPages());
@@ -84,6 +88,7 @@ public class VotingController {
                                                                @RequestParam(required = false) Boolean now,
                                                                Authentication authentication) {
         User user = userService.findUserByAuth(authentication);
+        log.info("Controller: Get all votings created by user {}", user.getEmail());
         Page<Voting> votingPage = votingService.findAllByCreator(user.getId(), name, now, page, size);
         PaginationListResponse<VotingListResponse> response = new PaginationListResponse<>();
         response.setTotalPages(votingPage.getTotalPages());
@@ -100,6 +105,7 @@ public class VotingController {
                                                                         @RequestParam(required = false) Boolean now,
                                                                         Authentication authentication) {
         User user = userService.findUserByAuth(authentication);
+        log.info("Controller: Get all votings for director {}, role {}", user.getEmail(), user.getRole());
         Page<Voting> votingPage = votingService.findAllForDirector(user.getId(), name, page, size);
         PaginationListResponse<VotingListResponse> response = new PaginationListResponse<>();
         response.setTotalPages(votingPage.getTotalPages());
@@ -112,6 +118,7 @@ public class VotingController {
     public VotingFullResponse getById(@PathVariable("school_id") Long schoolId,
                                                               @PathVariable("voting_id") Long votingId,
                                                               Authentication authentication) {
+        log.info("Controller: Get voting by id {}", votingId);
         Voting voting = votingService.findById(votingId);
         VotingFullResponse response = fromVotingToFullResponseWithStatistics(voting);
         return response;
@@ -123,11 +130,13 @@ public class VotingController {
                                       @PathVariable("voting_id") Long votingId,
                                       @PathVariable("answer_id") Long answerId,
                                       Authentication authentication) {
+        log.info("Controller: vote for answer {} in voting {}", answerId, votingId);
         votingService.vote(votingId, answerId, authentication);
     }
 
     private VotingFullResponse fromVotingToFullResponseWithStatistics(Voting voting) {
-        Long votingId = voting.getId();
+        log.info("Controller: Mapping voting {} to voting full response with statistics", voting.getId());
+        long votingId = voting.getId();
         VotingFullResponse response = votingMapper.fromVotingToFullResponse(voting);
         VotingStatisticsResponse votingStatisticsResponse = new VotingStatisticsResponse();
         votingStatisticsResponse.setAnswers(answerService.findAllByVoting(votingId).stream().map(answerMapper::fromAnswerToResponse).toList());

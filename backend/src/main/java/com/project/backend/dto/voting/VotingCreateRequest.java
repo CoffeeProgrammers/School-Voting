@@ -22,9 +22,7 @@ public class VotingCreateRequest {
     @NotBlank(message = "End time must be provided")
     private String endTime;
     @NotNull
-    @NotBlank(message = "Answers must be provided")
     private List<String> answers;
     @NotNull
-    @NotBlank(message = "Objects must be provided")
     private List<Long> targetIds;
 }

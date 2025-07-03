@@ -48,6 +48,7 @@ public class VotingUser {
     @Setter
     @Getter
     @AllArgsConstructor
+    @NoArgsConstructor
     public static class VotingUserId implements Serializable {
         private Long userId;
         private Long votingId;

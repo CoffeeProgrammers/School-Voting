@@ -2,12 +2,11 @@ INSERT INTO classes (id, school_id, name)
 VALUES (1, 1, '10A'),
        (2, 1, '9C');
 
-INSERT INTO students_class(class_id, user_id)
-VALUES (2, 5),
-       (1, 8),
-       (1, 10),
-       (2, 11),
-       (2, 12);
+UPDATE users SET class_id = 2 WHERE id = 5;
+UPDATE users SET class_id = 1 WHERE id = 8;
+UPDATE users SET class_id = 1 WHERE id = 10;
+UPDATE users SET class_id = 2 WHERE id = 11;
+UPDATE users SET class_id = 2 WHERE id = 12;
 
 INSERT INTO votings (name, description, level_type, start_time, end_time, creator_id)
 VALUES ('Some', 'More', 2, '1975-11-10 00:00:00', '2025-11-10 00:00:00',

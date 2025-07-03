@@ -19,6 +19,6 @@ public class School {
     private String name;
     @OneToOne
     private User director;
-    @OneToMany
+    @OneToMany(mappedBy = "school")
     private Set<Class> classes;
 }

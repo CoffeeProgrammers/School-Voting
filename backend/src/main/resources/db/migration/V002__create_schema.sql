@@ -34,18 +34,12 @@ CREATE TABLE "classes"
     FOREIGN KEY ("school_id") REFERENCES "schools" ("id") ON DELETE CASCADE
 );
 
-
 ALTER TABLE "users"
     ADD COLUMN "class_id" BIGINT;
 
-CREATE TABLE "students_class"
-(
-    "class_id" BIGINT NOT NULL,
-    "user_id"  BIGINT NOT NULL UNIQUE,
-    PRIMARY KEY ("class_id", "user_id"),
-    FOREIGN KEY ("class_id") REFERENCES "classes" ("id") ON DELETE CASCADE,
-    FOREIGN KEY ("user_id") REFERENCES "users" ("id") ON DELETE CASCADE
-);
+ALTER TABLE "users"
+    ADD CONSTRAINT fk_user_class
+        FOREIGN KEY ("class_id") REFERENCES "classes" ("id") ON DELETE SET NULL;
 
 CREATE TABLE "votings"
 (
@@ -108,27 +102,11 @@ CREATE TABLE "petition_user"
 CREATE TABLE "comments"
 (
     "id"           BIGSERIAL PRIMARY KEY,
-    "user_id"      BIGINT NOT NULL,
+    "creator_id"   BIGINT NOT NULL,
     "petition_id"  BIGINT NOT NULL,
     "text"         TEXT   NOT NULL,
     "created_time" TIMESTAMP,
-    FOREIGN KEY ("user_id") REFERENCES "users" ("id") ON DELETE CASCADE,
+    FOREIGN KEY ("creator_id") REFERENCES "users" ("id") ON DELETE CASCADE,
     FOREIGN KEY ("petition_id") REFERENCES "petitions" ("id") ON DELETE CASCADE
-);
-
-CREATE TABLE "files"
-(
-    "id"             BIGSERIAL PRIMARY KEY,
-    "user_id"        BIGINT,
-    "path"           VARCHAR(255),
-    "file_name"      VARCHAR(255),
-    "file_real_name" VARCHAR(255),
-    "file_size"      BIGINT,
-    "file_type"      VARCHAR(100),
-    "file_hash"      VARCHAR(255),
-    "upload_date"    TIMESTAMP,
-    "file_type_enum" SMALLINT,
-
-    CONSTRAINT fk_files_user FOREIGN KEY (user_id) REFERENCES "users" (id) ON DELETE SET NULL
 );
 

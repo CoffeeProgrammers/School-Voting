@@ -59,7 +59,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createUserKeycloak(User user, long schoolId) {
-        log.info("Service: Saving new user {}", user.getEmail());
+        log.info("Service: Saving new user keycloak {}", user.getEmail());
         user.setSchool(schoolService.findById(schoolId));
         return userRepository.save(user);
     }
@@ -69,6 +69,10 @@ public class UserServiceImpl implements UserService {
         log.info("Service: Saving new user {}", user.getEmail());
         if(roleOfCreator.equals("TEACHER") &&
                 (user.getRole().equals("TEACHER") ||  user.getRole().equals("DIRECTOR"))) {
+            throw new IllegalArgumentException("Teachers cant create teacher or director");
+        }
+        if(roleOfCreator.equals("DIRECTOR") &&
+                user.getRole().equals("DIRECTOR")) {
             throw new IllegalArgumentException("Teachers cant create teacher or director");
         }
         String email = user.getEmail();

@@ -9,4 +9,4 @@ VALUES ('Greenwood High School', (SELECT id FROM users WHERE email = 'bulakovski
 
 UPDATE users
 SET school_id = (SELECT id FROM schools WHERE name = 'Greenwood High School')
-WHERE email IN ('bulakovskijvladislav@gmail.com', '!deleted-user!@deleted.com');
+WHERE email IN ('bulakovskijvladislav@gmail.com');

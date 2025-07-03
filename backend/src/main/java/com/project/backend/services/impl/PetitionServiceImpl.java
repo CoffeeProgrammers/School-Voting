@@ -69,7 +69,7 @@ public class PetitionServiceImpl implements PetitionService {
             throw new IllegalArgumentException("Cannot support petition because user is already petition");
         }
         long countSupported = petition.incrementCount();
-        if(countSupported >= Math.floor(petition.getUsers().size() / 2.0) + 2) {
+        if(countSupported >= Math.floor(userService.countAllByPetition(petition) / 2.0) + 1) {
             petition.setStatus(Status.WAITING_FOR_CONSIDERATION);
         }
         return petitionRepository.save(petition).getCount();

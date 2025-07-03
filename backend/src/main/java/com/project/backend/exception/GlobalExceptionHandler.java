@@ -49,7 +49,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({
             EntityExistsException.class,
             UnsupportedOperationException.class,
-            BadCredentialsException.class
+            BadCredentialsException.class,
+            IllegalArgumentException.class
     })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionResponse handleBadRequestExceptions(RuntimeException e) {

@@ -2,6 +2,7 @@ package com.project.backend.services.impl;
 
 import com.project.backend.dto.wrapper.PasswordRequest;
 import com.project.backend.models.User;
+import com.project.backend.models.petitions.Petition;
 import com.project.backend.repositories.UserRepository;
 import com.project.backend.repositories.specification.UserSpecification;
 import com.project.backend.services.inter.SchoolService;
@@ -298,6 +299,11 @@ public class UserServiceImpl implements UserService {
     public boolean isNotExistByEmail(String email) {
         log.info("Service: Checking if user with email {} exist", email);
         return !userRepository.existsByEmail(email);
+    }
+
+    @Override
+    public long countAllByPetition(Petition petition) {
+        return userRepository.countAllByPetitionsContaining(petition);
     }
 
     @Override

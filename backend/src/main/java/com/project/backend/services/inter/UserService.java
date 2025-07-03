@@ -2,6 +2,7 @@ package com.project.backend.services.inter;
 
 import com.project.backend.dto.wrapper.PasswordRequest;
 import com.project.backend.models.User;
+import com.project.backend.models.petitions.Petition;
 import org.keycloak.jose.jwk.JWK;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
@@ -38,4 +39,6 @@ public interface UserService {
     User findUserByKeycloakUserId(String keycloakUserId);
 
     boolean isNotExistByEmail(String email);
+
+    long countAllByPetition(Petition petition);
 }

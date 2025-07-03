@@ -7,5 +7,5 @@ public class PetitionRequest {
     private String name;
     private String description;
     private String levelType;
-    private long levelId;
+    private Long levelId;
 }

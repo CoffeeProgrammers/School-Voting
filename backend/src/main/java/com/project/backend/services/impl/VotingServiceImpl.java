@@ -46,7 +46,7 @@ public class VotingServiceImpl implements VotingService {
                 users = userService.findAllBySchool(schoolId, userId).stream();
             }
             case CLASS -> {
-                Long classId = targetIds.getFirst();
+                Long classId = targetIds.get(0);
                 log.info("Service: Adding users from class {}", classId);
                 users = userService.findAllByClass(classId, userId).stream();
             }

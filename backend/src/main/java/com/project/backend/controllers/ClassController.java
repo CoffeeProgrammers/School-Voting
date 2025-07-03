@@ -3,11 +3,11 @@ package com.project.backend.controllers;
 import com.project.backend.dto.classDTO.ClassCreateRequest;
 import com.project.backend.dto.classDTO.ClassFullResponse;
 import com.project.backend.dto.classDTO.ClassListResponse;
+import com.project.backend.dto.classDTO.ClassUpdateRequest;
 import com.project.backend.dto.wrapper.PaginationListResponse;
 import com.project.backend.mappers.ClassMapper;
 import com.project.backend.models.Class;
 import com.project.backend.services.inter.ClassService;
-import jakarta.ws.rs.PathParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -39,35 +39,35 @@ public class ClassController {
     }
 
     @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasAnyRole('DIRECTOR', 'TEACHER')")
-    @PutMapping("/update/{id}")
+    @PutMapping("/update/{class_id}")
     @ResponseStatus(HttpStatus.OK)
     public ClassFullResponse updateClass(@PathVariable(value = "school_id") long schoolId,
-                                         @PathVariable(value = "id") long id,
-                                         @RequestBody ClassCreateRequest classCreateRequest,
+                                         @PathVariable(value = "class_id") long classId,
+                                         @RequestBody ClassUpdateRequest classUpdateRequest,
                                          Authentication auth) {
-        log.info("Controller: Updating class with id {}", id);
+        log.info("Controller: Updating class with id {}", classId);
         return classMapper.fromClassToFullResponse(
-                classService.update(classMapper.fromRequestToClass(classCreateRequest), id));
+                classService.update(classMapper.fromRequestToClass(classUpdateRequest), classId));
     }
 
     @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasAnyRole('DIRECTOR', 'TEACHER')")
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/delete/{class_id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteClass(@PathVariable(value = "school_id") long schoolId,
-                            @PathVariable(value = "id") long id,
+                            @PathVariable(value = "class_id") long classId,
                             Authentication auth) {
-        log.info("Controller: Deleting class with id {}", id);
-        classService.delete(id);
+        log.info("Controller: Deleting class with id {}", classId);
+        classService.delete(classId);
     }
 
     @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasAnyRole('DIRECTOR', 'TEACHER')")
-    @GetMapping("/{id}")
+    @GetMapping("/{class_id}")
     @ResponseStatus(HttpStatus.OK)
     public ClassFullResponse getClassById(@PathVariable(value = "school_id") long schoolId,
-                                          @PathVariable(value = "id") long id,
+                                          @PathVariable(value = "class_id") long classId,
                                           Authentication auth) {
-        log.info("Controller: Getting class with id {}", id);
-        return classMapper.fromClassToFullResponse(classService.findById(id));
+        log.info("Controller: Getting class with id {}", classId);
+        return classMapper.fromClassToFullResponse(classService.findById(classId));
     }
 
     @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasAnyRole('DIRECTOR', 'TEACHER')")
@@ -75,9 +75,9 @@ public class ClassController {
     @ResponseStatus(HttpStatus.OK)
     public PaginationListResponse<ClassListResponse> getClasses(
             @PathVariable(value = "school_id") long schoolId,
-            @PathParam("name") String name,
-            @PathParam("page") int page,
-            @PathParam("size") int size,
+            @RequestParam(required = false) String name,
+            @RequestParam int page,
+            @RequestParam int size,
             Authentication auth) {
         log.info("Controller: Getting all the classes in school with id {}", schoolId);
         PaginationListResponse<ClassListResponse> paginationListResponse = new PaginationListResponse<>();

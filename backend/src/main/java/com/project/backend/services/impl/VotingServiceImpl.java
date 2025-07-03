@@ -38,6 +38,7 @@ public class VotingServiceImpl implements VotingService {
     @Override
     public Voting create(Voting votingRequest, List<String> answer, List<Long> targetIds, long schoolId, long userId) {
         log.info("Service: Creating voting {}", votingRequest);
+        votingRequest.setCreator(userService.findById(userId));
         Voting voting = votingRepository.save(votingRequest);
         answerService.create(answer, voting);
         Stream<User> users = null;

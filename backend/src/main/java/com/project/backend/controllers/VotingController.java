@@ -36,9 +36,9 @@ public class VotingController {
     @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId)")
     public VotingFullResponse create(@PathVariable("school_id") Long schoolId,
                                      @Valid @RequestBody VotingCreateRequest votingCreateRequest,
-                                     Authentication authentication) {
+                                     Authentication auth) {
         log.info("Controller: Create vote with body {}", votingCreateRequest);
-        Voting createdVoting = votingService.create(votingMapper.fromRequestToVoting(votingCreateRequest), votingCreateRequest.getAnswers(), votingCreateRequest.getTargetIds(), schoolId, userService.findUserByAuth(authentication).getId());
+        Voting createdVoting = votingService.create(votingMapper.fromRequestToVoting(votingCreateRequest), votingCreateRequest.getAnswers(), votingCreateRequest.getTargetIds(), schoolId, userService.findUserByAuth(auth).getId());
         return fromVotingToFullResponseWithStatistics(createdVoting);
     }
 

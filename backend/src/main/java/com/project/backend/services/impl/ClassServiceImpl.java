@@ -1,6 +1,7 @@
 package com.project.backend.services.impl;
 
 import com.project.backend.models.Class;
+import com.project.backend.models.User;
 import com.project.backend.repositories.ClassRepository;
 import com.project.backend.repositories.UserRepository;
 import com.project.backend.repositories.specification.ClassSpecification;
@@ -60,8 +61,12 @@ public class ClassServiceImpl implements ClassService {
     public void assignUserToClass(long classId, List<Long> userIds) {
         log.info("Service: Assigning User with id {} to Class with id {}", userIds, classId);
         Class clazz = findById(classId);
+        User user;
         for(Long userId : userIds) {
-            clazz.getUsers().add(userService.findById(userId));
+            user = userService.findById(userId);
+            if(user.getRole().equals("STUDENT")) {
+                clazz.getUsers().add(user);
+            }
         }
         classRepository.save(clazz);
     }
@@ -70,8 +75,12 @@ public class ClassServiceImpl implements ClassService {
     public void unassignUserFromClass(long classId, List<Long> userIds) {
         log.info("Service: Unassigning User with id {} from Class with id {}", userIds, classId);
         Class clazz = findById(classId);
+        User user;
         for(Long userId : userIds) {
-            clazz.getUsers().remove(userService.findById(userId));
+            user = userService.findById(userId);
+            if(user.getRole().equals("STUDENT")) {
+                clazz.getUsers().remove(user);
+            }
         }
         classRepository.save(clazz);
     }

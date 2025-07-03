@@ -1,0 +1,89 @@
+package com.project.backend.controllers;
+
+import com.project.backend.models.Class;
+import com.project.backend.dto.classDTO.ClassCreateRequest;
+import com.project.backend.dto.classDTO.ClassFullResponse;
+import com.project.backend.dto.classDTO.ClassListResponse;
+import com.project.backend.dto.wrapper.PaginationListResponse;
+import com.project.backend.mappers.ClassMapper;
+import com.project.backend.services.inter.ClassService;
+import jakarta.ws.rs.PathParam;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@Slf4j
+@RestController
+@RequestMapping("/api/schools/{school_id}/classes")
+@RequiredArgsConstructor
+public class ClassController {
+
+    private final ClassService classService;
+    private final ClassMapper classMapper;
+
+    @PostMapping("/create")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ClassFullResponse createClass(@PathVariable(value = "school_id") long schoolId,
+                                         @RequestBody ClassCreateRequest classCreateRequest) {
+        return classMapper.fromClassToFullResponse(
+                classService.create(classMapper.fromRequestToClass(classCreateRequest)));
+    }
+
+    @PutMapping("/update/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ClassFullResponse updateClass(@PathVariable(value = "school_id") long schoolId,
+                                         @PathVariable(value = "id") long id,
+                                         @RequestBody ClassCreateRequest classCreateRequest) {
+        return classMapper.fromClassToFullResponse(
+                classService.update(classMapper.fromRequestToClass(classCreateRequest), id));
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteClass(@PathVariable(value = "school_id") long schoolId,
+                                         @PathVariable(value = "id") long id) {
+        classService.delete(id);
+    }
+
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ClassFullResponse getClassById(@PathVariable(value = "school_id") long schoolId,
+                            @PathVariable(value = "id") long id) {
+        return classMapper.fromClassToFullResponse(classService.findById(id));
+    }
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public PaginationListResponse<ClassListResponse> getClasses(
+            @PathVariable(value = "school_id") long schoolId,
+            @PathParam("name") String name,
+            @PathParam("page") int page,
+            @PathParam("size") int size) {
+        PaginationListResponse<ClassListResponse> paginationListResponse = new PaginationListResponse<>();
+        Page<Class> classes = classService.findAllBySchool(schoolId, name, page, size);
+        paginationListResponse.setContent(classes.stream().map(classMapper::fromClassToListResponse).toList());
+        paginationListResponse.setTotalPages(classes.getTotalPages());
+        return paginationListResponse;
+    }
+
+    @PostMapping("/{class_id}/assign-users")
+    @ResponseStatus(HttpStatus.OK)
+    public void assignUsers(@PathVariable(value = "school_id") long schoolId,
+                            @PathVariable(value = "class_id") long classId,
+                            @RequestBody List<Long> userIds) {
+        classService.assignUserToClass(classId, userIds);
+    }
+
+    @PostMapping("/{class_id}/unassign-users")
+    @ResponseStatus(HttpStatus.OK)
+    public void unassignUsers(@PathVariable(value = "school_id") long schoolId,
+                            @PathVariable(value = "class_id") long classId,
+                            @RequestBody List<Long> userIds) {
+        classService.unassignUserFromClass(classId, userIds);
+    }
+
+}

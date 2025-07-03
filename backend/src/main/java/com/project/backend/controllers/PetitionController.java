@@ -8,6 +8,7 @@ import com.project.backend.dto.petition.PetitionRequest;
 import com.project.backend.dto.wrapper.PaginationListResponse;
 import com.project.backend.mappers.CommentMapper;
 import com.project.backend.mappers.PetitionMapper;
+import com.project.backend.models.User;
 import com.project.backend.models.petitions.Comment;
 import com.project.backend.models.petitions.Petition;
 import com.project.backend.services.inter.CommentService;
@@ -41,8 +42,9 @@ public class PetitionController {
             @Valid @RequestBody PetitionRequest petitionRequest,
             Authentication auth) {
         log.info("Controller: Creating a petition for school {}", schoolId);
-        return petitionMapper.fromPetitionToFullResponse(
-                petitionService.create(petitionMapper.fromRequestToPetition(petitionRequest), petitionRequest.getLevelId(), userService.findUserByAuth(auth)));
+        User user = userService.findUserByAuth(auth);
+        return this.fromPetitionToPetitionFullResponseWithAllInfo(
+                petitionService.create(petitionMapper.fromRequestToPetition(petitionRequest), petitionRequest.getLevelId(), user), user);
     }
 
     @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasAnyRole('DIRECTOR', 'STUDENT')")
@@ -53,8 +55,9 @@ public class PetitionController {
             @PathVariable(name = "petition_id") long petitionId,
             Authentication auth) {
         log.info("Controller: Getting a petition with id {}", petitionId);
-        return petitionMapper.fromPetitionToFullResponse(
-                petitionService.findById(petitionId));
+        User user = userService.findUserByAuth(auth);
+        return this.fromPetitionToPetitionFullResponseWithAllInfo(
+                petitionService.findById(petitionId), user);
     }
 
     @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasRole('STUDENT')")
@@ -68,9 +71,10 @@ public class PetitionController {
             @RequestParam(required = false) String status,
             Authentication auth) {
         log.info("Controller: Getting all my petitions");
-        Page<Petition> petitionPage = petitionService.findAllMy(name, status, page, size, userService.findUserByAuth(auth).getId());
+        User user = userService.findUserByAuth(auth);
+        Page<Petition> petitionPage = petitionService.findAllMy(name, status, page, size, user.getId());
         PaginationListResponse<PetitionListResponse> response = new PaginationListResponse<>();
-        response.setContent(petitionPage.getContent().stream().map(petitionMapper::fromPetitionToListResponse).toList());
+        response.setContent(petitionPage.getContent().stream().map((Petition petition) -> fromPetitionToPetitionListResponseWithAllInfo(petition, user)).toList());
         response.setTotalPages(petitionPage.getTotalPages());
         return response;
     }
@@ -86,9 +90,10 @@ public class PetitionController {
             @RequestParam(required = false) String status,
             Authentication auth) {
         log.info("Controller: Getting all my created petitions");
-        Page<Petition> petitionPage = petitionService.findAllByCreator(name, status, page, size, userService.findUserByAuth(auth).getId());
+        User user = userService.findUserByAuth(auth);
+        Page<Petition> petitionPage = petitionService.findAllByCreator(name, status, page, size, user.getId());
         PaginationListResponse<PetitionListResponse> response = new PaginationListResponse<>();
-        response.setContent(petitionPage.getContent().stream().map(petitionMapper::fromPetitionToListResponse).toList());
+        response.setContent(petitionPage.getContent().stream().map((Petition petition) -> fromPetitionToPetitionListResponseWithAllInfo(petition, user)).toList());
         response.setTotalPages(petitionPage.getTotalPages());
         return response;
     }
@@ -106,7 +111,7 @@ public class PetitionController {
         log.info("Controller: Getting all petitions for director");
         Page<Petition> petitionPage = petitionService.findAllForDirector(name, status, page, size);
         PaginationListResponse<PetitionListResponse> response = new PaginationListResponse<>();
-        response.setContent(petitionPage.getContent().stream().map(petitionMapper::fromPetitionToListResponse).toList());
+        response.setContent(petitionPage.getContent().stream().map((Petition petition) -> fromPetitionToPetitionListResponseWithAllInfo(petition, userService.findUserByAuth(auth))).toList());
         response.setTotalPages(petitionPage.getTotalPages());
         return response;
     }
@@ -192,5 +197,21 @@ public class PetitionController {
         response.setContent(commentPage.getContent().stream().map(commentMapper::fromCommentToResponse).toList());
         response.setTotalPages(commentPage.getTotalPages());
         return response;
+    }
+
+    private PetitionListResponse fromPetitionToPetitionListResponseWithAllInfo(Petition petition, User user) {
+        PetitionListResponse petitionListResponse = petitionMapper.fromPetitionToListResponse(petition);
+        petitionListResponse.setCountNeeded((long) (Math.floor(userService.countAllByPetition(petition) / 2.0) + 1));
+        petitionListResponse.setCountSupported(petition.getCount());
+        petitionListResponse.setSupportedByCurrentId(petition.getUsers().contains(user));
+        return petitionListResponse;
+    }
+
+    private PetitionFullResponse fromPetitionToPetitionFullResponseWithAllInfo(Petition petition, User user) {
+        PetitionFullResponse petitionFullResponse = petitionMapper.fromPetitionToFullResponse(petition);
+        petitionFullResponse.setCountNeeded((long) (Math.floor(userService.countAllByPetition(petition) / 2.0) + 1));
+        petitionFullResponse.setCountSupported(petition.getCount());
+        petitionFullResponse.setSupportedByCurrentId(petition.getUsers().contains(user));
+        return petitionFullResponse;
     }
 }

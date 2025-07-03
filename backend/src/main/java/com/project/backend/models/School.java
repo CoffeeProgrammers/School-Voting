@@ -10,7 +10,7 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
-@ToString
+@ToString(exclude = {"director", "classes"})
 @EqualsAndHashCode
 public class School {
     @Id

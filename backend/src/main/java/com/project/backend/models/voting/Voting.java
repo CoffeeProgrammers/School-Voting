@@ -15,8 +15,8 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
-@ToString
-@EqualsAndHashCode
+@ToString(exclude = {"creator", "votingUsers"})
+@EqualsAndHashCode(exclude = {"creator", "votingUsers"})
 public class Voting {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

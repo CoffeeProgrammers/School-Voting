@@ -10,8 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 @Getter
 @Setter
 @NoArgsConstructor
-@ToString
-@EqualsAndHashCode
+@ToString(exclude = {"voting"})
+@EqualsAndHashCode(exclude = {"voting"})
 public class Answer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

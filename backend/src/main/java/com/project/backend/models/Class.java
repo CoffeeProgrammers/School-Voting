@@ -10,8 +10,8 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
-@ToString
-@EqualsAndHashCode
+@ToString(exclude = {"users", "school"})
+@EqualsAndHashCode(exclude = {"users", "school"})
 public class Class {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

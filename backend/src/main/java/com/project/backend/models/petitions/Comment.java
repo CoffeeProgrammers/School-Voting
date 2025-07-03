@@ -11,8 +11,8 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
-@ToString
-@EqualsAndHashCode
+@ToString(exclude = {"creator"})
+@EqualsAndHashCode(exclude = {"creator"})
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

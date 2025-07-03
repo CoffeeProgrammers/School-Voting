@@ -13,8 +13,8 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
-@ToString
-@EqualsAndHashCode
+@ToString(exclude = {"myClass", "school", "votingUsers", "petitions"})
+@EqualsAndHashCode(exclude = {"myClass", "school", "votingUsers", "petitions"})
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

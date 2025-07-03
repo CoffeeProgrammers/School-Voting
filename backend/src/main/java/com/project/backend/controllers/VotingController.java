@@ -95,10 +95,11 @@ public class VotingController {
             @RequestParam Integer size,
             @RequestParam(required = false) String name,
             @RequestParam(required = false) Boolean now,
+            @RequestParam(required = false) Boolean notStarted,
             Authentication auth) {
         User user = userService.findUserByAuth(auth);
         log.info("Controller: Get all votings created by user {}", user.getEmail());
-        Page<Voting> votingPage = votingService.findAllByCreator(user.getId(), name, now, page, size);
+        Page<Voting> votingPage = votingService.findAllByCreator(user.getId(), name, now, notStarted, page, size);
         PaginationListResponse<VotingListResponse> response = new PaginationListResponse<>();
         response.setTotalPages(votingPage.getTotalPages());
         response.setContent(votingPage.getContent().stream().map(votingMapper::fromVotingToListResponse).toList());

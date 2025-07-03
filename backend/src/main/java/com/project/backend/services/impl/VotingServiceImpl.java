@@ -96,18 +96,18 @@ public class VotingServiceImpl implements VotingService {
         log.info("Service: Finding all votings by user {}", userId);
         return votingRepository.findAll(
                 VotingSpecification.byUser(userId)
-                        .and(createSpecification(name, true, now, canVote, userId)),
+                        .and(createSpecification(name, false, now, null,  canVote, userId)),
                 PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "endTime")));
     }
 
     @Override
     public Page<Voting> findAllByCreator(
-            long userId, String name, Boolean now, int page, int size) {
+            long userId, String name, Boolean now, Boolean notStarted, int page, int size) {
         log.info("Service: Finding all votings by creator {}", userId);
 
         return votingRepository.findAll(
                 VotingSpecification.byCreator(userId)
-                        .and(createSpecification(name, false, now, null, null)),
+                        .and(createSpecification(name, true, now, notStarted, null, null)),
                 PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "endTime")));
     }
 
@@ -117,7 +117,7 @@ public class VotingServiceImpl implements VotingService {
         log.info("Service: Finding all votings for director {}", userId);
         return votingRepository.findAll(
                 VotingSpecification.byDirector(userId)
-                        .and(createSpecification(name, false, null, null, null)),
+                        .and(createSpecification(name, false, null, null, null, null)),
                 PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "endTime")));
     }
 
@@ -144,7 +144,7 @@ public class VotingServiceImpl implements VotingService {
         }
     }
 
-    private Specification<Voting> createSpecification(String name, boolean my, Boolean now, Boolean canVote, Long userId) {
+    private Specification<Voting> createSpecification(String name, boolean my, Boolean now, Boolean notStarted, Boolean canVote, Long userId) {
         log.info("Service: Creating specification with name {}, now {}, can vote {} and user {}", name, now, canVote, userId);
         Specification<Voting> specification = null;
 
@@ -155,8 +155,11 @@ public class VotingServiceImpl implements VotingService {
         if (isValid(now)) {
             specification = addSpecification(specification, now ? VotingSpecification::byStartDateAndEndDate : VotingSpecification::ended);
         } else {
-            if (my) {
+            if (!my) {
                 specification = addSpecification(specification, VotingSpecification::byStartDate);
+            }
+            if(isValid(notStarted) && notStarted) {
+                specification = addSpecification(specification, VotingSpecification::byStartDateNot);
             }
         }
 

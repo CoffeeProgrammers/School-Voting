@@ -46,6 +46,14 @@ public class VotingSpecification {
         };
     }
 
+    public static Specification<Voting> byStartDateNot() {
+        return (root, query, criteriaBuilder) -> {
+            LocalDate today = LocalDate.now();
+            Predicate startDatePredicate = criteriaBuilder.greaterThanOrEqualTo(root.get("startDate"), today);
+            return criteriaBuilder.and(startDatePredicate);
+        };
+    }
+
     public static Specification<Voting> ended() {
         return ((root, query, criteriaBuilder) ->
                 criteriaBuilder.greaterThan(root.get("endDate"), LocalDate.now()));

@@ -19,6 +19,6 @@ public class Class {
     private String name;
     @ManyToOne
     private School school;
-    @OneToMany
+    @OneToMany(mappedBy = "myClass")
     private Set<User> users;
 }

@@ -60,11 +60,11 @@ const SCHOOL_PETITIONS = [
     },
     {
         id: 6,
-        name: "Provide free menstrual hygiene products in schools",
+        name: "Replace broken desks and chairs in classrooms",
         endTime: "2025-10-05T23:59:59",
         levelType: "school",
         status: "REJECTED",
-        countSupport: 65,
+        countSupport: 1065,
         countNeeded: 300,
         supportedByCurrentUser: false,
     },
@@ -125,19 +125,18 @@ const PetitionsListPage = () => {
     ];
 
     return (
-        <>
-
-            <Stack direction="row" sx={{alignItems: 'center', display: "flex", justifyContent: "space-between "}}>
+        <Box>
+            <Stack direction="row" sx={{alignItems: 'center', display: "flex", justifyContent: "space-between", paddingX: '10px',}}>
                 <Typography variant="h6" fontWeight={'bold'}>Petitions</Typography>
-                <Box sx={{alignItems: 'center', display: "flex", justifyContent: "space-between"}} gap={0.5}>
+                <Box sx={{alignItems: 'center', display: "flex", justifyContent: "space-between"}} gap={0.25}>
                     <Search
                         searchQuery={searchName}
                         setSearchQuery={setSearchName}
                         sx={{mr: 1.5}}
                     />
 
-                    <Button variant="contained" color="primary" sx={{height: 32, borderRadius: 10}}>Create a
-                        petition
+                    <Button variant="contained" color="primary" sx={{height: 32, borderRadius: 10}}>
+                        Create a petition
                     </Button>
                 </Box>
 
@@ -145,11 +144,8 @@ const PetitionsListPage = () => {
             <Divider sx={{mt: 0.75}}/>
             <Stack direction="row" width={'100%'}>
                 {statusFilter.map((option, index) => (
-                    <Button key={index}
-                            onClick={() => setStatus(option.value)}
-                            fullWidth
-                            sx={{height: 40, borderRadius: 0, width: index !== 0 ? '100%' : 100}}>
-                        <Typography color={status === option.value ? 'primary' : 'text.secondary'}
+                    <Button key={index} onClick={() => setStatus(option.value)} fullWidth sx={{height: 40, borderRadius: 0, width: index !== 0 ? '100%' : 100}}>
+                        <Typography noWrap color={status === option.value ? 'primary' : 'text.secondary'}
                                     sx={{
                                         borderBottom: "2.5px solid",
                                         borderBottomColor: status === option.value ? theme.palette.primary.main : "transparent",
@@ -168,7 +164,7 @@ const PetitionsListPage = () => {
                     </Box>
                 ))}
             </Stack>
-        </>
+        </Box>
     );
 };
 

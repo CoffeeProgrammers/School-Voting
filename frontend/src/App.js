@@ -1,4 +1,4 @@
-import {BrowserRouter, Route, Routes, useNavigate} from 'react-router-dom';
+import {BrowserRouter, Navigate, Route, Routes, useNavigate} from 'react-router-dom';
 import {ThemeProvider} from '@mui/material';
 import {LocalizationProvider} from '@mui/x-date-pickers';
 import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs';
@@ -11,6 +11,7 @@ import First from "./pages/First";
 import NotFoundPage from "./pages/not_found_page/NotFoundPage";
 import Classes from "./pages/classes/Classes";
 import PetitionsListPage from "./pages/petitions/PetitionsListPage";
+import PetitionPage from "./pages/petitions/PetitionPage";
 import ClassPage from "./pages/classes/ClassPage";
 
 const InitNavigation = ({children}) => {
@@ -26,11 +27,12 @@ const InitNavigation = ({children}) => {
 function App() {
 
     const routes = [
-        {path: "/first", element: <First/>},
+        { path: "/", element: <Navigate to="/petitions" replace /> },
         {path: "/classes", element: <Classes/>},
         {path: "/classes/:id", element: <ClassPage/>},
 
         {path: "/petitions", element: <PetitionsListPage/>},
+        {path: "/petitions/:id", element: <PetitionPage/>},
 
         {path: "*", element:<NotFoundPage/>},
 

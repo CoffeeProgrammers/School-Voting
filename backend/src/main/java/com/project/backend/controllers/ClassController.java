@@ -29,6 +29,7 @@ public class ClassController {
     @ResponseStatus(HttpStatus.CREATED)
     public ClassFullResponse createClass(@PathVariable(value = "school_id") long schoolId,
                                          @RequestBody ClassCreateRequest classCreateRequest) {
+        log.info("Controller: Creating a new class");
         return classMapper.fromClassToFullResponse(
                 classService.create(classMapper.fromRequestToClass(classCreateRequest)));
     }
@@ -38,6 +39,7 @@ public class ClassController {
     public ClassFullResponse updateClass(@PathVariable(value = "school_id") long schoolId,
                                          @PathVariable(value = "id") long id,
                                          @RequestBody ClassCreateRequest classCreateRequest) {
+        log.info("Controller: Updating class with id {}", id);
         return classMapper.fromClassToFullResponse(
                 classService.update(classMapper.fromRequestToClass(classCreateRequest), id));
     }
@@ -46,6 +48,7 @@ public class ClassController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteClass(@PathVariable(value = "school_id") long schoolId,
                                          @PathVariable(value = "id") long id) {
+        log.info("Controller: Deleting class with id {}", id);
         classService.delete(id);
     }
 
@@ -53,6 +56,7 @@ public class ClassController {
     @ResponseStatus(HttpStatus.OK)
     public ClassFullResponse getClassById(@PathVariable(value = "school_id") long schoolId,
                             @PathVariable(value = "id") long id) {
+        log.info("Controller: Getting class with id {}", id);
         return classMapper.fromClassToFullResponse(classService.findById(id));
     }
 
@@ -63,6 +67,7 @@ public class ClassController {
             @PathParam("name") String name,
             @PathParam("page") int page,
             @PathParam("size") int size) {
+        log.info("Controller: Getting all the classes in school with id {}", schoolId);
         PaginationListResponse<ClassListResponse> paginationListResponse = new PaginationListResponse<>();
         Page<Class> classes = classService.findAllBySchool(schoolId, name, page, size);
         paginationListResponse.setContent(classes.stream().map(classMapper::fromClassToListResponse).toList());
@@ -75,6 +80,7 @@ public class ClassController {
     public void assignUsers(@PathVariable(value = "school_id") long schoolId,
                             @PathVariable(value = "class_id") long classId,
                             @RequestBody List<Long> userIds) {
+        log.info("Controller: Assigning users");
         classService.assignUserToClass(classId, userIds);
     }
 
@@ -83,6 +89,7 @@ public class ClassController {
     public void unassignUsers(@PathVariable(value = "school_id") long schoolId,
                             @PathVariable(value = "class_id") long classId,
                             @RequestBody List<Long> userIds) {
+        log.info("Controller: Unassigning users");
         classService.unassignUserFromClass(classId, userIds);
     }
 

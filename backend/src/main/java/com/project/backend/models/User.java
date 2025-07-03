@@ -33,12 +33,7 @@ public class User {
     private Class myClass;
     @OneToMany(mappedBy = "user")
     private Set<VotingUser> votingUsers = new HashSet<>();
-    @ManyToMany
-    @JoinTable(
-            name = "petition_user",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "petition_id")
-    )
+    @ManyToMany(mappedBy = "users")
     private Set<Petition> petitions = new HashSet<>();
 
 

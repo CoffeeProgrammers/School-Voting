@@ -310,8 +310,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public long countAllByPetition(Petition petition) {
-        return userRepository.countAllByPetitionsContaining(petition);
+    public long countAllBySchool(long schoolId) {
+        return userRepository.countAllBySchool_Id(schoolId);
     }
 
     @Override

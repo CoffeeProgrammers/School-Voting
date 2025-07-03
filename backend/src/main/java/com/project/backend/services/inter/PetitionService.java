@@ -10,6 +10,8 @@ public interface PetitionService {
     void delete(long id);
     long support(long petitionId, User user);
 
+    long countAll(Petition petition);
+
     void approve(long petitionId);
 
     void reject(long petitionId);

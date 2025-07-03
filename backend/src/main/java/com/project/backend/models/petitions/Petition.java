@@ -34,7 +34,12 @@ public class Petition {
     private LocalDateTime endTime;
     private Status status;
     private long count = 0;
-    @ManyToMany(mappedBy = "petitions")
+    @ManyToMany()
+    @JoinTable(
+            name = "petition_user",
+            joinColumns = @JoinColumn(name = "petition_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
     private Set<User> users = new HashSet<>();
     @ManyToOne
     @JoinColumn(name = "school_id")

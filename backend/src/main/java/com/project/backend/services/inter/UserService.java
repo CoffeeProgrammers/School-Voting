@@ -43,7 +43,7 @@ public interface UserService {
 
     boolean isNotExistByEmail(String email);
 
-    long countAllByPetition(Petition petition);
+    long countAllBySchool(long schoolId);
 
     void assignClassToUser(Class clazz, User user);
 }

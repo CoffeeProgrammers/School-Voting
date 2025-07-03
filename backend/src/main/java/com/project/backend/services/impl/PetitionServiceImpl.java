@@ -4,10 +4,8 @@ import com.project.backend.models.User;
 import com.project.backend.models.enums.LevelType;
 import com.project.backend.models.enums.Status;
 import com.project.backend.models.petitions.Petition;
-import com.project.backend.models.voting.Voting;
 import com.project.backend.repositories.petitions.PetitionRepository;
 import com.project.backend.repositories.specification.PetitionSpecification;
-import com.project.backend.repositories.specification.VotingSpecification;
 import com.project.backend.services.inter.ClassService;
 import com.project.backend.services.inter.PetitionService;
 import com.project.backend.services.inter.SchoolService;
@@ -72,10 +70,17 @@ public class PetitionServiceImpl implements PetitionService {
             throw new IllegalArgumentException("Cannot support petition because user is already petition");
         }
         long countSupported = petition.incrementCount();
-        if(countSupported >= Math.floor(userService.countAllByPetition(petition) / 2.0) + 1) {
+        if(countSupported >= countAll(petition)) {
             petition.setStatus(Status.WAITING_FOR_CONSIDERATION);
         }
         return petitionRepository.save(petition).getCount();
+    }
+
+    @Override
+    public long countAll(Petition petition) {
+        long countAll = petition.getLevelType().equals(LevelType.SCHOOL) ?
+                userService.countAllBySchool(petition.getSchool().getId()) : petition.getMyClass().getUsers().size();
+        return (long) (Math.floor(countAll / 2.0) + 1);
     }
 
     @Override

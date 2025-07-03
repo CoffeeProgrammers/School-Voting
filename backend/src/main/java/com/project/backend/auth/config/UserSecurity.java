@@ -1,6 +1,8 @@
 package com.project.backend.auth.config;
 
 import com.project.backend.models.School;
+import com.project.backend.models.enums.LevelType;
+import com.project.backend.models.petitions.Petition;
 import com.project.backend.services.inter.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +20,7 @@ public class UserSecurity {
     private final VotingService votingService;
     private final SchoolService schoolService;
     private final VotingUserService votingUserService;
+    private final ClassService classService;
 
     private boolean checkUser(Authentication authentication, String username) {
         log.info("preAuth: Checking user {}", username);
@@ -62,7 +65,14 @@ public class UserSecurity {
 
     public boolean checkUserPetition(Authentication authentication, long petitionId) {
         log.info("preAuth: Checking if user in petition {}", petitionId);
-        return petitionService.findById(petitionId).getUsers().contains(userService.findUserByAuth(authentication));
+        Petition petition = petitionService.findById(petitionId);
+        if(petition.getLevelType().equals(LevelType.SCHOOL)){
+            log.info("preAuth: Checking if user in school");
+            return checkUserSchool(authentication, petition.getCreator().getSchool().getId());
+        }else{
+            log.info("preAuth: Checking if user in class");
+            return petition.getMyClass().getUsers().contains(userService.findUserByAuth(authentication));
+        }
     }
 
     public boolean checkUserVoting(Authentication authentication, long votingId) {

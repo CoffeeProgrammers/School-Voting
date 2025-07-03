@@ -116,7 +116,7 @@ public class PetitionController {
         return response;
     }
 
-    @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasRole('STUDENT') and @userSecurity.checkUserPetition(#auth, #schoolId)")
+    @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasRole('STUDENT') and @userSecurity.checkUserPetition(#auth, #petitionId)")
     @PostMapping("/support/{petition_id}")
     @ResponseStatus(HttpStatus.OK)
     public void supportPetition(@PathVariable(name = "school_id") long schoolId,
@@ -201,7 +201,7 @@ public class PetitionController {
 
     private PetitionListResponse fromPetitionToPetitionListResponseWithAllInfo(Petition petition, User user) {
         PetitionListResponse petitionListResponse = petitionMapper.fromPetitionToListResponse(petition);
-        petitionListResponse.setCountNeeded((long) (Math.floor(userService.countAllByPetition(petition) / 2.0) + 1));
+        petitionListResponse.setCountNeeded(petitionService.countAll(petition));
         petitionListResponse.setCountSupported(petition.getCount());
         petitionListResponse.setSupportedByCurrentId(petition.getUsers().contains(user));
         return petitionListResponse;
@@ -209,7 +209,7 @@ public class PetitionController {
 
     private PetitionFullResponse fromPetitionToPetitionFullResponseWithAllInfo(Petition petition, User user) {
         PetitionFullResponse petitionFullResponse = petitionMapper.fromPetitionToFullResponse(petition);
-        petitionFullResponse.setCountNeeded((long) (Math.floor(userService.countAllByPetition(petition) / 2.0) + 1));
+        petitionFullResponse.setCountNeeded(petitionService.countAll(petition));
         petitionFullResponse.setCountSupported(petition.getCount());
         petitionFullResponse.setSupportedByCurrentId(petition.getUsers().contains(user));
         return petitionFullResponse;

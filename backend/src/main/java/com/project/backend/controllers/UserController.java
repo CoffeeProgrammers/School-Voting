@@ -83,7 +83,7 @@ public class UserController {
             @PathParam("size") int size,
             Authentication auth) {
         log.info("Controller: Get users by voting {}", votingId);
-        Page<User> userPage = userService.findAllByVoting(votingId, email, firstName, lastName, page, size, auth);
+        Page<User> userPage = userService.findAllByVoting(votingId, email, firstName, lastName, page, size);
         PaginationListResponse<UserListResponse> userListResponse = new PaginationListResponse<>();
         userListResponse.setContent(userPage.getContent().stream().map(userMapper::fromUserToListResponse).toList());
         userListResponse.setTotalPages(userPage.getTotalPages());
@@ -102,7 +102,7 @@ public class UserController {
             @PathParam("size") int size,
             Authentication auth) {
         log.info("Controller: Get users by role {}", role);
-        Page<User> userPage = userService.findAllByRoleInSchool(schoolId, role, email, firstName, lastName, page, size, auth);
+        Page<User> userPage = userService.findAllByRoleInSchool(schoolId, role, email, firstName, lastName, page, size);
         PaginationListResponse<UserListResponse> userListResponse = new PaginationListResponse<>();
         userListResponse.setContent(userPage.getContent().stream().map(userMapper::fromUserToListResponse).toList());
         userListResponse.setTotalPages(userPage.getTotalPages());
@@ -121,7 +121,7 @@ public class UserController {
             @PathParam("size") int size,
             Authentication auth) {
         log.info("Controller: Get users by class with id: {}", classId);
-        Page<User> userPage = userService.findAllByClass(classId, email, firstName, lastName, page, size, auth);
+        Page<User> userPage = userService.findAllByClass(classId, email, firstName, lastName, page, size);
         PaginationListResponse<UserListResponse> userListResponse = new PaginationListResponse<>();
         userListResponse.setContent(userPage.getContent().stream().map(userMapper::fromUserToListResponse).toList());
         userListResponse.setTotalPages(userPage.getTotalPages());
@@ -139,7 +139,7 @@ public class UserController {
             @PathParam("size") int size,
             Authentication auth) {
         log.info("Controller: Get users without class");
-        Page<User> userPage = userService.findAllStudentsWithoutClass(schoolId, email, firstName, lastName, page, size, auth);
+        Page<User> userPage = userService.findAllStudentsWithoutClass(schoolId, email, firstName, lastName, page, size);
         PaginationListResponse<UserListResponse> userListResponse = new PaginationListResponse<>();
         userListResponse.setContent(userPage.getContent().stream().map(userMapper::fromUserToListResponse).toList());
         userListResponse.setTotalPages(userPage.getTotalPages());

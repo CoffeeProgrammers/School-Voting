@@ -35,7 +35,7 @@ public class VotingController {
                                      VotingCreateRequest votingCreateRequest,
                                      Authentication authentication) {
         log.info("Controller: Create vote with body {}", votingCreateRequest);
-        Voting createdVoting = votingService.create(votingMapper.fromRequestToVoting(votingCreateRequest), votingCreateRequest.getAnswers(), votingCreateRequest.getTargetIds(), schoolId, authentication);
+        Voting createdVoting = votingService.create(votingMapper.fromRequestToVoting(votingCreateRequest), votingCreateRequest.getAnswers(), votingCreateRequest.getTargetIds(), schoolId, userService.findUserByAuth(authentication).getId());
         return fromVotingToFullResponseWithStatistics(createdVoting);
     }
 
@@ -131,7 +131,7 @@ public class VotingController {
                                       @PathVariable("answer_id") Long answerId,
                                       Authentication authentication) {
         log.info("Controller: vote for answer {} in voting {}", answerId, votingId);
-        votingService.vote(votingId, answerId, authentication);
+        votingService.vote(votingId, answerId, userService.findUserByAuth(authentication));
     }
 
     private VotingFullResponse fromVotingToFullResponseWithStatistics(Voting voting) {

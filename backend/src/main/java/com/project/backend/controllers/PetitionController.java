@@ -11,6 +11,7 @@ import com.project.backend.models.petitions.Comment;
 import com.project.backend.models.petitions.Petition;
 import com.project.backend.services.inter.CommentService;
 import com.project.backend.services.inter.PetitionService;
+import com.project.backend.services.inter.UserService;
 import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,9 +19,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -31,6 +29,7 @@ public class PetitionController {
     private final PetitionMapper petitionMapper;
     private final CommentService commentService;
     private final CommentMapper commentMapper;
+    private final UserService userService;
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
@@ -40,7 +39,7 @@ public class PetitionController {
             Authentication auth) {
         log.info("Controller: Creating a petition for school {}", schoolId);
         return petitionMapper.fromPetitionToFullResponse(
-                petitionService.create(petitionMapper.fromRequestToPetition(petitionRequest), petitionRequest.getLevelId(), auth));
+                petitionService.create(petitionMapper.fromRequestToPetition(petitionRequest), petitionRequest.getLevelId(), userService.findUserByAuth(auth)));
     }
 
     @GetMapping("/{id}")
@@ -64,7 +63,7 @@ public class PetitionController {
             @PathParam("status") String status,
             Authentication auth) {
         log.info("Controller: Getting all my petitions");
-        Page<Petition> petitionPage = petitionService.findAllMy(name, status, page, size, auth);
+        Page<Petition> petitionPage = petitionService.findAllMy(name, status, page, size, userService.findUserByAuth(auth).getId());
         PaginationListResponse<PetitionFullResponse> response = new PaginationListResponse<>();
         response.setContent(petitionPage.getContent().stream().map(petitionMapper::fromPetitionToFullResponse).toList());
         response.setTotalPages(petitionPage.getTotalPages());
@@ -81,7 +80,7 @@ public class PetitionController {
             @PathParam("status") String status,
             Authentication auth) {
         log.info("Controller: Getting all my created petitions");
-        Page<Petition> petitionPage = petitionService.findAllByCreator(name, status, page, size, auth);
+        Page<Petition> petitionPage = petitionService.findAllByCreator(name, status, page, size, userService.findUserByAuth(auth).getId());
         PaginationListResponse<PetitionFullResponse> response = new PaginationListResponse<>();
         response.setContent(petitionPage.getContent().stream().map(petitionMapper::fromPetitionToFullResponse).toList());
         response.setTotalPages(petitionPage.getTotalPages());
@@ -98,7 +97,7 @@ public class PetitionController {
             @PathParam("status") String status,
             Authentication auth) {
         log.info("Controller: Getting all petitions for director");
-        Page<Petition> petitionPage = petitionService.findAllForDirector(name, status, page, size, auth);
+        Page<Petition> petitionPage = petitionService.findAllForDirector(name, status, page, size);
         PaginationListResponse<PetitionFullResponse> response = new PaginationListResponse<>();
         response.setContent(petitionPage.getContent().stream().map(petitionMapper::fromPetitionToFullResponse).toList());
         response.setTotalPages(petitionPage.getTotalPages());
@@ -111,7 +110,7 @@ public class PetitionController {
                                 @PathVariable(name = "petition_id") long petitionId,
                                 Authentication auth) {
         log.info("Controller: Support petition with id {}", petitionId);
-        petitionService.support(petitionId, auth);
+        petitionService.support(petitionId, userService.findUserByAuth(auth));
     }
 
     @PostMapping("/approve/{petition_id}")
@@ -140,7 +139,7 @@ public class PetitionController {
                                          Authentication auth) {
         log.info("Controller: Creating a new comment for petition with id {}", petitionId);
         return commentMapper.fromCommentToResponse(
-                commentService.create(commentMapper.fromRequestToComment(commentRequest), auth, petitionId));
+                commentService.create(commentMapper.fromRequestToComment(commentRequest), userService.findUserByAuth(auth), petitionId));
     }
 
     @PostMapping("/{petition_id}/comments/update/{comment_id}")

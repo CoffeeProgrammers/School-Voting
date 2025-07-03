@@ -1,5 +1,6 @@
 package com.project.backend.services.impl;
 
+import com.project.backend.models.User;
 import com.project.backend.models.petitions.Comment;
 import com.project.backend.repositories.petitions.CommentRepository;
 import com.project.backend.services.inter.CommentService;
@@ -11,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -25,10 +25,10 @@ public class CommentServiceImpl implements CommentService {
 
 
     @Override
-    public Comment create(Comment comment, Authentication authentication, long petitionId) {
+    public Comment create(Comment comment, User creator, long petitionId) {
         log.info("Service: Creating comment {}", comment);
         comment.setPetition(petitionService.findById(petitionId));
-        comment.setCreator(userService.findUserByKeycloakUserId(authentication.getName()));
+        comment.setCreator(creator);
         return commentRepository.save(comment);
     }
 

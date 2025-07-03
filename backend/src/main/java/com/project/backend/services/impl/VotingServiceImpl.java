@@ -15,7 +15,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -36,7 +35,7 @@ public class VotingServiceImpl implements VotingService {
     private final VotingUserService votingUserService;
 
     @Override
-    public Voting create(Voting votingRequest, List<String> answer, List<Long> targetIds, long schoolId, Authentication authentication) {
+    public Voting create(Voting votingRequest, List<String> answer, List<Long> targetIds, long schoolId, long userId) {
         log.info("Service: Creating voting {}", votingRequest);
         Voting voting = votingRepository.save(votingRequest);
         answerService.create(answer, voting);
@@ -44,12 +43,12 @@ public class VotingServiceImpl implements VotingService {
         switch (voting.getLevelType()) {
             case SCHOOL -> {
                 log.info("Service: Adding users from school {}", schoolId);
-                users = userService.findAllBySchool(schoolId, authentication).stream();
+                users = userService.findAllBySchool(schoolId, userId).stream();
             }
             case CLASS -> {
                 Long classId = targetIds.getFirst();
                 log.info("Service: Adding users from class {}", classId);
-                users = userService.findAllByClass(classId, authentication).stream();
+                users = userService.findAllByClass(classId, userId).stream();
             }
             case GROUP_OF_TEACHERS -> {
                 log.info("Service: Adding users from group of teachers");
@@ -123,11 +122,11 @@ public class VotingServiceImpl implements VotingService {
     }
 
     @Override
-    public void vote(long votingId, long answerId, Authentication auth) {
+    public void vote(long votingId, long answerId, User user) {
         log.info("Service: Vote for answer with id {}", answerId);
         Voting voting = findById(votingId);
         checkTimeForVote(voting);
-        votingUserService.update(voting, userService.findUserByAuth(auth), answerService.findById(answerId));
+        votingUserService.update(voting, user, answerService.findById(answerId));
         answerService.vote(answerId);
     }
 

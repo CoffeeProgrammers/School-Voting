@@ -1,12 +1,11 @@
 package com.project.backend.services.impl;
 
+import com.project.backend.models.User;
 import com.project.backend.models.enums.LevelType;
 import com.project.backend.models.enums.Status;
 import com.project.backend.models.petitions.Petition;
-import com.project.backend.models.voting.Voting;
 import com.project.backend.repositories.petitions.PetitionRepository;
 import com.project.backend.repositories.specification.PetitionSpecification;
-import com.project.backend.repositories.specification.VotingSpecification;
 import com.project.backend.services.inter.ClassService;
 import com.project.backend.services.inter.PetitionService;
 import com.project.backend.services.inter.SchoolService;
@@ -18,7 +17,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -36,10 +34,10 @@ public class PetitionServiceImpl implements PetitionService {
     private final ClassService classService;
 
     @Override
-    public Petition create(Petition petition, long levelId, Authentication auth) {
+    public Petition create(Petition petition, long levelId, User creator) {
         log.info("Service: Creating a new petition {}", petition);
         petition.setEndTime(LocalDateTime.now().plusDays(45));
-        petition.setCreator(userService.findUserByAuth(auth));
+        petition.setCreator(creator);
         if (petition.getLevelType().equals(LevelType.SCHOOL)) {
             petition.setSchool(schoolService.findById(levelId));
         } else {
@@ -56,11 +54,10 @@ public class PetitionServiceImpl implements PetitionService {
     }
 
     @Override
-    public long support(long petitionId, Authentication auth) {
-        long userId = userService.findUserByAuth(auth).getId();
-        log.info("Service: Support for petition {} by user {}", petitionId, userId);
+    public long support(long petitionId, User user) {
+        log.info("Service: Support for petition {} by user {}", petitionId, user.getId());
         Petition petition = findById(petitionId);
-        boolean ifCanSupport = petition.getUsers().add(userService.findUserByAuth(auth));
+        boolean ifCanSupport = petition.getUsers().add(user);
         if (!ifCanSupport) {
             throw new IllegalArgumentException("Cannot support petition because user is already petition");
         }
@@ -91,8 +88,7 @@ public class PetitionServiceImpl implements PetitionService {
     }
 
     @Override
-    public Page<Petition> findAllMy(String name, String status, int page, int size, Authentication auth) {
-        long userId = userService.findUserByAuth(auth).getId();
+    public Page<Petition> findAllMy(String name, String status, int page, int size, long userId) {
         log.info("Service: Finding all my petitions with name {} and status {}", name, status);
         return petitionRepository.findAll(
                 createSpecification(name, status)
@@ -103,8 +99,7 @@ public class PetitionServiceImpl implements PetitionService {
     }
 
     @Override
-    public Page<Petition> findAllByCreator(String name, String status, int page, int size, Authentication auth) {
-        long creatorId = userService.findUserByAuth(auth).getId();
+    public Page<Petition> findAllByCreator(String name, String status, int page, int size, long creatorId) {
         log.info("Service: Finding all petitions by creator {}, name {} and status {}", creatorId, name, status);
         return petitionRepository.findAll(
                 createSpecification(name, status)
@@ -115,7 +110,7 @@ public class PetitionServiceImpl implements PetitionService {
     }
 
     @Override
-    public Page<Petition> findAllForDirector(String name, String status, int page, int size, Authentication auth) {
+    public Page<Petition> findAllForDirector(String name, String status, int page, int size) {
         log.info("Service: Finding all petitions for director, name {} and status {}", name, status);
         return petitionRepository.findAll(
                 createSpecification(name, status), PageRequest.of(

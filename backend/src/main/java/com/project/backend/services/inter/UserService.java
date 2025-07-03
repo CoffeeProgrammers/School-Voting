@@ -19,27 +19,17 @@ public interface UserService {
     void delete(long id);
     User findById(long id);
 
-    Page<User> findAllByVoting(
-            long votingId, String email, String firstName, String lastName,
-            int page, int size, Authentication auth);
+    Page<User> findAllByVoting(long votingId, String email, String firstName, String lastName, int page, int size);
 
-    Page<User> findAllByRoleInSchool(
-            long schoolId, String role, String email, String firstName, String lastName,
-            int page, int size, Authentication auth);
+    Page<User> findAllByRoleInSchool(long schoolId, String role, String email, String firstName, String lastName, int page, int size);
 
-    Page<User> findAllByClass(
-            long classId, String email, String firstName, String lastName,
-            int page, int size, Authentication auth);
+    Page<User> findAllByClass(long classId, String email, String firstName, String lastName, int page, int size);
 
-    Page<User> findAllStudentsWithoutClass(
-            long schoolId, String email, String firstName, String lastName,
-            int page, int size, Authentication auth);
+    Page<User> findAllStudentsWithoutClass(long schoolId, String email, String firstName, String lastName, int page, int size);
 
-    List<User> findAllBySchool(
-            long schoolId, Authentication auth);
+    List<User> findAllBySchool(long schoolId, long userId);
 
-    List<User> findAllByClass(
-            long classId, Authentication auth);
+    List<User> findAllByClass(long classId, long userId);
 
     User findUserByAuth(Authentication authentication);
     User findUserByEmail(String email);

@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -91,8 +92,10 @@ public class ClassServiceImpl implements ClassService {
 
     @Override
     public Page<Class> findAllBySchool(long schoolId, String name, int page, int size) {
-        return classRepository.findAll(ClassSpecification.bySchool(schoolId)
-                .and(ClassSpecification.byName(isValid(name) ? name : "")),
+        log.info("Service: Finding all classes by school {} with name {}", schoolId, name);
+        Specification<Class> specification = isValid(name) ?
+                ClassSpecification.bySchool(schoolId).and(ClassSpecification.byName(name)) : ClassSpecification.bySchool(schoolId);
+        return classRepository.findAll(specification,
                 PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "name")));
     }
 }

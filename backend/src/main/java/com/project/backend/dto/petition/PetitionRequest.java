@@ -6,6 +6,6 @@ import lombok.Data;
 public class PetitionRequest {
     private String name;
     private String description;
-    private String endTime;
     private String levelType;
+    private long levelId;
 }

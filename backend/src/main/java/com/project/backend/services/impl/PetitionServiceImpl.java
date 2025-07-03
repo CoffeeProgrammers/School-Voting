@@ -1,12 +1,15 @@
 package com.project.backend.services.impl;
 
+import com.project.backend.models.enums.LevelType;
 import com.project.backend.models.enums.Status;
 import com.project.backend.models.petitions.Petition;
 import com.project.backend.models.voting.Voting;
 import com.project.backend.repositories.petitions.PetitionRepository;
 import com.project.backend.repositories.specification.PetitionSpecification;
 import com.project.backend.repositories.specification.VotingSpecification;
+import com.project.backend.services.inter.ClassService;
 import com.project.backend.services.inter.PetitionService;
+import com.project.backend.services.inter.SchoolService;
 import com.project.backend.services.inter.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +21,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 import static com.project.backend.utils.SpecificationUtil.addSpecification;
 import static com.project.backend.utils.SpecificationUtil.isValid;
 
@@ -27,10 +32,19 @@ import static com.project.backend.utils.SpecificationUtil.isValid;
 public class PetitionServiceImpl implements PetitionService {
     private final PetitionRepository petitionRepository;
     private final UserService userService;
+    private final SchoolService schoolService;
+    private final ClassService classService;
 
     @Override
-    public Petition create(Petition petition) {
+    public Petition create(Petition petition, long levelId, Authentication auth) {
         log.info("Service: Creating a new petition {}", petition);
+        petition.setEndTime(LocalDateTime.now().plusDays(45));
+        petition.setCreator(userService.findUserByAuth(auth));
+        if (petition.getLevelType().equals(LevelType.SCHOOL)) {
+            petition.setSchool(schoolService.findById(levelId));
+        } else {
+            petition.setMyClass(classService.findById(levelId));
+        }
         return petitionRepository.save(petition);
     }
 
@@ -42,7 +56,8 @@ public class PetitionServiceImpl implements PetitionService {
     }
 
     @Override
-    public long support(long petitionId, long userId) {
+    public long support(long petitionId, Authentication auth) {
+        long userId = userService.findUserByAuth(auth).getId();
         log.info("Service: Support for petition {} by user {}", petitionId, userId);
         Petition petition = findById(petitionId);
         petition.incrementCount();
@@ -73,31 +88,24 @@ public class PetitionServiceImpl implements PetitionService {
 
     @Override
     public Page<Petition> findAllMy(String name, String status, int page, int size, Authentication auth) {
+        long userId = userService.findUserByAuth(auth).getId();
         log.info("Service: Finding all my petitions with name {} and status {}", name, status);
         return petitionRepository.findAll(
                 createSpecification(name, status)
-                        .and(PetitionSpecification.byCreator(
-                                userService.findUserByAuth(auth)
-                                        .getId()
-                        )), PageRequest.of(
-                                page, size, Sort.by(
-                                        Sort.Direction.ASC, "endTime"
-                                )
-                        )
+                        .and(PetitionSpecification.byUserInClass(userId))
+                        .and(PetitionSpecification.byUserInSchool(userId)),
+                PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "endTime"))
         );
     }
 
     @Override
-    public Page<Petition> findAllByCreator(String name, String status, int page, int size, long creatorId) {
+    public Page<Petition> findAllByCreator(String name, String status, int page, int size, Authentication auth) {
+        long creatorId = userService.findUserByAuth(auth).getId();
         log.info("Service: Finding all petitions by creator {}, name {} and status {}", creatorId, name, status);
         return petitionRepository.findAll(
                 createSpecification(name, status)
-                        .and(PetitionSpecification.byCreator(
-                                creatorId
-                        )), PageRequest.of(
-                        page, size, Sort.by(
-                                Sort.Direction.ASC, "endTime"
-                        )
+                        .and(PetitionSpecification.byCreator(creatorId)),
+                PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "endTime")
                 )
         );
     }

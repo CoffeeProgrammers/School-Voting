@@ -6,7 +6,7 @@ const PageContainer = ({children}) => {
     return (
         <Box sx={{ display: 'flex' }}>
             <AppBar/>
-            <Box component="main" sx={{ flexGrow: 1, p: 3, mt: '55px' }}>
+            <Box component="main" sx={{ flexGrow: 1, paddingX: 3, mt: '80px' }}>
                 {children}
 
             </Box>

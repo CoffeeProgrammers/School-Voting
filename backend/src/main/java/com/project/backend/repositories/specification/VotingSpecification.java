@@ -58,12 +58,12 @@ public class VotingSpecification {
                 criteriaBuilder.greaterThan(root.get("endTime"), LocalDateTime.now()));
     }
 
-    public static Specification<Voting> canVote(long userId) {
+    public static Specification<Voting> isNotVoted(long userId) {
         return ((root, query, criteriaBuilder) ->
                 criteriaBuilder.isNull(root.join("votingUsers").get("answer")));
     }
 
-    public static Specification<Voting> cantVote(long userId) {
+    public static Specification<Voting> isVoted(long userId) {
         return ((root, query, criteriaBuilder) ->
                 criteriaBuilder.isNotNull(root.join("votingUsers").get("answer")));
     }

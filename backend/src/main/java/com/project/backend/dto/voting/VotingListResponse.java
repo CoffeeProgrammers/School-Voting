@@ -9,6 +9,5 @@ public class VotingListResponse {
     private String levelType;
     private String startTime;
     private String endTime;
-    private VotingStatisticsResponse statistics;
     private Boolean isAnswered;
 }

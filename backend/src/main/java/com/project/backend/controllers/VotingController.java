@@ -102,7 +102,7 @@ public class VotingController {
         Page<Voting> votingPage = votingService.findAllByCreator(user.getId(), name, now, notStarted, page, size);
         PaginationListResponse<VotingListResponse> response = new PaginationListResponse<>();
         response.setTotalPages(votingPage.getTotalPages());
-        response.setContent(votingPage.getContent().stream().map(this::fromVotingToListResponseWithStatistics).toList());
+        response.setContent(votingPage.getContent().stream().map(votingMapper::fromVotingToListResponse).toList());
         return response;
     }
 
@@ -150,13 +150,6 @@ public class VotingController {
     private VotingFullResponse fromVotingToFullResponseWithStatistics(Voting voting) {
         log.info("Controller: Mapping voting {} to voting full response with statistics", voting.getId());
         VotingFullResponse response = votingMapper.fromVotingToFullResponse(voting);
-        response.setStatistics(fromVotingToStatisticsResponse(voting));
-        return response;
-    }
-
-    private VotingListResponse fromVotingToListResponseWithStatistics(Voting voting) {
-        log.info("Controller: Mapping voting {} to voting list response with statistics", voting.getId());
-        VotingListResponse response = votingMapper.fromVotingToListResponse(voting);
         response.setStatistics(fromVotingToStatisticsResponse(voting));
         return response;
     }

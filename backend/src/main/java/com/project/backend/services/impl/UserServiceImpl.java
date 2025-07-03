@@ -65,8 +65,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User createUser(User user, String password, long schoolId) {
+    public User createUser(User user, String password, long schoolId, String roleOfCreator) {
         log.info("Service: Saving new user {}", user.getEmail());
+        if(roleOfCreator.equals("TEACHER") &&
+                (user.getRole().equals("TEACHER") ||  user.getRole().equals("DIRECTOR"))) {
+            throw new IllegalArgumentException("Teachers cant create teacher or director");
+        }
         String email = user.getEmail();
         if (userRepository.existsByEmail(email)) {
             throw new EntityExistsException("User with email " + email + " already exists");

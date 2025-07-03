@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -32,10 +33,12 @@ public class UserController {
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
     public UserFullResponse createUser(@PathVariable(value = "school_id") long schoolId,
-                                       @Valid @RequestBody UserCreateRequest request){
+                                     @Valid @RequestBody UserCreateRequest request,
+                                     Authentication auth) {
         log.info("Controller: Create user with body: {}", request);
         User user = userMapper.fromRequestToUser(request);
-        return userMapper.fromUserToFullResponse(userService.createUser(user, request.getPassword(), schoolId));
+        return userMapper.fromUserToFullResponse(userService.createUser(user, request.getPassword(),
+                schoolId, userService.findUserByAuth(auth).getRole()));
     }
 
     @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasAnyRole('DIRECTOR', 'TEACHER')")

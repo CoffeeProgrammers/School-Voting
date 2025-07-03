@@ -2,6 +2,7 @@ package com.project.backend.services.inter;
 
 import com.project.backend.dto.wrapper.PasswordRequest;
 import com.project.backend.models.User;
+import org.keycloak.jose.jwk.JWK;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 
@@ -9,7 +10,7 @@ import java.util.List;
 
 public interface UserService {
     User createUserKeycloak(User user, long schoolId);
-    User createUser(User user, String password, long schoolId);
+    User createUser(User user, String password, long schoolId, String roleOfCreator);
 
     User updateUser(User user, long userId);
     User updateUserKeycloak(User user, long userId);

@@ -57,6 +57,9 @@ public class PetitionServiceImpl implements PetitionService {
     public long support(long petitionId, User user) {
         log.info("Service: Support for petition {} by user {}", petitionId, user.getId());
         Petition petition = findById(petitionId);
+        if(!(petition.getStatus().equals(Status.ACTIVE))) {
+            throw new IllegalStateException("Petition is not active.");
+        }
         boolean ifCanSupport = petition.getUsers().add(user);
         if (!ifCanSupport) {
             throw new IllegalArgumentException("Cannot support petition because user is already petition");
@@ -69,6 +72,9 @@ public class PetitionServiceImpl implements PetitionService {
     public void approve(long petitionId) {
         log.info("Service: Approving a petition {}", petitionId);
         Petition petition = findById(petitionId);
+        if(!(petition.getStatus().equals(Status.WAITING_FOR_CONSIDERATION))) {
+            throw new IllegalStateException("Petition is not waiting.");
+        }
         petition.setStatus(Status.APPROVED);
         petitionRepository.save(petition);
     }
@@ -77,6 +83,9 @@ public class PetitionServiceImpl implements PetitionService {
     public void reject(long petitionId) {
         log.info("Service: Rejecting a petition {}", petitionId);
         Petition petition = findById(petitionId);
+        if(!(petition.getStatus().equals(Status.WAITING_FOR_CONSIDERATION))) {
+            throw new IllegalStateException("Petition is not waiting.");
+        }
         petition.setStatus(Status.REJECTED);
         petitionRepository.save(petition);
     }

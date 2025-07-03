@@ -1,8 +1,8 @@
-INSERT INTO classes (school_id, name)
-VALUES (1, '10A'),
-       (1, '9C');
+INSERT INTO classes (id, school_id, name)
+VALUES (1, 1, '10A'),
+       (2, 1, '9C');
 
-INSERT INTO user_class(class_id, user_id)
+INSERT INTO students_class(class_id, user_id)
 VALUES (2, 5),
        (1, 8),
        (1, 10),
@@ -15,14 +15,14 @@ VALUES ('Some', 'More', 2, '1975-11-10 00:00:00', '2025-11-10 00:00:00',
        ('New', 'New', 1, '1995-12-10 00:00:00', '2025-11-10 00:00:00',
         (SELECT id FROM users WHERE email = 'bulakovskijvladislav@gmail.com'));
 
-INSERT INTO answer (name, voting_id, count)
-VALUES ('Варіант A', (SELECT id FROM votings WHERE name = 'Some' LIMIT 1), 0),
-('Варіант B', (SELECT id FROM votings WHERE name = 'Some' LIMIT 1), 0);
+INSERT INTO answer (id, name, voting_id, count)
+VALUES (1, 'Варіант A', (SELECT id FROM votings WHERE name = 'Some' LIMIT 1), 0),
+(2, 'Варіант B', (SELECT id FROM votings WHERE name = 'Some' LIMIT 1), 0);
 
-INSERT INTO answer (name, voting_id, count)
-VALUES ('Варіант 1', (SELECT id FROM votings WHERE name = 'New' LIMIT 1), 0),
-('Варіант 2', (SELECT id FROM votings WHERE name = 'New' LIMIT 1), 0),
-('Варіант 3', (SELECT id FROM votings WHERE name = 'New' LIMIT 1), 0);
+INSERT INTO answer (id, name, voting_id, count)
+VALUES (3, 'Варіант 1', (SELECT id FROM votings WHERE name = 'New' LIMIT 1), 0),
+(4, 'Варіант 2', (SELECT id FROM votings WHERE name = 'New' LIMIT 1), 0),
+(5, 'Варіант 3', (SELECT id FROM votings WHERE name = 'New' LIMIT 1), 0);
 
 INSERT INTO voting_user (user_id, voting_id, answer_id)
 VALUES ((SELECT id FROM users WHERE email = 'ivan.fr@example.com'),

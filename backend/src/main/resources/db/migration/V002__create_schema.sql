@@ -89,8 +89,8 @@ CREATE TABLE "petitions"
     "creator_id"  BIGINT       NOT NULL,
     "status"      BIGINT       NOT NULL,
     "count"       BIGINT       NOT NULL,
-    "school_id"   BIGINT       NOT NULL,
-    "class_id"    BIGINT       NOT NULL,
+    "school_id"   BIGINT,
+    "class_id"    BIGINT,
     FOREIGN KEY ("creator_id") REFERENCES "users" ("id") ON DELETE SET NULL,
     FOREIGN KEY ("school_id") REFERENCES "schools" ("id") ON DELETE SET NULL,
     FOREIGN KEY ("class_id") REFERENCES "classes" ("id") ON DELETE SET NULL

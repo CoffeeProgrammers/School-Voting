@@ -12,7 +12,6 @@ import com.project.backend.models.petitions.Petition;
 import com.project.backend.services.inter.CommentService;
 import com.project.backend.services.inter.PetitionService;
 import com.project.backend.services.inter.UserService;
-import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -45,16 +44,16 @@ public class PetitionController {
     }
 
     @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasAnyRole('DIRECTOR', 'STUDENT')")
-    @GetMapping("/{id}")
+    @GetMapping("/{petition_id}")
     @ResponseStatus(HttpStatus.OK)
     public PetitionFullResponse getPetition(
             @PathVariable(name = "school_id") long schoolId,
-            @PathVariable(name = "id") long id,
+            @PathVariable(name = "petition_id") long petitionId,
             @RequestBody PetitionRequest petitionRequest,
             Authentication auth) {
-        log.info("Controller: Getting a petition with id {}", id);
+        log.info("Controller: Getting a petition with id {}", petitionId);
         return petitionMapper.fromPetitionToFullResponse(
-                petitionService.findById(id));
+                petitionService.findById(petitionId));
     }
 
     @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasRole('STUDENT')")
@@ -62,10 +61,10 @@ public class PetitionController {
     @ResponseStatus(HttpStatus.OK)
     public PaginationListResponse<PetitionFullResponse> getMyPetitions(
             @PathVariable(name = "school_id") long schoolId,
-            @PathParam("page") int page,
-            @PathParam("size") int size,
-            @PathParam("name") String name,
-            @PathParam("status") String status,
+            @RequestParam int page,
+            @RequestParam int size,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String status,
             Authentication auth) {
         log.info("Controller: Getting all my petitions");
         Page<Petition> petitionPage = petitionService.findAllMy(name, status, page, size, userService.findUserByAuth(auth).getId());
@@ -80,10 +79,10 @@ public class PetitionController {
     @ResponseStatus(HttpStatus.OK)
     public PaginationListResponse<PetitionFullResponse> getMyOwnPetitions(
             @PathVariable(name = "school_id") long schoolId,
-            @PathParam("page") int page,
-            @PathParam("size") int size,
-            @PathParam("name") String name,
-            @PathParam("status") String status,
+            @RequestParam int page,
+            @RequestParam int size,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String status,
             Authentication auth) {
         log.info("Controller: Getting all my created petitions");
         Page<Petition> petitionPage = petitionService.findAllByCreator(name, status, page, size, userService.findUserByAuth(auth).getId());
@@ -98,10 +97,10 @@ public class PetitionController {
     @ResponseStatus(HttpStatus.OK)
     public PaginationListResponse<PetitionFullResponse> getPetitionsForDirector(
             @PathVariable(name = "school_id") long schoolId,
-            @PathParam("page") int page,
-            @PathParam("size") int size,
-            @PathParam("name") String name,
-            @PathParam("status") String status,
+            @RequestParam int page,
+            @RequestParam int size,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String status,
             Authentication auth) {
         log.info("Controller: Getting all petitions for director");
         Page<Petition> petitionPage = petitionService.findAllForDirector(name, status, page, size);
@@ -184,8 +183,8 @@ public class PetitionController {
     public PaginationListResponse<CommentResponse> getAllByPetition(
             @PathVariable(name = "school_id") long schoolId,
             @PathVariable(name = "petition_id") long petitionId,
-            @PathParam("page") int page,
-            @PathParam("size") int size,
+            @RequestParam int page,
+            @RequestParam int size,
             Authentication auth) {
         log.info("Controller: Getting all the comments for petition with id {}", petitionId);
         Page<Comment> commentPage = commentService.findAllByPetition(petitionId, page, size);

@@ -9,7 +9,6 @@ import com.project.backend.mappers.UserMapper;
 import com.project.backend.models.User;
 import com.project.backend.services.inter.UserService;
 import jakarta.validation.Valid;
-import jakarta.ws.rs.PathParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -31,8 +30,8 @@ public class UserController {
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
     public UserFullResponse createUser(@PathVariable(value = "school_id") long schoolId,
-                                     @Valid @RequestBody UserCreateRequest request,
-                                     Authentication auth) {
+                                       @Valid @RequestBody UserCreateRequest request,
+                                       Authentication auth) {
         log.info("Controller: Create user with body: {}", request);
         User user = userMapper.fromRequestToUser(request);
         return userMapper.fromUserToFullResponse(userService.createUser(user, request.getPassword(),
@@ -40,23 +39,23 @@ public class UserController {
     }
 
     @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasAnyRole('DIRECTOR', 'TEACHER')")
-    @PutMapping("/update/{id}")
+    @PutMapping("/update/{user_id}")
     @ResponseStatus(HttpStatus.OK)
     public UserFullResponse updateUser(
             @PathVariable(value = "school_id") long schoolId,
-            @PathVariable long id,
+            @PathVariable(value = "user_id") long userId,
             @Valid @RequestBody UserUpdateRequest request) {
-        log.info("Controller: Update user with id: {} with body: {}", id, request);
+        log.info("Controller: Update user with id: {} with body: {}", userId, request);
         User user = userMapper.fromRequestToUser(request);
-        return userMapper.fromUserToFullResponse(userService.updateUser(user, id));
+        return userMapper.fromUserToFullResponse(userService.updateUser(user, userId));
     }
 
     @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasAnyRole('DIRECTOR', 'TEACHER')")
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/delete/{user_id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteUser(@PathVariable(value = "school_id") long schoolId, @PathVariable long id) {
-        log.info("Controller: Delete user with id: {}", id);
-        userService.delete(id);
+    public void deleteUser(@PathVariable(value = "school_id") long schoolId, @PathVariable(value = "user_id") long userId) {
+        log.info("Controller: Delete user with id: {}", userId);
+        userService.delete(userId);
     }
 
     @GetMapping("/my")
@@ -72,11 +71,11 @@ public class UserController {
     public PaginationListResponse<UserListResponse> getUsersByVoting(
             @PathVariable(value = "school_id") long schoolId,
             @PathVariable(value = "voting_id") long votingId,
-            @PathParam("email") String email,
-            @PathParam("firstName")  String firstName,
-            @PathParam("lastName")   String lastName,
-            @PathParam("page") int page,
-            @PathParam("size") int size,
+            @RequestParam(required = false) String email,
+            @RequestParam(required = false) String firstName,
+            @RequestParam(required = false) String lastName,
+            @RequestParam int page,
+            @RequestParam int size,
             Authentication auth) {
         log.info("Controller: Get users by voting {}", votingId);
         Page<User> userPage = userService.findAllByVoting(votingId, email, firstName, lastName, page, size);
@@ -92,11 +91,11 @@ public class UserController {
     public PaginationListResponse<UserListResponse> getUsersByRole(
             @PathVariable(value = "school_id") long schoolId,
             @PathVariable(value = "role") String role,
-            @PathParam("email") String email,
-            @PathParam("firstName")  String firstName,
-            @PathParam("lastName")   String lastName,
-            @PathParam("page") int page,
-            @PathParam("size") int size,
+            @RequestParam(required = false) String email,
+            @RequestParam(required = false) String firstName,
+            @RequestParam(required = false) String lastName,
+            @RequestParam int page,
+            @RequestParam int size,
             Authentication auth) {
         log.info("Controller: Get users by role {}", role);
         Page<User> userPage = userService.findAllByRoleInSchool(schoolId, role, email, firstName, lastName, page, size);
@@ -112,11 +111,11 @@ public class UserController {
     public PaginationListResponse<UserListResponse> getUsersByClass(
             @PathVariable(value = "school_id") long schoolId,
             @PathVariable(value = "class_id") long classId,
-            @PathParam("email") String email,
-            @PathParam("firstName")  String firstName,
-            @PathParam("lastName")   String lastName,
-            @PathParam("page") int page,
-            @PathParam("size") int size,
+            @RequestParam(required = false) String email,
+            @RequestParam(required = false) String firstName,
+            @RequestParam(required = false) String lastName,
+            @RequestParam int page,
+            @RequestParam int size,
             Authentication auth) {
         log.info("Controller: Get users by class with id: {}", classId);
         Page<User> userPage = userService.findAllByClass(classId, email, firstName, lastName, page, size);
@@ -131,11 +130,11 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     public PaginationListResponse<UserListResponse> getUsersWithoutClass(
             @PathVariable(value = "school_id") long schoolId,
-            @PathParam("email") String email,
-            @PathParam("firstName")  String firstName,
-            @PathParam("lastName")   String lastName,
-            @PathParam("page") int page,
-            @PathParam("size") int size,
+            @RequestParam(required = false) String email,
+            @RequestParam(required = false) String firstName,
+            @RequestParam(required = false) String lastName,
+            @RequestParam int page,
+            @RequestParam int size,
             Authentication auth) {
         log.info("Controller: Get users without class");
         Page<User> userPage = userService.findAllStudentsWithoutClass(schoolId, email, firstName, lastName, page, size);

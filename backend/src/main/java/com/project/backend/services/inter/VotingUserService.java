@@ -6,11 +6,13 @@ import com.project.backend.models.voting.Answer;
 import com.project.backend.models.voting.Voting;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface VotingUserService {
     List<VotingUser> create(Voting voting, List<User> user);
     VotingUser update(Voting voting, User user, Answer answer);
     VotingUser findById(long votingId, long userId);
+    boolean exitsById(long votingId, long userId);
 
     Long countAllByVoting(long votingId);
     Long countAllByVotingAnswered(long votingId);

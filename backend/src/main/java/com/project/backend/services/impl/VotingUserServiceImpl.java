@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -45,6 +46,12 @@ public class VotingUserServiceImpl implements VotingUserService {
         return votingUserRepository.findById(votingUserId).orElseThrow(
                 () -> new EntityNotFoundException("VotingUser with votingId " + votingId + " userId " + userId + " not found"));
     }
+
+    @Override
+    public boolean exitsById(long votingId, long userId) {
+        return votingUserRepository.existsById(new VotingUser.VotingUserId(votingId, userId));
+    }
+
 
     @Override
     public Long countAllByVoting(long votingId) {

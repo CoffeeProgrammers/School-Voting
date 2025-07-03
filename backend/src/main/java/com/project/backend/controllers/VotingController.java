@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,34 +40,39 @@ public class VotingController {
         return fromVotingToFullResponseWithStatistics(createdVoting);
     }
 
+    @PreAuthorize("@userSecurity.checkUserVoting(#auth, #votingId)")
     @PutMapping("/update/{voting_id}")
     @ResponseStatus(HttpStatus.OK)
     public VotingFullResponse update(@PathVariable("school_id") Long schoolId,
                                      @PathVariable("voting_id") Long votingId,
-                                     VotingUpdateRequest votingUpdateRequest) {
+                                     VotingUpdateRequest votingUpdateRequest,
+                                     Authentication auth) {
         log.info("Controller: Update vote with id {} with body {}", votingId, votingUpdateRequest);
         Voting updatedVoting = votingService.update(votingMapper.fromRequestToVoting(votingUpdateRequest), votingUpdateRequest.getAnswers(), votingId);
         return fromVotingToFullResponseWithStatistics(updatedVoting);
     }
 
+    @PreAuthorize("@userSecurity.checkUserVoting(#auth, #votingId)")
     @DeleteMapping("/delete/{voting_id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable("school_id") Long schoolId,
-                       @PathVariable("voting_id") Long votingId) {
+                       @PathVariable("voting_id") Long votingId,
+                       Authentication auth) {
         log.info("Controller: Delete voting with id {}", votingId);
         votingService.delete(votingId);
     }
 
     @GetMapping("/my")
     @ResponseStatus(HttpStatus.OK)
-    public PaginationListResponse<VotingListResponse> getAllMy(@PathVariable("school_id") Long schoolId,
-                                                               @RequestParam Integer page,
-                                                               @RequestParam Integer size,
-                                                               @RequestParam(required = false) String name,
-                                                               @RequestParam(required = false) Boolean now,
-                                                               @RequestParam(required = false) Boolean canVote,
-                                                               Authentication authentication) {
-        User user = userService.findUserByAuth(authentication);
+    public PaginationListResponse<VotingListResponse> getAllMy
+            (@PathVariable("school_id") Long schoolId,
+             @RequestParam Integer page,
+             @RequestParam Integer size,
+             @RequestParam(required = false) String name,
+             @RequestParam(required = false) Boolean now,
+             @RequestParam(required = false) Boolean canVote,
+             Authentication auth) {
+        User user = userService.findUserByAuth(auth);
         log.info("Controller: Get all votings for user {}", user.getEmail());
         Page<Voting> votingPage = votingService.findAllByUser(user.getId(), name, now, canVote, page, size);
         PaginationListResponse<VotingListResponse> response = new PaginationListResponse<>();
@@ -81,13 +87,14 @@ public class VotingController {
 
     @GetMapping("/createdByMe")
     @ResponseStatus(HttpStatus.OK)
-    public PaginationListResponse<VotingListResponse> getAllCreatedByMe(@PathVariable("school_id") Long schoolId,
-                                                               @RequestParam Integer page,
-                                                               @RequestParam Integer size,
-                                                               @RequestParam(required = false) String name,
-                                                               @RequestParam(required = false) Boolean now,
-                                                               Authentication authentication) {
-        User user = userService.findUserByAuth(authentication);
+    public PaginationListResponse<VotingListResponse> getAllCreatedByMe(
+            @PathVariable("school_id") Long schoolId,
+            @RequestParam Integer page,
+            @RequestParam Integer size,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) Boolean now,
+            Authentication auth) {
+        User user = userService.findUserByAuth(auth);
         log.info("Controller: Get all votings created by user {}", user.getEmail());
         Page<Voting> votingPage = votingService.findAllByCreator(user.getId(), name, now, page, size);
         PaginationListResponse<VotingListResponse> response = new PaginationListResponse<>();
@@ -96,15 +103,17 @@ public class VotingController {
         return response;
     }
 
+    @PreAuthorize("hasRole('DIRECTOR')")
     @GetMapping("/forDirector")
     @ResponseStatus(HttpStatus.OK)
-    public PaginationListResponse<VotingListResponse> getAllForDirector(@PathVariable("school_id") Long schoolId,
-                                                                        @RequestParam Integer page,
-                                                                        @RequestParam Integer size,
-                                                                        @RequestParam(required = false) String name,
-                                                                        @RequestParam(required = false) Boolean now,
-                                                                        Authentication authentication) {
-        User user = userService.findUserByAuth(authentication);
+    public PaginationListResponse<VotingListResponse> getAllForDirector(
+            @PathVariable("school_id") Long schoolId,
+            @RequestParam Integer page,
+            @RequestParam Integer size,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) Boolean now,
+            Authentication auth) {
+        User user = userService.findUserByAuth(auth);
         log.info("Controller: Get all votings for director {}, role {}", user.getEmail(), user.getRole());
         Page<Voting> votingPage = votingService.findAllForDirector(user.getId(), name, page, size);
         PaginationListResponse<VotingListResponse> response = new PaginationListResponse<>();
@@ -113,25 +122,27 @@ public class VotingController {
         return response;
     }
 
+    @PreAuthorize("@userSecurity.checkUserVoting(#auth, #votingId)")
     @GetMapping("/{voting_id}")
     @ResponseStatus(HttpStatus.OK)
     public VotingFullResponse getById(@PathVariable("school_id") Long schoolId,
-                                                              @PathVariable("voting_id") Long votingId,
-                                                              Authentication authentication) {
+                                      @PathVariable("voting_id") Long votingId,
+                                      Authentication auth) {
         log.info("Controller: Get voting by id {}", votingId);
         Voting voting = votingService.findById(votingId);
         VotingFullResponse response = fromVotingToFullResponseWithStatistics(voting);
         return response;
     }
 
+    @PreAuthorize("@userSecurity.checkUserVoting(#auth, #votingId)")
     @PostMapping("/{voting_id}/vote/{answer_id}")
     @ResponseStatus(HttpStatus.OK)
     public void vote(@PathVariable("school_id") Long schoolId,
-                                      @PathVariable("voting_id") Long votingId,
-                                      @PathVariable("answer_id") Long answerId,
-                                      Authentication authentication) {
+                     @PathVariable("voting_id") Long votingId,
+                     @PathVariable("answer_id") Long answerId,
+                     Authentication auth) {
         log.info("Controller: vote for answer {} in voting {}", answerId, votingId);
-        votingService.vote(votingId, answerId, userService.findUserByAuth(authentication));
+        votingService.vote(votingId, answerId, userService.findUserByAuth(auth));
     }
 
     private VotingFullResponse fromVotingToFullResponseWithStatistics(Voting voting) {

@@ -1,0 +1,7 @@
+.recharts-wrapper *:focus,
+.recharts-layer:focus,
+.recharts-layer.recharts-pie:focus,
+.recharts-sector:focus,
+.recharts-wrapper > svg > g:focus {
+    outline: none !important;
+}

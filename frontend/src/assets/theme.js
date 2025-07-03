@@ -5,19 +5,15 @@ import {blueGrey, brown} from "@mui/material/colors";
 const theme = createTheme({
     palette: {
         primary: {
-            // main: '#ad1457',
-            // dark: '#880e4f',
-            // light: '#d81b60'
             main: blueGrey[600],
             dark: blueGrey[700],
             light: blueGrey[300]
-
 
         },
         secondary: {
             main: '#D8A25E',
             dark: '#9c7545',
-            light: '#EEDF7A'
+            light: '#f6e880'
         },
     },
     typography: {

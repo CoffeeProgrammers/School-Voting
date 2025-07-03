@@ -9,6 +9,7 @@ import {ErrorProvider} from "./contexts/ErrorContext";
 import PageContainer from "./components/layouts/appbar_with_drawer/PageContainer";
 import First from "./pages/First";
 import NotFoundPage from "./pages/not_found_page/NotFoundPage";
+import Classes from "./pages/classes/Classes";
 import PetitionsListPage from "./pages/petitions/PetitionsListPage";
 
 const InitNavigation = ({children}) => {
@@ -24,6 +25,9 @@ const InitNavigation = ({children}) => {
 function App() {
 
     const routes = [
+        {path: "/first", element: <First/>},
+        {path: "/classes", element: <Classes/>},
+
         {path: "/petitions", element: <PetitionsListPage/>},
 
         {path: "*", element:<NotFoundPage/>},

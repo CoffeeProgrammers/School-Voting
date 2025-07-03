@@ -17,6 +17,7 @@ import theme from "../../../assets/theme";
 import FolderIcon from '@mui/icons-material/Folder';
 import BalanceRoundedIcon from '@mui/icons-material/BalanceRounded';
 import HistoryEduRoundedIcon from '@mui/icons-material/HistoryEduRounded';
+import Groups2Icon from '@mui/icons-material/Groups2';
 
 const drawerWidth = 240;
 
@@ -81,7 +82,8 @@ const Drawer = ({open, handleDrawerClose}) => {
     const navigation = [
         {type: "navigation", icon: <HistoryEduRoundedIcon sx={{fontSize: 28, ml: -0.25}}/>, title: "Petitions", path: "/petitions"},
         {type: "navigation", icon: <BalanceRoundedIcon sx={{fontSize: 25}}/>, title: "Voting", path: "/second"},
-
+        {type: "divider"},
+        {type: "navigation", icon: <Groups2Icon sx={{fontSize: 25}}/>, title: "Classes", path: "/classes"},
         {type: "divider"},
         {type: "navigation", icon: <AccountCircleIcon/>, title: "Profile", path: "/profile"},
     ]

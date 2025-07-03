@@ -27,6 +27,7 @@ function App() {
     const routes = [
         {path: "/first", element: <First/>},
         {path: "/classes", element: <Classes/>},
+        {path: "/classes/:id", element: <First/>},
 
         {path: "/petitions", element: <PetitionsListPage/>},
 

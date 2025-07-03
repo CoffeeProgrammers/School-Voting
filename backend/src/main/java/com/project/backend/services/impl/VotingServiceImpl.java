@@ -93,8 +93,7 @@ public class VotingServiceImpl implements VotingService {
 
     @Override
     public Page<Voting> findAllByUser(
-            Authentication auth, String name, Boolean now, Boolean canVote, int page, int size) {
-        long userId = userService.findUserByAuth(auth).getId();
+            long userId, String name, Boolean now, Boolean canVote, int page, int size) {
         log.info("Service: Finding all votings by user {}", userId);
         return votingRepository.findAll(
                 VotingSpecification.byUser(userId)
@@ -104,8 +103,7 @@ public class VotingServiceImpl implements VotingService {
 
     @Override
     public Page<Voting> findAllByCreator(
-            Authentication auth, String name, Boolean now, int page, int size) {
-        long userId = userService.findUserByAuth(auth).getId();
+            long userId, String name, Boolean now, int page, int size) {
         log.info("Service: Finding all votings by creator {}", userId);
 
         return votingRepository.findAll(
@@ -116,8 +114,7 @@ public class VotingServiceImpl implements VotingService {
 
     @Override
     public Page<Voting> findAllForDirector(
-            Authentication auth, String name, int page, int size) {
-        long userId = userService.findUserByAuth(auth).getId();
+            long userId, String name, int page, int size) {
         log.info("Service: Finding all votings for director {}", userId);
         return votingRepository.findAll(
                 VotingSpecification.byDirector(userId)

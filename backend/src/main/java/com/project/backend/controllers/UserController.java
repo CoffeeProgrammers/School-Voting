@@ -5,7 +5,6 @@ import com.project.backend.dto.user.UserFullResponse;
 import com.project.backend.dto.user.UserListResponse;
 import com.project.backend.dto.user.UserUpdateRequest;
 import com.project.backend.dto.wrapper.PaginationListResponse;
-import com.project.backend.dto.wrapper.PasswordRequest;
 import com.project.backend.mappers.UserMapper;
 import com.project.backend.models.User;
 import com.project.backend.services.inter.UserService;
@@ -15,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -51,16 +49,6 @@ public class UserController {
         log.info("Controller: Update user with id: {} with body: {}", id, request);
         User user = userMapper.fromRequestToUser(request);
         return userMapper.fromUserToFullResponse(userService.updateUser(user, id));
-    }
-
-    @PutMapping("/update/password")
-    @ResponseStatus(HttpStatus.OK)
-    public boolean updateMyPassword(
-            @PathVariable(value = "school_id") long schoolId,
-            @RequestBody PasswordRequest password,
-            Authentication auth) {
-        log.info("Controller: Update my password");
-        return userService.updatePassword(password, userService.findUserByAuth(auth));
     }
 
     @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasAnyRole('DIRECTOR', 'TEACHER')")

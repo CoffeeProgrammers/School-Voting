@@ -1,5 +1,6 @@
 package com.project.backend.auth.controllers;
 
+import com.project.backend.dto.wrapper.PasswordRequest;
 import com.project.backend.models.User;
 import com.project.backend.services.inter.UserService;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.util.LinkedMultiValueMap;
@@ -18,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -45,6 +46,16 @@ public class AuthController {
     private final UserService userService;
     private final JwtDecoder jwtDecoder;
     private final RealmResource realmResource;
+
+
+    @PutMapping("/update/password")
+    @ResponseStatus(HttpStatus.OK)
+    public boolean updateMyPassword(
+            @RequestBody PasswordRequest password,
+            Authentication auth) {
+        log.info("Controller: Update my password");
+        return userService.updatePassword(password, userService.findUserByAuth(auth));
+    }
 
     @PostMapping("/callback")
     public ResponseEntity<Void> exchangeCode(@RequestParam String code) {

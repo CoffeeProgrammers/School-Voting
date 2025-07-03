@@ -1,6 +1,5 @@
 package com.project.backend.auth.config;
 
-import com.project.backend.mappers.CommentMapper;
 import com.project.backend.models.School;
 import com.project.backend.services.inter.*;
 import lombok.RequiredArgsConstructor;
@@ -34,26 +33,26 @@ public class UserSecurity {
 
     public boolean checkDirectorOfSchool(Authentication authentication, long schoolId) {
         log.info("preAuth: Checking if director of school {}", schoolId);
-        return schoolService.findById(schoolId).getDirector().getEmail()
-                .equals(userService.findUserByAuth(authentication).getEmail());
+        return schoolService.findById(schoolId).getDirector().getKeycloakUserId()
+                .equals(authentication.getName());
     }
 
     public boolean checkCreatorPetition(Authentication authentication, long petitionId) {
         log.info("preAuth: Checking if creator of petition {}", petitionId);
-        return  petitionService.findById(petitionId).getCreator().getEmail()
-                .equals(userService.findUserByAuth(authentication).getEmail());
+        return  petitionService.findById(petitionId).getCreator().getKeycloakUserId()
+                .equals(authentication.getName());
     }
 
     public boolean checkCreatorVoting(Authentication authentication, long votingId) {
         log.info("preAuth: Checking if creator of voting {}", votingId);
-        return  votingService.findById(votingId).getCreator().getEmail()
-                .equals(userService.findUserByAuth(authentication).getEmail());
+        return  votingService.findById(votingId).getCreator().getKeycloakUserId()
+                .equals(authentication.getName());
     }
 
     public boolean checkCreatorComment(Authentication authentication, long commentId) {
         log.info("preAuth: Checking if creator of comment {}", commentId);
-        return  commentService.findById(commentId).getCreator().getEmail()
-                .equals(userService.findUserByAuth(authentication).getEmail());
+        return  commentService.findById(commentId).getCreator().getKeycloakUserId()
+                .equals(authentication.getName());
     }
 
     public boolean checkUserPetition(Authentication authentication, long petitionId) {

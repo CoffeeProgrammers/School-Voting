@@ -41,7 +41,7 @@ public class VotingController {
         return fromVotingToFullResponseWithStatistics(createdVoting);
     }
 
-    @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and @userSecurity.checkUserVoting(#auth, #votingId)")
+    @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and @userSecurity.checkCreatorVoting(#auth, #votingId)")
     @PutMapping("/update/{voting_id}")
     @ResponseStatus(HttpStatus.OK)
     public VotingFullResponse update(@PathVariable("school_id") Long schoolId,
@@ -53,7 +53,7 @@ public class VotingController {
         return fromVotingToFullResponseWithStatistics(updatedVoting);
     }
 
-    @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and @userSecurity.checkUserVoting(#auth, #votingId)")
+    @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and @userSecurity.checkCreatorVoting(#auth, #votingId)")
     @DeleteMapping("/delete/{voting_id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable("school_id") Long schoolId,

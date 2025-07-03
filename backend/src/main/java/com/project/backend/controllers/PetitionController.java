@@ -121,7 +121,7 @@ public class PetitionController {
         petitionService.support(petitionId, userService.findUserByAuth(auth));
     }
 
-    @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasRole('DIRECTOR') and @userSecurity.checkDirectorOfSchool(#auth, #schoolId)")
+    @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasRole('DIRECTOR')")
     @PostMapping("/approve/{petition_id}")
     @ResponseStatus(HttpStatus.OK)
     public void approvePetition(@PathVariable(name = "school_id") long schoolId,
@@ -131,7 +131,7 @@ public class PetitionController {
         petitionService.approve(petitionId);
     }
 
-    @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasRole('DIRECTOR') and @userSecurity.checkDirectorOfSchool(#auth, #schoolId)")
+    @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasRole('DIRECTOR')")
     @PostMapping("/reject/{petition_id}")
     @ResponseStatus(HttpStatus.OK)
     public void rejectPetition(@PathVariable(name = "school_id") long schoolId,

@@ -11,6 +11,7 @@ import First from "./pages/First";
 import NotFoundPage from "./pages/not_found_page/NotFoundPage";
 import Classes from "./pages/classes/Classes";
 import PetitionsListPage from "./pages/petitions/PetitionsListPage";
+import ClassPage from "./pages/classes/ClassPage";
 
 const InitNavigation = ({children}) => {
     const navigate = useNavigate();
@@ -27,7 +28,7 @@ function App() {
     const routes = [
         {path: "/first", element: <First/>},
         {path: "/classes", element: <Classes/>},
-        {path: "/classes/:id", element: <First/>},
+        {path: "/classes/:id", element: <ClassPage/>},
 
         {path: "/petitions", element: <PetitionsListPage/>},
 

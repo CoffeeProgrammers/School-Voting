@@ -13,6 +13,7 @@ import com.project.backend.models.petitions.Petition;
 import com.project.backend.services.inter.CommentService;
 import com.project.backend.services.inter.PetitionService;
 import com.project.backend.services.inter.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -37,7 +38,7 @@ public class PetitionController {
     @ResponseStatus(HttpStatus.CREATED)
     public PetitionFullResponse createPetition(
             @PathVariable(name = "school_id") long schoolId,
-            @RequestBody PetitionRequest petitionRequest,
+            @Valid @RequestBody PetitionRequest petitionRequest,
             Authentication auth) {
         log.info("Controller: Creating a petition for school {}", schoolId);
         return petitionMapper.fromPetitionToFullResponse(
@@ -145,7 +146,7 @@ public class PetitionController {
     @ResponseStatus(HttpStatus.CREATED)
     public CommentResponse createComment(@PathVariable(name = "school_id") long schoolId,
                                          @PathVariable(name = "petition_id") long petitionId,
-                                         @RequestBody CommentRequest commentRequest,
+                                         @Valid @RequestBody CommentRequest commentRequest,
                                          Authentication auth) {
         log.info("Controller: Creating a new comment for petition with id {}", petitionId);
         return commentMapper.fromCommentToResponse(
@@ -158,7 +159,7 @@ public class PetitionController {
     public CommentResponse updateComment(@PathVariable(name = "school_id") long schoolId,
                                          @PathVariable(name = "petition_id") long petitionId,
                                          @PathVariable(name = "comment_id") long commentId,
-                                         @RequestBody CommentRequest commentRequest,
+                                         @Valid @RequestBody CommentRequest commentRequest,
                                          Authentication auth) {
         log.info("Controller: Updating a new comment for petition with id {}", petitionId);
         return commentMapper.fromCommentToResponse(
@@ -171,7 +172,6 @@ public class PetitionController {
     public void deleteComment(@PathVariable(name = "school_id") long schoolId,
                               @PathVariable(name = "petition_id") long petitionId,
                               @PathVariable(name = "comment_id") long commentId,
-                              @RequestBody CommentRequest commentRequest,
                               Authentication auth) {
         log.info("Controller: Deleting a new comment for petition with id {}", petitionId);
         commentService.delete(commentId);

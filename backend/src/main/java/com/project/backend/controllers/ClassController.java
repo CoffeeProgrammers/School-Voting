@@ -8,6 +8,7 @@ import com.project.backend.dto.wrapper.PaginationListResponse;
 import com.project.backend.mappers.ClassMapper;
 import com.project.backend.models.Class;
 import com.project.backend.services.inter.ClassService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -31,7 +32,7 @@ public class ClassController {
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
     public ClassFullResponse createClass(@PathVariable(value = "school_id") long schoolId,
-                                         @RequestBody ClassCreateRequest classCreateRequest,
+                                         @Valid @RequestBody ClassCreateRequest classCreateRequest,
                                          Authentication auth) {
         log.info("Controller: Creating a new class");
         return classMapper.fromClassToFullResponse(
@@ -43,7 +44,7 @@ public class ClassController {
     @ResponseStatus(HttpStatus.OK)
     public ClassFullResponse updateClass(@PathVariable(value = "school_id") long schoolId,
                                          @PathVariable(value = "class_id") long classId,
-                                         @RequestBody ClassUpdateRequest classUpdateRequest,
+                                         @Valid @RequestBody ClassUpdateRequest classUpdateRequest,
                                          Authentication auth) {
         log.info("Controller: Updating class with id {}", classId);
         return classMapper.fromClassToFullResponse(

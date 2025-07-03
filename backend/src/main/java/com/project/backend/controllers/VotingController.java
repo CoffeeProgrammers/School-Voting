@@ -10,6 +10,7 @@ import com.project.backend.services.inter.AnswerService;
 import com.project.backend.services.inter.UserService;
 import com.project.backend.services.inter.VotingService;
 import com.project.backend.services.inter.VotingUserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -34,7 +35,7 @@ public class VotingController {
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId)")
     public VotingFullResponse create(@PathVariable("school_id") Long schoolId,
-                                     @RequestBody VotingCreateRequest votingCreateRequest,
+                                     @Valid @RequestBody VotingCreateRequest votingCreateRequest,
                                      Authentication authentication) {
         log.info("Controller: Create vote with body {}", votingCreateRequest);
         Voting createdVoting = votingService.create(votingMapper.fromRequestToVoting(votingCreateRequest), votingCreateRequest.getAnswers(), votingCreateRequest.getTargetIds(), schoolId, userService.findUserByAuth(authentication).getId());
@@ -46,7 +47,7 @@ public class VotingController {
     @ResponseStatus(HttpStatus.OK)
     public VotingFullResponse update(@PathVariable("school_id") Long schoolId,
                                      @PathVariable("voting_id") Long votingId,
-                                     @RequestBody VotingUpdateRequest votingUpdateRequest,
+                                     @Valid  @RequestBody VotingUpdateRequest votingUpdateRequest,
                                      Authentication auth) {
         log.info("Controller: Update vote with id {} with body {}", votingId, votingUpdateRequest);
         Voting updatedVoting = votingService.update(votingMapper.fromRequestToVoting(votingUpdateRequest), votingUpdateRequest.getAnswers(), votingId);

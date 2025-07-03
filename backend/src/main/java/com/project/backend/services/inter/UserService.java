@@ -8,8 +8,8 @@ import org.springframework.security.core.Authentication;
 import java.util.List;
 
 public interface UserService {
-    User createUserKeycloak(User user);
-    User createUser(User user, String password);
+    User createUserKeycloak(User user, long schoolId);
+    User createUser(User user, String password, long schoolId);
 
     User updateUser(User user, long userId);
     User updateUserKeycloak(User user, long userId);
@@ -20,15 +20,19 @@ public interface UserService {
     User findById(long id);
 
     Page<User> findAllByVoting(
-            long votingId, String email, String firstName, String lastName, String role,
+            long votingId, String email, String firstName, String lastName,
             int page, int size, Authentication auth);
 
-    Page<User> findAllByRole(
-            String role, String email, String firstName, String lastName,
+    Page<User> findAllByRoleInSchool(
+            long schoolId, String role, String email, String firstName, String lastName,
             int page, int size, Authentication auth);
 
     Page<User> findAllByClass(
             long classId, String email, String firstName, String lastName,
+            int page, int size, Authentication auth);
+
+    Page<User> findAllStudentsWithoutClass(
+            long schoolId, String email, String firstName, String lastName,
             int page, int size, Authentication auth);
 
     List<User> findAllBySchool(

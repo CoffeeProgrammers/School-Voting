@@ -4,6 +4,7 @@ import com.project.backend.dto.wrapper.PasswordRequest;
 import com.project.backend.models.User;
 import com.project.backend.repositories.UserRepository;
 import com.project.backend.repositories.specification.UserSpecification;
+import com.project.backend.services.inter.SchoolService;
 import com.project.backend.services.inter.UserService;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
@@ -45,6 +46,7 @@ public class UserServiceImpl implements UserService {
     private final ClientResource clientResource;
     private final String clientUUID;
     private final Map<String, RoleRepresentation> clientRoles;
+    private final SchoolService schoolService;
 
     private final WebClient webClient;
 
@@ -56,13 +58,14 @@ public class UserServiceImpl implements UserService {
     private String clientSecret;
 
     @Override
-    public User createUserKeycloak(User user) {
+    public User createUserKeycloak(User user, long schoolId) {
         log.info("Service: Saving new user {}", user.getEmail());
+        user.setSchool(schoolService.findById(schoolId));
         return userRepository.save(user);
     }
 
     @Override
-    public User createUser(User user, String password) {
+    public User createUser(User user, String password, long schoolId) {
         log.info("Service: Saving new user {}", user.getEmail());
         String email = user.getEmail();
         if (userRepository.existsByEmail(email)) {
@@ -101,7 +104,7 @@ public class UserServiceImpl implements UserService {
                 .clientLevel(clientUUID)
                 .add(List.of(clientRoles.get(user.getRole())));
 
-        return createUserKeycloak(user);
+        return createUserKeycloak(user, schoolId);
     }
 
     @Override
@@ -208,7 +211,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Page<User> findAllByVoting(long votingId, String email, String firstName, String lastName, String role, int page, int size, Authentication auth) {
+    public Page<User> findAllByVoting(long votingId, String email, String firstName, String lastName, int page, int size, Authentication auth) {
+       log.info("Service: Finding all users by voting with id {}", votingId);
         return userRepository.findAll(
                 createSpecification(email, firstName, lastName, null)
                         .and(UserSpecification.usersByVotingSortedByAnswer(votingId)),
@@ -219,9 +223,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Page<User> findAllByRole(String role, String email, String firstName, String lastName, int page, int size, Authentication auth) {
+    public Page<User> findAllByRoleInSchool(long schoolId, String role, String email, String firstName, String lastName, int page, int size, Authentication auth) {
+        log.info("Service: Finding all users by role {}", role);
         return userRepository.findAll(
-                createSpecification(email, firstName, lastName, role),
+                createSpecification(email, firstName, lastName, role)
+                        .and(UserSpecification.bySchool(schoolId)),
                 PageRequest.of(
                         page, size, Sort.by(Sort.Direction.ASC, "lastName", "firstName")
                 )
@@ -230,6 +236,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Page<User> findAllByClass(long classId, String email, String firstName, String lastName, int page, int size, Authentication auth) {
+        log.info("Service: Finding all users by class {}", classId);
         return userRepository.findAll(
                 createSpecification(email, firstName, lastName, null)
                         .and(UserSpecification.byClass(classId)),
@@ -240,12 +247,27 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Page<User> findAllStudentsWithoutClass(long schoolId, String email, String firstName, String lastName, int page, int size, Authentication auth) {
+        log.info("Service: Finding all users without class");
+        return userRepository.findAll(
+                createSpecification(email, firstName, lastName, "STUDENT")
+                        .and(UserSpecification.notInAnyClass())
+                        .and(UserSpecification.bySchool(schoolId)),
+                PageRequest.of(
+                        page, size, Sort.by(Sort.Direction.ASC, "lastName", "firstName")
+                )
+        );
+    }
+
+    @Override
     public List<User> findAllBySchool(long schoolId, Authentication auth) {
+        log.info("Service: Finding list of all users by school {}", schoolId);
         return userRepository.findAll(UserSpecification.bySchool(schoolId).and(UserSpecification.notUser(findUserByAuth(auth).getId())));
     }
 
     @Override
     public List<User> findAllByClass(long classId, Authentication auth) {
+        log.info("Service: Finding list of all users by class {}", classId);
         return userRepository.findAll(UserSpecification.byClass(classId).and(UserSpecification.notUser(findUserByAuth(auth).getId())));
     }
 

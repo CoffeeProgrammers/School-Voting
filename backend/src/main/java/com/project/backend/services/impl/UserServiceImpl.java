@@ -68,11 +68,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public User createUser(User user, String password, long schoolId, String roleOfCreator) {
         log.info("Service: Saving new user {}", user.getEmail());
-        if(roleOfCreator.equals("TEACHER") &&
-                (user.getRole().equals("TEACHER") ||  user.getRole().equals("DIRECTOR"))) {
+        if (roleOfCreator.equals("TEACHER") &&
+                (user.getRole().equals("TEACHER") || user.getRole().equals("DIRECTOR"))) {
             throw new IllegalArgumentException("Teachers cant create teacher or director");
         }
-        if(roleOfCreator.equals("DIRECTOR") &&
+        if (roleOfCreator.equals("DIRECTOR") &&
                 user.getRole().equals("DIRECTOR")) {
             throw new IllegalArgumentException("Teachers cant create teacher or director");
         }
@@ -208,6 +208,10 @@ public class UserServiceImpl implements UserService {
         User user = findById(id);
         checkForDeletedUser(user);
 
+        if(user.getRole().equals("DIRECTOR")){
+            throw new IllegalArgumentException("Cannot delete director");
+        }
+
         realmResource.users().delete(user.getKeycloakUserId());
         userRepository.deleteById(id);
     }
@@ -221,7 +225,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Page<User> findAllByVoting(long votingId, String email, String firstName, String lastName, int page, int size) {
-       log.info("Service: Finding all users by voting with id {}", votingId);
+        log.info("Service: Finding all users by voting with id {}", votingId);
         return userRepository.findAll(
                 createSpecification(email, firstName, lastName, null)
                         .and(UserSpecification.usersByVotingSortedByAnswer(votingId)),
@@ -234,9 +238,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public Page<User> findAllByRoleInSchool(long schoolId, String role, String email, String firstName, String lastName, int page, int size) {
         log.info("Service: Finding all users by role {}", role);
+        Specification<User> userSpecification = createSpecification(email, firstName, lastName, role);
+        Specification<User> fullSpecification = userSpecification == null ? UserSpecification.bySchool(schoolId) : userSpecification.and(UserSpecification.bySchool(schoolId));
         return userRepository.findAll(
-                createSpecification(email, firstName, lastName, role)
-                        .and(UserSpecification.bySchool(schoolId)),
+                fullSpecification,
                 PageRequest.of(
                         page, size, Sort.by(Sort.Direction.ASC, "lastName", "firstName")
                 )
@@ -246,9 +251,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public Page<User> findAllByClass(long classId, String email, String firstName, String lastName, int page, int size) {
         log.info("Service: Finding all users by class {}", classId);
+        Specification<User> userSpecification = createSpecification(email, firstName, lastName, null);
+        Specification<User> fullSpecification = userSpecification == null ? UserSpecification.byClass(classId) : userSpecification.and(UserSpecification.byClass(classId));
         return userRepository.findAll(
-                createSpecification(email, firstName, lastName, null)
-                        .and(UserSpecification.byClass(classId)),
+                fullSpecification,
                 PageRequest.of(
                         page, size, Sort.by(Sort.Direction.ASC, "lastName", "firstName")
                 )
@@ -258,10 +264,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public Page<User> findAllStudentsWithoutClass(long schoolId, String email, String firstName, String lastName, int page, int size) {
         log.info("Service: Finding all users without class");
+        Specification<User> userSpecification = createSpecification(email, firstName, lastName, "STUDENT");
+        Specification<User> fullSpecification = userSpecification == null ?
+                UserSpecification.notInAnyClass().and(UserSpecification.bySchool(schoolId)) : userSpecification.and(UserSpecification.notInAnyClass()).and(UserSpecification.bySchool(schoolId));
         return userRepository.findAll(
-                createSpecification(email, firstName, lastName, "STUDENT")
-                        .and(UserSpecification.notInAnyClass())
-                        .and(UserSpecification.bySchool(schoolId)),
+                fullSpecification,
                 PageRequest.of(
                         page, size, Sort.by(Sort.Direction.ASC, "lastName", "firstName")
                 )

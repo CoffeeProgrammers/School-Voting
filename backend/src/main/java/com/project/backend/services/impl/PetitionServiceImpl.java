@@ -4,8 +4,10 @@ import com.project.backend.models.User;
 import com.project.backend.models.enums.LevelType;
 import com.project.backend.models.enums.Status;
 import com.project.backend.models.petitions.Petition;
+import com.project.backend.models.voting.Voting;
 import com.project.backend.repositories.petitions.PetitionRepository;
 import com.project.backend.repositories.specification.PetitionSpecification;
+import com.project.backend.repositories.specification.VotingSpecification;
 import com.project.backend.services.inter.ClassService;
 import com.project.backend.services.inter.PetitionService;
 import com.project.backend.services.inter.SchoolService;
@@ -106,10 +108,14 @@ public class PetitionServiceImpl implements PetitionService {
     @Override
     public Page<Petition> findAllMy(String name, String status, int page, int size, long userId) {
         log.info("Service: Finding all my petitions with name {} and status {}", name, status);
+
+        Specification<Petition> petitionSpecification = createSpecification(name, status);
+        Specification<Petition> fullSpecification = petitionSpecification == null ?
+               PetitionSpecification.byUserInClass(userId).and(PetitionSpecification.byUserInSchool(userId)) :
+                petitionSpecification.and(PetitionSpecification.byUserInClass(userId)).and(PetitionSpecification.byUserInSchool(userId));
+
         return petitionRepository.findAll(
-                createSpecification(name, status)
-                        .and(PetitionSpecification.byUserInClass(userId))
-                        .and(PetitionSpecification.byUserInSchool(userId)),
+                fullSpecification,
                 PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "endTime"))
         );
     }
@@ -117,9 +123,14 @@ public class PetitionServiceImpl implements PetitionService {
     @Override
     public Page<Petition> findAllByCreator(String name, String status, int page, int size, long creatorId) {
         log.info("Service: Finding all petitions by creator {}, name {} and status {}", creatorId, name, status);
+
+        Specification<Petition> petitionSpecification = createSpecification(name, status);
+        Specification<Petition> fullSpecification = petitionSpecification == null ?
+                PetitionSpecification.byCreator(creatorId) :
+                petitionSpecification.and(PetitionSpecification.byCreator(creatorId));
+
         return petitionRepository.findAll(
-                createSpecification(name, status)
-                        .and(PetitionSpecification.byCreator(creatorId)),
+                fullSpecification,
                 PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "endTime")
                 )
         );
@@ -128,13 +139,18 @@ public class PetitionServiceImpl implements PetitionService {
     @Override
     public Page<Petition> findAllForDirector(String name, String status, int page, int size) {
         log.info("Service: Finding all petitions for director, name {} and status {}", name, status);
-        return petitionRepository.findAll(
-                createSpecification(name, status), PageRequest.of(
-                        page, size, Sort.by(
-                                Sort.Direction.ASC, "endTime"
-                        )
-                )
-        );
+
+        Specification<Petition> petitionSpecification = createSpecification(name, status);
+
+        if(petitionSpecification == null){
+            return petitionRepository.findAll(
+                PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "endTime")));
+        }else {
+            return petitionRepository.findAll(
+                    createSpecification(name, status), PageRequest.of(
+                            page, size, Sort.by(
+                                    Sort.Direction.ASC, "endTime")));
+        }
     }
 
     private Specification<Petition> createSpecification(String name, String status) {

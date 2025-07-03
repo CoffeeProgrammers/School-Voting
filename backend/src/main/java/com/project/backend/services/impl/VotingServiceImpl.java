@@ -2,6 +2,7 @@ package com.project.backend.services.impl;
 
 import com.project.backend.models.User;
 import com.project.backend.models.voting.Voting;
+import com.project.backend.repositories.specification.UserSpecification;
 import com.project.backend.repositories.specification.VotingSpecification;
 import com.project.backend.repositories.voting.VotingRepository;
 import com.project.backend.services.inter.AnswerService;
@@ -94,9 +95,11 @@ public class VotingServiceImpl implements VotingService {
     public Page<Voting> findAllByUser(
             long userId, String name, Boolean now, Boolean canVote, int page, int size) {
         log.info("Service: Finding all votings by user {}", userId);
+        Specification<Voting> voitingSpecification = createSpecification(name, false, now, null,  canVote, userId);
+        Specification<Voting> fullSpecification = voitingSpecification == null ? VotingSpecification.byUser(userId) : voitingSpecification.and(VotingSpecification.byUser(userId));
+
         return votingRepository.findAll(
-                VotingSpecification.byUser(userId)
-                        .and(createSpecification(name, false, now, null,  canVote, userId)),
+                fullSpecification,
                 PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "endTime")));
     }
 
@@ -105,9 +108,11 @@ public class VotingServiceImpl implements VotingService {
             long userId, String name, Boolean now, Boolean notStarted, int page, int size) {
         log.info("Service: Finding all votings by creator {}", userId);
 
+        Specification<Voting> voitingSpecification = createSpecification(name, true, now, notStarted, null, null);
+        Specification<Voting> fullSpecification = voitingSpecification == null ? VotingSpecification.byCreator(userId) : voitingSpecification.and(VotingSpecification.byCreator(userId));
+
         return votingRepository.findAll(
-                VotingSpecification.byCreator(userId)
-                        .and(createSpecification(name, true, now, notStarted, null, null)),
+                fullSpecification,
                 PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "endTime")));
     }
 
@@ -115,9 +120,12 @@ public class VotingServiceImpl implements VotingService {
     public Page<Voting> findAllForDirector(
             long userId, String name, int page, int size) {
         log.info("Service: Finding all votings for director {}", userId);
+
+        Specification<Voting> voitingSpecification = createSpecification(name, false, null, null, null, null);
+        Specification<Voting> fullSpecification = voitingSpecification == null ? VotingSpecification.byDirector(userId) : voitingSpecification.and(VotingSpecification.byDirector(userId));
+
         return votingRepository.findAll(
-                VotingSpecification.byDirector(userId)
-                        .and(createSpecification(name, false, null, null, null, null)),
+                fullSpecification,
                 PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "endTime")));
     }
 

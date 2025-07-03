@@ -43,12 +43,11 @@ public class AnswerServiceImpl implements AnswerService {
     }
 
     @Override
-    public long vote(long id) {
+    public void vote(long id) {
         log.info("Service: Vote request {}", id);
         Answer answer = findById(id);
         answer.incrementCount();
         answerRepository.save(answer);
-        return answer.getCount();
     }
 
     @Override

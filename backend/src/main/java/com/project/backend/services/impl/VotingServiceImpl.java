@@ -1,6 +1,7 @@
 package com.project.backend.services.impl;
 
 import com.project.backend.models.User;
+import com.project.backend.models.voting.Answer;
 import com.project.backend.models.voting.Voting;
 import com.project.backend.repositories.specification.VotingSpecification;
 import com.project.backend.repositories.voting.VotingRepository;
@@ -69,7 +70,7 @@ public class VotingServiceImpl implements VotingService {
     @Override
     public Voting update(Voting votingRequest, List<String> answer, long id) {
         log.info("Service: Updating voting with id {}", id);
-        Voting oldVoting = findById(votingRequest.getId());
+        Voting oldVoting = findById(id);
         checkTimeForChanges(oldVoting);
         oldVoting.setName(votingRequest.getName());
         oldVoting.setDescription(votingRequest.getDescription());
@@ -95,7 +96,7 @@ public class VotingServiceImpl implements VotingService {
     public Page<Voting> findAllByUser(
             long userId, String name, Boolean now, Boolean canVote, int page, int size) {
         log.info("Service: Finding all votings by user {}", userId);
-        Specification<Voting> voitingSpecification = createSpecification(name, false, now, null,  canVote, userId);
+        Specification<Voting> voitingSpecification = createSpecification(name, false, now, null, canVote, userId);
         Specification<Voting> fullSpecification = voitingSpecification == null ? VotingSpecification.byUser(userId) : voitingSpecification.and(VotingSpecification.byUser(userId));
 
         return votingRepository.findAll(
@@ -134,8 +135,8 @@ public class VotingServiceImpl implements VotingService {
         log.info("Service: Vote for answer with id {}", answerId);
         Voting voting = findById(votingId);
         checkTimeForVote(voting);
-        votingUserService.update(voting, user, answerService.findById(answerId));
         answerService.vote(answerId);
+        votingUserService.update(voting, user, answerService.findById(answerId));
     }
 
     private void checkTimeForChanges(Voting voting) {
@@ -166,7 +167,7 @@ public class VotingServiceImpl implements VotingService {
             if (!my) {
                 specification = addSpecification(specification, VotingSpecification::byStartTime);
             }
-            if(isValid(notStarted) && notStarted) {
+            if (isValid(notStarted) && notStarted) {
                 specification = addSpecification(specification, VotingSpecification::byStartTimeNot);
             }
         }

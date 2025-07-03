@@ -8,7 +8,7 @@ import java.util.List;
 public interface AnswerService {
     List<Answer> create (List<String> answerRequest, Voting voting);
     List<Answer> update(List<String> newText, Voting voting);
-    long vote(long id);
+    void vote(long id);
     List<Answer> findAllByVoting(long votingId);
     Answer findById(long id);
 }

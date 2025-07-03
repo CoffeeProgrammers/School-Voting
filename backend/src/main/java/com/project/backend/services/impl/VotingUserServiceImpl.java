@@ -42,14 +42,14 @@ public class VotingUserServiceImpl implements VotingUserService {
     @Override
     public VotingUser findById(long votingId, long userId) {
         log.info("Service: Finding voting user with voting {} and user {}", votingId, userId);
-        VotingUser.VotingUserId votingUserId = new VotingUser.VotingUserId(votingId, userId);
+        VotingUser.VotingUserId votingUserId = new VotingUser.VotingUserId(userId, votingId);
         return votingUserRepository.findById(votingUserId).orElseThrow(
                 () -> new EntityNotFoundException("VotingUser with votingId " + votingId + " userId " + userId + " not found"));
     }
 
     @Override
     public boolean exitsById(long votingId, long userId) {
-        return votingUserRepository.existsById(new VotingUser.VotingUserId(votingId, userId));
+        return votingUserRepository.existsById(new VotingUser.VotingUserId(userId, votingId));
     }
 
 

@@ -12,8 +12,8 @@ const voting = [
         "id": 1,
         "name": "Poll on Environmental Policy",
         "levelType": "NATIONAL",
-        "startTime": "2025-06-01T08:00:00Z",
-        "endTime": "2025-06-05T20:00:00Z",
+        "startTime": "2024-09-30T23:59:59",
+        "endTime": "2026-09-30T23:59:59",
         "statistics": {
             "answers": [
                 {"id": 1, "name": "Yes", "count": 900},
@@ -24,14 +24,14 @@ const voting = [
             "countAll": 1800,
             "countAllAnswered": 1550
         },
-        "isAnswered": true
+        "isAnswered": false
     },
     {
         "id": 2,
         "name": "Budget Allocation Vote",
         "levelType": "REGIONAL",
         "startTime": "2025-07-01T09:00:00Z",
-        "endTime": "2025-07-03T17:00:00Z",
+        "endTime": "2026-07-03T17:00:00Z",
         "statistics": {
             "answers": [
                 {"id": 5, "name": "Yes", "count": 430},
@@ -59,14 +59,14 @@ const voting = [
             "countAll": 1250,
             "countAllAnswered": 1150
         },
-        "isAnswered": true
+        "isAnswered": false
     },
     {
         "id": 4,
         "name": "Local Festival Theme",
         "levelType": "COMMUNITY",
         "startTime": "2025-06-10T12:00:00Z",
-        "endTime": "2025-06-11T12:00:00Z",
+        "endTime": "2026-06-11T12:00:00Z",
         "statistics": {
             "answers": [
                 {"id": 12, "name": "Yes", "count": 60},
@@ -94,7 +94,7 @@ const voting = [
             "countAll": 1200,
             "countAllAnswered": 1120
         },
-        "isAnswered": true
+        "isAnswered": false
     },
     {
         "id": 6,

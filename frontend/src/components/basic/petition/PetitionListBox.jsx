@@ -11,11 +11,6 @@ import {blueGrey} from "@mui/material/colors";
 const PetitionListBox = ({petition}) => {
     const navigate = useNavigate();
 
-    const percentage = Math.min(
-        (petition.countSupport * 100) / petition.countNeeded,
-        100
-    );
-
     const date = Utils.getDaysLeft(petition.endTime);
     const viewDate = date < 0 ? 'Expired' : date + " days left";
 

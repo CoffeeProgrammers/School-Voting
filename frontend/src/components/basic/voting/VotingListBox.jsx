@@ -2,7 +2,6 @@ import React from 'react';
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import {useNavigate} from "react-router-dom";
-import Utils from "../../../utils/Utils";
 import {Chip} from "@mui/material";
 import HowToVoteIcon from '@mui/icons-material/HowToVote';
 import {blueGrey} from "@mui/material/colors";
@@ -48,14 +47,15 @@ const VotingListBox = ({voting}) => {
             </Box>
             <Box mt={8} display="flex" alignItems="center" justifyContent="space-between">
                 <Box/>
-                <Box display="flex" alignItems="center" gap={0.5}>
-                   <VotingDate startDate={voting.startDate} endDate={voting.endDate}/>
-                    <Chip
-                        icon={<HowToVoteIcon color="success"/>}
-                        label="Voted"
-                        size="small"
-                        sx={{color: 'success.main', backgroundColor: blueGrey[50]}}
-                    />
+                <Box display="flex" alignItems="center">
+                    <VotingDate startDate={voting.startTime} endDate={voting.endTime}/>
+                    {voting.isAnswered && (
+                        <Chip
+                            icon={<HowToVoteIcon color="success"/>}
+                            label="Voted"
+                            size="small"
+                            sx={{color: 'success.main', backgroundColor: blueGrey[50], ml: 1}}
+                        />)}
                 </Box>
             </Box>
         </Box>

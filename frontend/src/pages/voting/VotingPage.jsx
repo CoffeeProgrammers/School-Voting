@@ -18,7 +18,7 @@ const voting = {
     "description": "lorem ipsum dolor sit amet, consectetur adipiscing elit lorem ipsum dolor sit amet, consectetur adipiscing elitlorem ipsum dolor sit amet, consectetur adipiscing elit lorem ipsum dolor sit amet, consectetur adipiscing elit lorem ipsum dolor sit amet, consectetur adipiscing elitvlorem ipsum dolor sit amet, consectetur adipiscing elit lorem ipsum dolor sit amet, consectetur adipiscing elitvlorem ipsum dolor sit amet, consectetur adipiscing elitvlorem ipsum dolor sit amet, consectetur adipiscing elitvlorem ipsum dolor sit amet, consectetur adipiscing elitvlorem ipsum dolor sit amet, consectetur adipiscing elitvlorem ipsum dolor sit amet, consectetur adipiscing elitlorem ipsum dolor sit amet, consectetur adipiscing elitvlorem ipsum dolor sit amet, consectetur adipiscing elitv",
     "levelType": "NATIONAL",
     "startTime": "2025-06-01T08:00:00Z",
-    "endTime": "2024-06-05T20:00:00Z",
+    "endTime": "2026-06-05T20:00:00Z",
     "creator": {
         "id": 10,
         "email": "jane.doe@example.com",

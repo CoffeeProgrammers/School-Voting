@@ -14,15 +14,17 @@ const VotingDate = ({startDate, endDate}) => {
             <Chip
                 label="Not started yet"
                 size="small"
-                sx={{mr: 0.5, backgroundColor: blueGrey[50]}}
+                sx={{backgroundColor: blueGrey[50]}}
             />
         );
     }
 
+    console.log(now + " " + start + " " + end)
+
     if (now >= start && now <= end) {
         const daysLeft = Utils.getDaysLeft(endDate);
         return (
-            <Typography mr={1}>
+            <Typography>
                 {`${daysLeft} day${daysLeft !== 1 ? 's' : ''} left`}
             </Typography>
         )
@@ -31,7 +33,7 @@ const VotingDate = ({startDate, endDate}) => {
         <Chip
             label="Finished"
             size="small"
-            sx={{mr: 0.5, backgroundColor: blueGrey[100]}}
+            sx={{backgroundColor: blueGrey[100]}}
         />)
 };
 

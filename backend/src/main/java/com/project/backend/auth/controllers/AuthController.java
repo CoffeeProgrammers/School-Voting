@@ -20,6 +20,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Map;
@@ -93,7 +94,7 @@ public class AuthController {
         } catch (WebClientResponseException e) {
             log.error("Controller: {} Error response from Keycloak: {}", e.getRawStatusCode(), e.getResponseBodyAsString());
 
-            return ResponseEntity.status(e.getRawStatusCode()).build();
+            throw new ResponseStatusException(e.getStatusCode(), e.getResponseBodyAsString());
         }
     }
 

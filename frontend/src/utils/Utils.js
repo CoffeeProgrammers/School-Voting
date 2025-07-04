@@ -19,6 +19,24 @@ class Utils {
         return diffDays;
     }
 
+    static formatVotingDate(startDate, endDate) {
+        const now = new Date();
+        const start = new Date(startDate);
+        const end = new Date(endDate);
+
+        if (now < start) {
+            return "Not started yet";
+        }
+
+        if (now >= start && now <= end) {
+            const daysLeft = this.getDaysLeft(endDate);
+            return `${daysLeft} day${daysLeft !== 1 ? 's' : ''} left`;
+        }
+
+        return "Finished";
+    }
+
+
     static getStatus(status, iconStyles, textStyles) {
         switch (status) {
             case 'ACTIVE':

@@ -7,12 +7,13 @@ import {history} from "./utils/history";
 import {useEffect} from "react";
 import {ErrorProvider} from "./contexts/ErrorContext";
 import PageContainer from "./components/layouts/appbar_with_drawer/PageContainer";
-import First from "./pages/First";
 import NotFoundPage from "./pages/not_found_page/NotFoundPage";
 import Classes from "./pages/classes/Classes";
 import PetitionsListPage from "./pages/petitions/PetitionsListPage";
 import PetitionPage from "./pages/petitions/PetitionPage";
 import ClassPage from "./pages/classes/ClassPage";
+import VotingListPage from "./pages/voitings/VotingListPage";
+import VotingPage from "./pages/voitings/VotingPage";
 
 const InitNavigation = ({children}) => {
     const navigate = useNavigate();
@@ -28,11 +29,15 @@ function App() {
 
     const routes = [
         { path: "/", element: <Navigate to="/petitions" replace /> },
-        {path: "/classes", element: <Classes/>},
-        {path: "/classes/:id", element: <ClassPage/>},
 
         {path: "/petitions", element: <PetitionsListPage/>},
         {path: "/petitions/:id", element: <PetitionPage/>},
+
+        {path: "/voting", element: <VotingListPage/>},
+        {path: "/voting/:id", element: <VotingPage/>},
+
+        {path: "/classes", element: <Classes/>},
+        {path: "/classes/:id", element: <ClassPage/>},
 
         {path: "*", element:<NotFoundPage/>},
 

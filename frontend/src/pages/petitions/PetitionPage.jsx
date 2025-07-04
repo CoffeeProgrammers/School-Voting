@@ -35,8 +35,7 @@ const PetitionPage = () => {
 
     const [tab, setTab] = useState("Description")
 
-    const date = Utils.getDaysLeft(petition.endTime);
-    const viewDate = date < 0 ? 'Expired' : date + " days left";
+    const viewDate = Utils.getDaysLeft(petition.endTime) + ' days left';
 
     const renderSuccessSupportButton = () => {
         return (

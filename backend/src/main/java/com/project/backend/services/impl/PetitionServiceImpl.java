@@ -40,7 +40,9 @@ public class PetitionServiceImpl implements PetitionService {
                 || petition.getLevelType().equals(LevelType.GROUP_OF_TEACHERS)) {
             throw new IllegalArgumentException("Cannot create a petition with such level type.");
         }
-        petition.setEndTime(LocalDateTime.now().plusDays(45));
+        LocalDateTime now = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0);
+        petition.setCreationTime(now);
+        petition.setEndTime(now.plusDays(45));
         petition.setCreator(creator);
         petition.setStatus(Status.ACTIVE);
         petition.setTargetId(petition.getTargetId());

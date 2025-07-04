@@ -29,6 +29,7 @@ public class Petition {
     @Column(columnDefinition = "TEXT")
     private String description;
     private LevelType levelType;
+    private LocalDateTime creationTime;
     private LocalDateTime endTime;
     private Status status;
     private long count = 0;

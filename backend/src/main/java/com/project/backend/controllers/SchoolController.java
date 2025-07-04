@@ -2,8 +2,9 @@ package com.project.backend.controllers;
 
 import com.project.backend.auth.utils.CookieUtil;
 import com.project.backend.auth.utils.SecurityUtil;
-import com.project.backend.dto.school.SchoolRequest;
+import com.project.backend.dto.school.SchoolCreateRequest;
 import com.project.backend.dto.school.SchoolResponse;
+import com.project.backend.dto.school.SchoolUpdateRequest;
 import com.project.backend.mappers.SchoolMapper;
 import com.project.backend.mappers.UserMapper;
 import com.project.backend.models.School;
@@ -11,7 +12,6 @@ import com.project.backend.models.User;
 import com.project.backend.services.inter.SchoolService;
 import com.project.backend.services.inter.SchoolWithDirectorService;
 import jakarta.validation.Valid;
-import com.project.backend.services.inter.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -54,11 +54,11 @@ public class SchoolController {
     private final WebClient webClient;
 
     @PostMapping("/create")
-    public ResponseEntity<String> createSchool(@Valid @RequestBody SchoolRequest schoolRequest) {
-        School school = schoolMapper.fromRequestToSchool(schoolRequest);
-        User director = userMapper.fromDirectorRequestToUser(schoolRequest.getDirector());
+    public ResponseEntity<String> createSchool(@Valid @RequestBody SchoolCreateRequest schoolCreateRequest) {
+        School school = schoolMapper.fromRequestToSchool(schoolCreateRequest);
+        User director = userMapper.fromDirectorRequestToUser(schoolCreateRequest.getDirector());
         try {
-            school = schoolWithDirectorService.createSchoolWithDirector(school, director, schoolRequest.getDirector().getPassword());
+            school = schoolWithDirectorService.createSchoolWithDirector(school, director, schoolCreateRequest.getDirector().getPassword());
         } catch (WebClientResponseException e) {
             log.error("Controller: {} Error response from Keycloak: {}", e.getRawStatusCode(), e.getResponseBodyAsString());
 
@@ -71,7 +71,7 @@ public class SchoolController {
         formData.add("client_id", clientId);
         formData.add("client_secret", clientSecret);
         formData.add("username", director.getEmail());
-        formData.add("password", schoolRequest.getDirector().getPassword());
+        formData.add("password", schoolCreateRequest.getDirector().getPassword());
 
         Map response;
         try {
@@ -102,5 +102,12 @@ public class SchoolController {
     @ResponseStatus(HttpStatus.OK)
     public SchoolResponse getSchoolById(@PathVariable("school_id") long schoolId, Authentication auth) {
         return schoolMapper.fromSchoolToResponse(schoolService.findById(schoolId));
+    }
+
+    @PreAuthorize("@userSecurity.checkDirectorOfSchool(#auth, #schoolId)")
+    @PutMapping("/update/{school_id}")
+    @ResponseStatus(HttpStatus.OK)
+    public SchoolResponse updateSchool(@PathVariable("school_id") long schoolId, @RequestBody SchoolUpdateRequest schoolUpdateRequest, Authentication auth) {
+        return schoolMapper.fromSchoolToResponse(schoolService.update(schoolMapper.fromRequestToSchool(schoolUpdateRequest), schoolId));
     }
 }

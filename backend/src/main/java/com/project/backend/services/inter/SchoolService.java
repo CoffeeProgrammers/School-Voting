@@ -6,4 +6,6 @@ public interface SchoolService {
     School findById(long schoolId);
 
     School save(School school);
+
+    School update(School school, long schoolId);
 }

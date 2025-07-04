@@ -1,5 +1,5 @@
 import React, {createContext, useCallback, useContext, useState} from 'react';
-import SnackbarAlert from "../components/layouts/SnackbarAlert";
+import SnackbarAlert from "../components/layouts/error/SnackbarAlert";
 
 export const ErrorContext = createContext();
 

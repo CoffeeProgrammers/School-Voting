@@ -1,7 +1,7 @@
 import {Cell, Pie, PieChart} from 'recharts';
 import Typography from "@mui/material/Typography";
 import {blueGrey} from "@mui/material/colors";
-import Utils from "../../utils/Utils";
+import Utils from "../../../utils/Utils";
 
 
 export function CustomPieChart({supportedCount, totalCount, status}) {

@@ -6,42 +6,10 @@ import Utils from "../../../utils/Utils";
 import {Chip} from "@mui/material";
 import HowToVoteIcon from '@mui/icons-material/HowToVote';
 import {blueGrey} from "@mui/material/colors";
+import VotingDate from "./VotingDate";
 
 const VotingListBox = ({voting}) => {
     const navigate = useNavigate();
-
-    const renderDate = (startDate, endDate) => {
-        const now = new Date();
-        const start = new Date(startDate);
-        const end = new Date(endDate);
-
-        if (now < start) {
-            return (
-                <Chip
-                    label="Not started yet"
-                    size="small"
-                    sx={{mr: 0.5, backgroundColor: blueGrey[50]}}
-                />
-            );
-        }
-
-        if (now >= start && now <= end) {
-            const daysLeft = Utils.getDaysLeft(endDate);
-            return (
-                <Typography mr={1}>
-                    {`${daysLeft} day${daysLeft !== 1 ? 's' : ''} left`}
-                </Typography>
-            )
-        }
-        return (
-            <Chip
-                label="Finished"
-                size="small"
-                sx={{mr: 0.5, backgroundColor: blueGrey[100]}}
-            />)
-    }
-
-
     return (
         <Box sx={{
             display: 'grid',
@@ -51,8 +19,12 @@ const VotingListBox = ({voting}) => {
             paddingTop: '7px',
             paddingBottom: '15px',
             cursor: 'pointer',
-            '&:hover': {
-                backgroundColor: '#f5f5f5',
+            transition: "background-color 0.2s, border-color 0.2s, box-shadow 0.2s",
+            "&:hover": {
+                cursor: "pointer",
+                bgcolor: "#f5f5f5",
+                borderColor: "#c6c5c5",
+                boxShadow: "0px 0px 5px rgba(0, 0, 0, 0.2)",
             },
             '&:last-child': {
                 borderBottom: 'none',
@@ -77,9 +49,7 @@ const VotingListBox = ({voting}) => {
             <Box mt={8} display="flex" alignItems="center" justifyContent="space-between">
                 <Box/>
                 <Box display="flex" alignItems="center" gap={0.5}>
-                    <Typography>
-                        {renderDate(voting.startTime, voting.endTime)}
-                    </Typography>
+                   <VotingDate startDate={voting.startDate} endDate={voting.endDate}/>
                     <Chip
                         icon={<HowToVoteIcon color="success"/>}
                         label="Voted"

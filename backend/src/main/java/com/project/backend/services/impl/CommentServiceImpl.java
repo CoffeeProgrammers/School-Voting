@@ -14,6 +14,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -29,6 +31,7 @@ public class CommentServiceImpl implements CommentService {
         log.info("Service: Creating comment {}", comment);
         comment.setPetition(petitionService.findById(petitionId));
         comment.setCreator(creator);
+        comment.setCreatedTime(LocalDateTime.now());
         return commentRepository.save(comment);
     }
 

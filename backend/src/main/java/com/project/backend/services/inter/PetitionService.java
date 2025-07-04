@@ -22,4 +22,6 @@ public interface PetitionService {
     Page<Petition> findAllByCreator(String name, String status, int page, int size, long creatorId);
 
     Page<Petition> findAllForDirector(String name, String status, int page, int size);
+
+    void deletingUser(long userId);
 }

@@ -7,7 +7,7 @@ import com.project.backend.dto.user.UserUpdateRequest;
 import com.project.backend.dto.wrapper.PaginationListResponse;
 import com.project.backend.mappers.UserMapper;
 import com.project.backend.models.User;
-import com.project.backend.services.inter.UserService;
+import com.project.backend.services.inter.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,8 +23,12 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final UserService userService;
     private final UserMapper userMapper;
+    private final UserService userService;
+    private final VotingService votingService;
+    private final CommentService commentService;
+    private final PetitionService petitionService;
+    private final VotingUserService votingUserService;
 
     @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasAnyRole('DIRECTOR', 'TEACHER')")
     @PostMapping("/create")
@@ -59,6 +63,10 @@ public class UserController {
                            @PathVariable(value = "user_id") long userId,
                            Authentication auth) {
         log.info("Controller: Delete user with id: {}", userId);
+        commentService.deleteingUser(userId);
+        petitionService.deletingUser(userId);
+        votingService.deletingUser(userId);
+        votingUserService.deleteWithUser(userId);
         userService.delete(userId);
     }
 

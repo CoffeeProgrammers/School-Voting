@@ -63,4 +63,11 @@ public class CommentServiceImpl implements CommentService {
         log.info("Service: Finding comment with id {}", id);
         return commentRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Comment with id " + id + " not found"));
     }
+
+    @Override
+    public void deleteingUser(long userId){
+        log.info("Service: Deleting user {}", userId);
+        commentRepository.saveAll(commentRepository.findAllByCreator_Id(userId).stream()
+                .peek(comment -> comment.setCreator(userService.findUserByEmail("!deleted-user!@deleted.com"))).toList());
+    }
 }

@@ -36,4 +36,8 @@ public class PetitionSpecification {
         return (root, query, cb) ->
                 cb.like(root.get("name"), name);
     }
+    public static Specification<Petition> byUser(User user) {
+        return (root, query, cb) ->
+                cb.isMember(user, root.get("users"));
+    }
 }

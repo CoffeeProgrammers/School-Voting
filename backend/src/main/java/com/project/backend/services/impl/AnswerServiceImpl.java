@@ -61,4 +61,12 @@ public class AnswerServiceImpl implements AnswerService {
         log.info("Service: Finding answer by id {}", id);
         return answerRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Answer not found"));
     }
+
+    @Override
+    public void decrement(long answerId){
+        log.info("Service: Decrement answer by id {}", answerId);
+        Answer answer = findById(answerId);
+        answer.setCount(answer.getCount() - 1);
+        answerRepository.save(answer);
+    }
 }

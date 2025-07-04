@@ -208,6 +208,11 @@ public class UserServiceImpl implements UserService {
         log.info("Service: Deleting user with id {}", id);
         User user = findById(id);
         checkForDeletedUser(user);
+        user.setSchool(null);
+        user.setMyClass(null);
+        user.setPetitions(null);
+        user.setVotingUsers(null);
+        userRepository.save(user);
 
         if(user.getRole().equals("DIRECTOR")){
             throw new IllegalArgumentException("Cannot delete director");

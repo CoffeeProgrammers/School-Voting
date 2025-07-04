@@ -11,4 +11,6 @@ public interface AnswerService {
     void vote(long id);
     List<Answer> findAllByVoting(long votingId);
     Answer findById(long id);
+
+    void decrement(long answerId);
 }

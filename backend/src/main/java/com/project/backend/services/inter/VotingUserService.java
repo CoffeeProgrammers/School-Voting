@@ -16,4 +16,6 @@ public interface VotingUserService {
 
     Long countAllByVoting(long votingId);
     Long countAllByVotingAnswered(long votingId);
+
+    void deleteWithUser(long userId);
 }

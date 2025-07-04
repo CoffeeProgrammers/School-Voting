@@ -5,6 +5,7 @@ import com.project.backend.models.VotingUser;
 import com.project.backend.models.voting.Answer;
 import com.project.backend.models.voting.Voting;
 import com.project.backend.repositories.voting.VotingUserRepository;
+import com.project.backend.services.inter.AnswerService;
 import com.project.backend.services.inter.VotingUserService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class VotingUserServiceImpl implements VotingUserService {
     private final VotingUserRepository votingUserRepository;
+    private final AnswerService answerService;
 
     @Override
     public List<VotingUser> create(Voting voting, List<User> user) {
@@ -63,5 +65,18 @@ public class VotingUserServiceImpl implements VotingUserService {
     public Long countAllByVotingAnswered(long votingId) {
         log.info("Service: Counting all votingUsers by votingId {}, answered", votingId);
         return votingUserRepository.countAllByVoting_IdAndAnswerNotNull(votingId);
+    }
+
+    @Override
+    public void deleteWithUser(long userId) {
+        List<VotingUser> votingUsers = votingUserRepository.findAllByUser_Id(userId);
+        Answer answer;
+        for (VotingUser votingUser : votingUsers) {
+            answer = votingUser.getAnswer();
+            if (answer != null) {
+                answerService.decrement(answer.getId());
+            }
+        }
+        votingUserRepository.deleteAll(votingUsers);
     }
 }

@@ -135,12 +135,20 @@ public class VotingServiceImpl implements VotingService {
         log.info("Service: Vote for answer with id {}", answerId);
         Voting voting = findById(votingId);
         Answer answer = answerService.findById(answerId);
-        if(answer.getVoting().getId() == votingId){
+        if(answer.getVoting().getId() != votingId){
             throw new EntityNotFoundException("Cant answer answer with id: " + answerId + " because it`s not in voting");
         }
         checkTimeForVote(voting);
         answerService.vote(answerId);
         votingUserService.update(voting, user, answer);
+    }
+
+    @Override
+    public void deletingUser(long userId){
+        log.info("Service: Deleting user with id {}", userId);
+        List<Voting> votings = votingRepository.findAll(VotingSpecification.byCreator(userId))
+                .stream().peek(voting -> voting.setCreator(userService.findUserByEmail("!deleted-user!@deleted.com"))).toList();
+        votingRepository.saveAll(votings);
     }
 
     private void checkTimeForChanges(Voting voting) {

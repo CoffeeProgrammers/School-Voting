@@ -12,4 +12,6 @@ public interface CommentService {
     Page<Comment> findAllByPetition(long petitionId, int page, int size);
 
     Comment findById(long id);
+
+    void deleteingUser(long userId);
 }

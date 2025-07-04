@@ -22,6 +22,7 @@ public class SchoolWithDirectorServiceImpl implements SchoolWithDirectorService 
     @Override
     public School createSchoolWithDirector(School school, User director, String password) {
         log.info("Creating school with director {}", director.getEmail());
+        userService.checkEmail(director.getEmail());
         School savedSchool = schoolService.save(school);
 
         director.setRole("DIRECTOR");

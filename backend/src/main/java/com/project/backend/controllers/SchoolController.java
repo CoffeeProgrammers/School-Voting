@@ -11,6 +11,7 @@ import com.project.backend.models.User;
 import com.project.backend.services.inter.SchoolService;
 import com.project.backend.services.inter.SchoolWithDirectorService;
 import jakarta.validation.Valid;
+import com.project.backend.services.inter.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;

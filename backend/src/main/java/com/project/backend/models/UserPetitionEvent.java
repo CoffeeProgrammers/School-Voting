@@ -19,7 +19,7 @@ public class UserPetitionEvent {
     private UserPetitionEventId id;
 
     @ManyToOne
-    @MapsId("petitionId") // вказує, що petitionId з id мапиться на це поле
+    @MapsId("petitionId")
     @JoinColumn(name = "petition_id", nullable = false)
     private Petition petition;
 

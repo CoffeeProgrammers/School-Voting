@@ -2,11 +2,7 @@ import React from 'react';
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import {Chip} from "@mui/material";
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import Progress from "../../layouts/Progress";
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import PeopleRoundedIcon from '@mui/icons-material/PeopleRounded';
-import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import Utils from "../../../utils/Utils";
 import {useNavigate} from "react-router-dom";
 import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
@@ -36,6 +32,7 @@ const PetitionListBox = ({petition}) => {
             },
             '&:last-child': {
                 borderBottom: 'none',
+
             },
             '&:first-child': {
                 borderTop: '1px solid #ddd',
@@ -60,7 +57,7 @@ const PetitionListBox = ({petition}) => {
                         {petition.countSupport}
                     </Typography>
 
-                    <Progress status={petition.status} progressPercent={percentage}/>
+                    <Progress color={Utils.getStatusMUIColor(petition.status)} progressPercent={percentage}/>
                 </Box>
                 <Box mt={0.75} display="flex" alignItems="center">
                     {Utils.getStatus(petition.status, {mr: 0.25, fontSize: 18}, {fontSize: 13})}

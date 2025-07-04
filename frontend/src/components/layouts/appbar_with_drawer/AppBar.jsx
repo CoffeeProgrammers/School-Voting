@@ -7,7 +7,6 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import Drawer from "./Drawer";
-import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import {Stack} from "@mui/material";
 import Box from "@mui/material/Box";
 import AccountMenu from "./AccountMenu";
@@ -76,7 +75,7 @@ const AppBar = () => {
 
                         <PsychologyAltIcon color='primary' sx={{mt: '3px', mr: '6px', fontSize: '35px'}}/>
                         <Typography variant="h6" fontWeight='bold' noWrap>
-                            School Voting
+                            School Governance
                         </Typography>
                     </Stack>
 

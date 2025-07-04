@@ -7,14 +7,9 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import * as React from "react";
 import MuiDrawer from "@mui/material/Drawer";
-import Filter1Icon from "@mui/icons-material/Filter1";
-import Filter2Icon from "@mui/icons-material/Filter2";
-import Filter3Icon from "@mui/icons-material/Filter3";
 import DrawerNavigationButton from "./DrawerNavigationButton";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import theme from "../../../assets/theme";
-import FolderIcon from '@mui/icons-material/Folder';
 import BalanceRoundedIcon from '@mui/icons-material/BalanceRounded';
 import HistoryEduRoundedIcon from '@mui/icons-material/HistoryEduRounded';
 import Groups2Icon from '@mui/icons-material/Groups2';
@@ -81,7 +76,7 @@ const Drawer = ({open, handleDrawerClose}) => {
 
     const navigation = [
         {type: "navigation", icon: <HistoryEduRoundedIcon sx={{fontSize: 28, ml: -0.25}}/>, title: "Petitions", path: "/petitions"},
-        {type: "navigation", icon: <BalanceRoundedIcon sx={{fontSize: 25}}/>, title: "Voting", path: "/second"},
+        {type: "navigation", icon: <BalanceRoundedIcon sx={{fontSize: 25}}/>, title: "Voting", path: "/voting"},
         {type: "divider"},
         {type: "navigation", icon: <Groups2Icon sx={{fontSize: 25}}/>, title: "Classes", path: "/classes"},
         {type: "divider"},

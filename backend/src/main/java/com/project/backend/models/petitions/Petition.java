@@ -3,6 +3,7 @@ package com.project.backend.models.petitions;
 import com.project.backend.models.Class;
 import com.project.backend.models.School;
 import com.project.backend.models.User;
+import com.project.backend.models.UserPetitionEvent;
 import com.project.backend.models.enums.LevelType;
 import com.project.backend.models.enums.Status;
 import jakarta.persistence.*;
@@ -10,7 +11,9 @@ import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Slf4j
@@ -47,6 +50,8 @@ public class Petition {
     @ManyToOne
     @JoinColumn(name = "class_id")
     private Class myClass;
+    @OneToMany(mappedBy = "petition")
+    private List<UserPetitionEvent> userPetitionEvents = new ArrayList<>();
 
     public long incrementCount() {
         log.info("Model: Increment count {} of petition {}", count, this.id);

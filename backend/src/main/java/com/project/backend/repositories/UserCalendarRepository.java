@@ -1,0 +1,11 @@
+package com.project.backend.repositories;
+
+import com.project.backend.models.UserCalendar;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.Optional;
+
+public interface UserCalendarRepository extends JpaRepository<UserCalendar, Long> {
+    Optional<UserCalendar> findByUser_Id(long userId);
+    boolean existsByUser_Id(long userId);
+}

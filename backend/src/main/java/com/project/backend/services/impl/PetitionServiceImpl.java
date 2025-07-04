@@ -20,6 +20,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static com.project.backend.utils.SpecificationUtil.addSpecification;
 import static com.project.backend.utils.SpecificationUtil.isValid;
@@ -109,6 +110,11 @@ public class PetitionServiceImpl implements PetitionService {
     public Petition findById(long id) {
         log.info("Service: Finding a petition {}", id);
         return petitionRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Petition with id " + id + " not found"));
+    }
+
+    @Override
+    public List<Petition> findAllMy(long userId) {
+        return petitionRepository.findAll(PetitionSpecification.byUser(userService.findById(userId)));
     }
 
     @Override

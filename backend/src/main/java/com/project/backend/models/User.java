@@ -4,8 +4,9 @@ import com.project.backend.models.petitions.Petition;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -35,7 +36,12 @@ public class User {
     private Set<VotingUser> votingUsers = new HashSet<>();
     @ManyToMany(mappedBy = "users")
     private Set<Petition> petitions = new HashSet<>();
-
+    @OneToOne(mappedBy = "user")
+    private GoogleCalendarCredential googleCalendarCredential;
+    @OneToMany(mappedBy = "user")
+    private List<UserVotingEvent> userVotingEvents = new ArrayList<>();
+    @OneToMany(mappedBy = "user")
+    private List<UserPetitionEvent> userPetitionEvents = new ArrayList<>();
 
     public User(String keycloakUserId, String email, String firstName,
                 String lastName, String role) {

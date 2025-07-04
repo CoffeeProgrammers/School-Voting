@@ -1,13 +1,16 @@
 package com.project.backend.models.voting;
 
 import com.project.backend.models.User;
+import com.project.backend.models.UserVotingEvent;
 import com.project.backend.models.VotingUser;
 import com.project.backend.models.enums.LevelType;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -31,4 +34,6 @@ public class Voting {
     private User creator;
     @OneToMany(mappedBy = "voting")
     private Set<VotingUser> votingUsers = new HashSet<>();
+    @OneToMany(mappedBy = "voting")
+    private List<UserVotingEvent> userVotingEvents = new ArrayList<>();
 }

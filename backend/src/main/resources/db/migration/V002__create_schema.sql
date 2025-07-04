@@ -48,6 +48,7 @@ CREATE TABLE "votings"
     "start_time"  TIMESTAMP    NOT NULL,
     "end_time"    TIMESTAMP    NOT NULL,
     "creator_id"  BIGINT       NOT NULL,
+    "count_all"    BIGINT,
     FOREIGN KEY ("creator_id") REFERENCES "users" ("id") ON DELETE SET NULL
 );
 
@@ -81,11 +82,9 @@ CREATE TABLE "petitions"
     "creator_id"  BIGINT       NOT NULL,
     "status"      BIGINT       NOT NULL,
     "count"       BIGINT       NOT NULL,
-    "school_id"   BIGINT,
-    "class_id"    BIGINT,
-    FOREIGN KEY ("creator_id") REFERENCES "users" ("id") ON DELETE SET NULL,
-    FOREIGN KEY ("school_id") REFERENCES "schools" ("id") ON DELETE SET NULL,
-    FOREIGN KEY ("class_id") REFERENCES "classes" ("id") ON DELETE SET NULL
+    "target_id"   BIGINT,
+    "count_needed" BIGINT,
+    FOREIGN KEY ("creator_id") REFERENCES "users" ("id") ON DELETE SET NULL
 );
 
 CREATE TABLE "petition_user"

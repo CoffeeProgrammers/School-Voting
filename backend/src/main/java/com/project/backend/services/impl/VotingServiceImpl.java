@@ -1,6 +1,7 @@
 package com.project.backend.services.impl;
 
 import com.project.backend.models.User;
+import com.project.backend.models.enums.LevelType;
 import com.project.backend.models.voting.Answer;
 import com.project.backend.models.voting.Voting;
 import com.project.backend.repositories.specification.VotingSpecification;
@@ -17,6 +18,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -64,6 +66,7 @@ public class VotingServiceImpl implements VotingService {
         List<User> usersToAdd = users.filter(u -> u.getSchool().getId() == schoolId).toList();
         log.info("Service: Users to add: {}, before filters: {}", usersToAdd.stream().map(User::getId).toList(), targetIds);
         votingUserService.create(voting, usersToAdd);
+        voting.setCountAll(usersToAdd.size());
         return voting;
     }
 
@@ -78,11 +81,23 @@ public class VotingServiceImpl implements VotingService {
         return votingRepository.save(oldVoting);
     }
 
+    @Transactional
     @Override
     public void delete(long id) {
         log.info("Service: Deleting voting with id {}", id);
         checkTimeForChanges(findById(id));
         votingRepository.deleteById(id);
+    }
+
+    @Transactional
+    @Override
+    public void deleteBy(LevelType levelType, long targetId) {
+        log.info("Service: Deleting votings with levelType {}", levelType);
+        if (levelType.equals(LevelType.SCHOOL)) {
+            votingRepository.deleteAllByCreator_School_Id(targetId);
+        } else {
+            votingRepository.deleteAllByCreator_MyClass_Id(targetId);
+        }
     }
 
     @Override
@@ -143,6 +158,7 @@ public class VotingServiceImpl implements VotingService {
         votingUserService.update(voting, user, answer);
     }
 
+    @Transactional
     @Override
     public void deletingUser(long userId){
         log.info("Service: Deleting user with id {}", userId);

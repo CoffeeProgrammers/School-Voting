@@ -1,10 +1,10 @@
 package com.project.backend.models;
 
 import com.project.backend.models.petitions.Petition;
+import com.project.backend.models.voting.VotingUser;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 

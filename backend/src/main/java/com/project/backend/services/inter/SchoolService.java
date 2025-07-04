@@ -8,4 +8,6 @@ public interface SchoolService {
     School save(School school);
 
     School update(School school, long schoolId);
+
+    void delete(long schoolId);
 }

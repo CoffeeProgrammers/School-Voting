@@ -6,9 +6,8 @@ import com.project.backend.models.enums.Status;
 import com.project.backend.models.petitions.Petition;
 import com.project.backend.repositories.petitions.PetitionRepository;
 import com.project.backend.repositories.specification.PetitionSpecification;
-import com.project.backend.services.inter.ClassService;
+import com.project.backend.services.inter.CommentService;
 import com.project.backend.services.inter.PetitionService;
-import com.project.backend.services.inter.SchoolService;
 import com.project.backend.services.inter.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +17,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static com.project.backend.utils.SpecificationUtil.addSpecification;
 import static com.project.backend.utils.SpecificationUtil.isValid;
@@ -30,56 +31,78 @@ import static com.project.backend.utils.SpecificationUtil.isValid;
 public class PetitionServiceImpl implements PetitionService {
     private final PetitionRepository petitionRepository;
     private final UserService userService;
-    private final SchoolService schoolService;
-    private final ClassService classService;
+    private final CommentService commentService;
 
     @Override
     public Petition create(Petition petition, long levelId, User creator) {
         log.info("Service: Creating a new petition {}", petition);
-        if(petition.getLevelType().equals(LevelType.GROUP_OF_PARENTS_AND_STUDENTS)
+        if (petition.getLevelType().equals(LevelType.GROUP_OF_PARENTS_AND_STUDENTS)
                 || petition.getLevelType().equals(LevelType.GROUP_OF_TEACHERS)) {
             throw new IllegalArgumentException("Cannot create a petition with such level type.");
         }
         petition.setEndTime(LocalDateTime.now().plusDays(45));
         petition.setCreator(creator);
         petition.setStatus(Status.ACTIVE);
-        if (petition.getLevelType().equals(LevelType.SCHOOL)) {
-            petition.setSchool(schoolService.findById(levelId));
-        } else {
-            petition.setMyClass(classService.findById(levelId));
-        }
+        petition.setTargetId(petition.getTargetId());
         return petitionRepository.save(petition);
     }
 
+    @Transactional
     @Override
     public void delete(long id) {
         log.info("Service: Deleting a petition {}", id);
         findById(id);
+        commentService.deleteWithPetition(id);
         petitionRepository.deleteById(id);
+    }
+
+    @Transactional
+    @Override
+    public void deleteBy(LevelType levelType, long targetId) {
+        log.info("Service: Deleting a petitions");
+        List<Long> petitionIds = petitionRepository.findAll(
+                        levelType.equals(LevelType.SCHOOL) ?
+                                PetitionSpecification.bySchool(targetId) : PetitionSpecification.byClass(targetId))
+                .stream().map(Petition::getId).toList();
+        for (Long id : petitionIds) {
+            commentService.deleteWithPetition(id);
+        }
+        petitionRepository.deleteAllByLevelTypeAndTargetId(levelType, targetId);
     }
 
     @Override
     public long support(long petitionId, User user) {
         log.info("Service: Support for petition {} by user {}", petitionId, user.getId());
         Petition petition = findById(petitionId);
-        if(!(petition.getStatus().equals(Status.ACTIVE))) {
+        if (!(petition.getStatus().equals(Status.ACTIVE))) {
             throw new IllegalStateException("Petition is not active.");
         }
         boolean ifCanSupport = petition.getUsers().add(user);
         if (!ifCanSupport) {
             throw new IllegalArgumentException("Cannot support petition because user is already petition");
         }
-        long countSupported = petition.incrementCount();
-        if(countSupported >= countAll(petition)) {
-            petition.setStatus(Status.WAITING_FOR_CONSIDERATION);
-        }
+        petition.incrementCount();
+        checkingStatus(petition);
         return petitionRepository.save(petition).getCount();
     }
 
     @Override
+    public void checkingStatus(Petition petition) {
+        log.info("Service: Checking status for petition {}", petition.getId());
+        if (petition.getCount() >= countAll(petition)) {
+            petition.setCountNeeded(countAll(petition));
+            petition.setStatus(Status.WAITING_FOR_CONSIDERATION);
+        } else {
+            petition.setCountNeeded(0);
+            petition.setStatus(Status.ACTIVE);
+        }
+    }
+
+    @Override
     public long countAll(Petition petition) {
+        log.info("Service: Count all petition {}", petition.getId());
         long countAll = petition.getLevelType().equals(LevelType.SCHOOL) ?
-                userService.countAllBySchool(petition.getSchool().getId()) : petition.getMyClass().getUsers().size();
+                userService.countAllBySchool(petition.getTargetId()) : userService.countAllByClass(petition.getTargetId());
         return (long) (Math.floor(countAll / 2.0) + 1);
     }
 
@@ -87,7 +110,7 @@ public class PetitionServiceImpl implements PetitionService {
     public void approve(long petitionId) {
         log.info("Service: Approving a petition {}", petitionId);
         Petition petition = findById(petitionId);
-        if(!(petition.getStatus().equals(Status.WAITING_FOR_CONSIDERATION))) {
+        if (!(petition.getStatus().equals(Status.WAITING_FOR_CONSIDERATION))) {
             throw new IllegalStateException("Petition is not waiting.");
         }
         petition.setStatus(Status.APPROVED);
@@ -98,7 +121,7 @@ public class PetitionServiceImpl implements PetitionService {
     public void reject(long petitionId) {
         log.info("Service: Rejecting a petition {}", petitionId);
         Petition petition = findById(petitionId);
-        if(!(petition.getStatus().equals(Status.WAITING_FOR_CONSIDERATION))) {
+        if (!(petition.getStatus().equals(Status.WAITING_FOR_CONSIDERATION))) {
             throw new IllegalStateException("Petition is not waiting.");
         }
         petition.setStatus(Status.REJECTED);
@@ -117,7 +140,7 @@ public class PetitionServiceImpl implements PetitionService {
 
         Specification<Petition> petitionSpecification = createSpecification(name, status);
         Specification<Petition> fullSpecification = petitionSpecification == null ?
-               PetitionSpecification.byUserInClass(userId).and(PetitionSpecification.byUserInSchool(userId)) :
+                PetitionSpecification.byUserInClass(userId).and(PetitionSpecification.byUserInSchool(userId)) :
                 petitionSpecification.and(PetitionSpecification.byUserInClass(userId)).and(PetitionSpecification.byUserInSchool(userId));
 
         return petitionRepository.findAll(
@@ -148,10 +171,10 @@ public class PetitionServiceImpl implements PetitionService {
 
         Specification<Petition> petitionSpecification = createSpecification(name, status);
 
-        if(petitionSpecification == null){
+        if (petitionSpecification == null) {
             return petitionRepository.findAll(
-                PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "endTime")));
-        }else {
+                    PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "endTime")));
+        } else {
             return petitionRepository.findAll(
                     createSpecification(name, status), PageRequest.of(
                             page, size, Sort.by(
@@ -160,7 +183,7 @@ public class PetitionServiceImpl implements PetitionService {
     }
 
     @Override
-    public void deletingUser(long userId){
+    public void deletingUser(long userId) {
         log.info("Service: Deleting user {}", userId);
         petitionRepository.saveAll(petitionRepository.findAll(PetitionSpecification.byCreator(userId)).stream()
                 .peek(petition -> petition.setCreator(userService.findUserByEmail("!deleted-user!@deleted.com"))).toList());
@@ -168,9 +191,17 @@ public class PetitionServiceImpl implements PetitionService {
     }
 
     @Override
-    public void deleteVoteByUser(long userId){
-        petitionRepository.saveAll(petitionRepository.findAll(PetitionSpecification.byUser(userService.findById(userId))).stream()
-                .peek(petition -> petition.setCount(petition.getCount() - 1)).toList());
+    public void deleteVoteByUser(long userId) {
+        petitionRepository.saveAll(
+                petitionRepository.findAll(
+                                PetitionSpecification.byUser(userService.findById(userId)))
+                        .stream().peek(petition ->
+                        {
+                            if (petition.now()) {
+                                petition.decrementCount();
+                                checkingStatus(petition);
+                            }
+                        }).toList());
     }
 
     private Specification<Petition> createSpecification(String name, String status) {

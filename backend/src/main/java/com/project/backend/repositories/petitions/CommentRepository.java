@@ -10,4 +10,5 @@ import java.util.List;
 public interface CommentRepository extends JpaRepository<Comment, Long> {
     Page<Comment> findAllByPetition_Id(long petitionId, Pageable pageable);
     List<Comment> findAllByCreator_Id(long creatorId);
+    void deleteAllByPetition_Id(long petitionId);
 }

@@ -18,9 +18,7 @@ public class UserSecurity {
     private final PetitionService petitionService;
     private final CommentService commentService;
     private final VotingService votingService;
-    private final SchoolService schoolService;
     private final VotingUserService votingUserService;
-    private final ClassService classService;
 
     private boolean checkUser(Authentication authentication, String username) {
         log.info("preAuth: Checking user {}", username);
@@ -42,12 +40,6 @@ public class UserSecurity {
         log.info("preAuth: Checking if user in school {}", schoolId);
         School school = userService.findUserByAuth(authentication).getSchool();
         return school.getId() == schoolId;
-    }
-
-    public boolean checkDirectorOfSchool(Authentication authentication, long schoolId) {
-        log.info("preAuth: Checking if director of school {}", schoolId);
-        return schoolService.findById(schoolId).getDirector().getKeycloakUserId()
-                .equals(authentication.getName());
     }
 
     public boolean checkCreatorPetition(Authentication authentication, long petitionId) {
@@ -76,7 +68,7 @@ public class UserSecurity {
             return checkUserSchool(authentication, petition.getCreator().getSchool().getId());
         }else{
             log.info("preAuth: Checking if user in class");
-            return petition.getMyClass().getUsers().contains(userService.findUserByAuth(authentication));
+            return userService.findAllByClass(petition.getTargetId()).contains(userService.findUserByAuth(authentication));
         }
     }
 

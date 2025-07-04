@@ -1,7 +1,5 @@
 package com.project.backend.models.petitions;
 
-import com.project.backend.models.Class;
-import com.project.backend.models.School;
 import com.project.backend.models.User;
 import com.project.backend.models.enums.LevelType;
 import com.project.backend.models.enums.Status;
@@ -19,8 +17,8 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
-@ToString(exclude = {"users", "school", "myClass"})
-@EqualsAndHashCode(exclude = {"creator", "school", "myClass"})
+@ToString(exclude = {"users"})
+@EqualsAndHashCode(exclude = {"creator"})
 public class Petition {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,6 +32,7 @@ public class Petition {
     private LocalDateTime endTime;
     private Status status;
     private long count = 0;
+    private long countNeeded = 0;
     @ManyToMany()
     @JoinTable(
             name = "petition_user",
@@ -41,15 +40,17 @@ public class Petition {
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     private Set<User> users = new HashSet<>();
-    @ManyToOne
-    @JoinColumn(name = "school_id")
-    private School school;
-    @ManyToOne
-    @JoinColumn(name = "class_id")
-    private Class myClass;
+    private long targetId;
 
-    public long incrementCount() {
+    public void incrementCount() {
         log.info("Model: Increment count {} of petition {}", count, this.id);
-        return ++this.count;
+        ++this.count;
+    }
+    public void decrementCount() {
+        log.info("Model: Decrement count {} of petition {}", count, this.id);
+        ++this.count;
+    }
+    public boolean now(){
+        return LocalDateTime.now().isBefore(this.endTime);
     }
 }

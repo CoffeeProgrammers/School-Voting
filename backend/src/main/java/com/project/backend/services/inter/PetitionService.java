@@ -1,6 +1,7 @@
 package com.project.backend.services.inter;
 
 import com.project.backend.models.User;
+import com.project.backend.models.enums.LevelType;
 import com.project.backend.models.petitions.Petition;
 import org.springframework.data.domain.Page;
 
@@ -8,7 +9,12 @@ public interface PetitionService {
     Petition create(Petition petition, long levelId, User creator);
 
     void delete(long id);
+
+    void deleteBy(LevelType levelType, long targetId);
+
     long support(long petitionId, User user);
+
+    void checkingStatus(Petition petition);
 
     long countAll(Petition petition);
 

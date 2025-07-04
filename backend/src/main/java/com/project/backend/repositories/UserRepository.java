@@ -1,7 +1,6 @@
 package com.project.backend.repositories;
 
 import com.project.backend.models.User;
-import com.project.backend.models.petitions.Petition;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
@@ -12,4 +11,7 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     boolean existsByEmail(String email);
     Optional<User> findByKeycloakUserId(String keycloakUserId);
     long countAllBySchool_Id(long schoolId);
+    long countAllByMyClass_Id(long classId);
+
+    void deleteAllBySchool_Id(long schoolId);
 }

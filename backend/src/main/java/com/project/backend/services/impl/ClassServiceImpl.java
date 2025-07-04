@@ -2,11 +2,10 @@ package com.project.backend.services.impl;
 
 import com.project.backend.models.Class;
 import com.project.backend.models.User;
+import com.project.backend.models.enums.LevelType;
 import com.project.backend.repositories.ClassRepository;
 import com.project.backend.repositories.specification.ClassSpecification;
-import com.project.backend.services.inter.ClassService;
-import com.project.backend.services.inter.SchoolService;
-import com.project.backend.services.inter.UserService;
+import com.project.backend.services.inter.*;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +28,8 @@ public class ClassServiceImpl implements ClassService {
     private final ClassRepository classRepository;
     private final UserService userService;
     private final SchoolService schoolService;
+    private final PetitionService petitionService;
+    private final VotingService votingService;
 
     @Override
     public Class create(Class classRequest, List<Long> userIds, long schoolId) {
@@ -47,9 +48,20 @@ public class ClassServiceImpl implements ClassService {
     }
 
     @Override
+    public void deleteBySchool(long schoolId){
+        log.info("Service: Deleting Class with by school with id {}", schoolId);
+        List<Class> classes = classRepository.findAll(ClassSpecification.bySchool(schoolId));
+        for (Class clazz : classes) {
+            delete(clazz.getId(), true);
+        }
+    }
+
+    @Override
     public void delete(long id, boolean deleteUsers) {
         log.info("Service: Deleting Class with id {}", id);
         Class aClass = findById(id);
+        votingService.deleteBy(LevelType.CLASS, id);
+        petitionService.deleteBy(LevelType.CLASS, id);
         if(deleteUsers) {
             for (User user : aClass.getUsers()) {
                 userService.delete(user.getId());

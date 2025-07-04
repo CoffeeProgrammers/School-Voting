@@ -1,9 +1,9 @@
 package com.project.backend.services.impl;
 
 import com.project.backend.models.User;
-import com.project.backend.models.VotingUser;
 import com.project.backend.models.voting.Answer;
 import com.project.backend.models.voting.Voting;
+import com.project.backend.models.voting.VotingUser;
 import com.project.backend.repositories.voting.VotingUserRepository;
 import com.project.backend.services.inter.AnswerService;
 import com.project.backend.services.inter.VotingUserService;
@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -54,7 +53,6 @@ public class VotingUserServiceImpl implements VotingUserService {
         return votingUserRepository.existsById(new VotingUser.VotingUserId(userId, votingId));
     }
 
-
     @Override
     public Long countAllByVoting(long votingId) {
         log.info("Service: Counting all votingUsers by votingId {}", votingId);
@@ -72,9 +70,11 @@ public class VotingUserServiceImpl implements VotingUserService {
         List<VotingUser> votingUsers = votingUserRepository.findAllByUser_Id(userId);
         Answer answer;
         for (VotingUser votingUser : votingUsers) {
-            answer = votingUser.getAnswer();
-            if (answer != null) {
-                answerService.decrement(answer.getId());
+            if(votingUser.getVoting().now()) {
+                answer = votingUser.getAnswer();
+                if (answer != null) {
+                    answerService.decrement(answer.getId());
+                }
             }
         }
         votingUserRepository.deleteAll(votingUsers);

@@ -12,7 +12,6 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.keycloak.admin.client.resource.ClientResource;
 import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.RoleRepresentation;
@@ -26,6 +25,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -46,7 +46,6 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final RealmResource realmResource;
-    private final ClientResource clientResource;
     private final String clientUUID;
     private final Map<String, RoleRepresentation> clientRoles;
     private final SchoolService schoolService;
@@ -298,6 +297,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<User> findAllByClass(long classId) {
+        log.info("Service: Finding list of all users by class {}", classId);
+        return userRepository.findAll(UserSpecification.byClass(classId));
+    }
+
+    @Override
     public User findUserByAuth(Authentication authentication) {
         log.info("Service: Finding user by authentication {}", authentication);
         return findUserByKeycloakUserId(authentication.getName());
@@ -321,6 +326,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public long countAllBySchool(long schoolId) {
         return userRepository.countAllBySchool_Id(schoolId);
+    }
+
+    @Override
+    public long countAllByClass(long classId) {
+        return userRepository.countAllByMyClass_Id(classId);
     }
 
     @Override
@@ -355,6 +365,12 @@ public class UserServiceImpl implements UserService {
         if (userRepository.existsByEmail(email)) {
             throw new EntityExistsException("User with email " + email + " already exists");
         }
+    }
+
+    @Transactional
+    @Override
+    public void deleteBySchool(long schoolId) {
+        userRepository.deleteAllBySchool_Id(schoolId);
     }
 
     private Specification<User> createSpecification(String email, String firstName, String lastName, String role) {

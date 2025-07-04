@@ -9,8 +9,8 @@ import com.project.backend.mappers.SchoolMapper;
 import com.project.backend.mappers.UserMapper;
 import com.project.backend.models.School;
 import com.project.backend.models.User;
-import com.project.backend.services.inter.SchoolService;
-import com.project.backend.services.inter.SchoolWithDirectorService;
+import com.project.backend.models.enums.LevelType;
+import com.project.backend.services.inter.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
@@ -35,11 +36,16 @@ import java.util.Map;
 @RequestMapping("/api/schools")
 @RequiredArgsConstructor
 public class SchoolController {
+
     private final SchoolWithDirectorService schoolWithDirectorService;
+    private final PetitionService petitionService;
+    private final VotingService votingService;
     private final SchoolService schoolService;
+    private final ClassService classService;
     private final SchoolMapper schoolMapper;
     private final UserMapper userMapper;
     private final JwtDecoder jwtDecoder;
+    private final UserService userService;
 
     @Value("${client-id}")
     private String clientId;
@@ -104,10 +110,22 @@ public class SchoolController {
         return schoolMapper.fromSchoolToResponse(schoolService.findById(schoolId));
     }
 
-    @PreAuthorize("@userSecurity.checkDirectorOfSchool(#auth, #schoolId)")
+    @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasRole('DIRECTOR')")
     @PutMapping("/update/{school_id}")
     @ResponseStatus(HttpStatus.OK)
     public SchoolResponse updateSchool(@PathVariable("school_id") long schoolId, @RequestBody SchoolUpdateRequest schoolUpdateRequest, Authentication auth) {
         return schoolMapper.fromSchoolToResponse(schoolService.update(schoolMapper.fromRequestToSchool(schoolUpdateRequest), schoolId));
+    }
+
+    @Transactional
+    @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasRole('DIRECTOR')")
+    @DeleteMapping("/delete/{school_id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteSchool(@PathVariable("school_id") long schoolId, Authentication auth) {
+        petitionService.deleteBy(LevelType.SCHOOL, schoolId);
+        votingService.deleteBy(LevelType.SCHOOL, schoolId);
+        classService.deleteBySchool(schoolId);
+        userService.deleteBySchool(schoolId);
+        schoolService.delete(schoolId);
     }
 }

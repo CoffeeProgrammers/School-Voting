@@ -8,11 +8,11 @@ UPDATE users SET class_id = 1 WHERE id = 10;
 UPDATE users SET class_id = 2 WHERE id = 11;
 UPDATE users SET class_id = 2 WHERE id = 12;
 
-INSERT INTO votings (name, description, level_type, start_time, end_time, creator_id)
+INSERT INTO votings (name, description, level_type, start_time, end_time, creator_id, count_all)
 VALUES ('Some', 'More', 2, '1975-11-10 00:00:00', '2025-11-10 00:00:00',
-        (SELECT id FROM users WHERE email = 'maria@example.com')),
+        (SELECT id FROM users WHERE email = 'maria@example.com'), 0),
        ('New', 'New', 1, '1995-12-10 00:00:00', '2025-11-10 00:00:00',
-        (SELECT id FROM users WHERE email = 'bulakovskijvladislav@gmail.com'));
+        (SELECT id FROM users WHERE email = 'bulakovskijvladislav@gmail.com'), 0);
 
 INSERT INTO answers (name, voting_id, count)
 VALUES ('Варіант A', (SELECT id FROM votings WHERE name = 'Some' LIMIT 1), 0),
@@ -35,7 +35,7 @@ VALUES ((SELECT id FROM users WHERE email = 'ivan.fr@example.com'),
 (SELECT id FROM answers WHERE name = 'Варіант 3' AND voting_id = (SELECT id FROM votings WHERE name = 'New' LIMIT 1)));
 
 INSERT INTO petitions
-(name, description, end_time, level_type, creator_id, status, count, school_id)
+(name, description, end_time, level_type, creator_id, status, count, target_id, count_needed)
 VALUES ('Some',
         'new',
         '2045-12-10 00:00:00',
@@ -43,7 +43,17 @@ VALUES ('Some',
         (SELECT id FROM users WHERE email = 'oleh@example.com'),
         0,
         0,
-        1);
+        1,
+        0),
+       ('Some',
+        'new',
+        '2045-12-10 00:00:00',
+        1,
+        (SELECT id FROM users WHERE email = 'oleh@example.com'),
+        0,
+        0,
+        1,
+        0);
 
 
 

@@ -159,7 +159,7 @@ public class PetitionController {
                                          Authentication auth) {
         log.info("Controller: Creating a new comment for petition with id {}", petitionId);
         return commentMapper.fromCommentToResponse(
-                commentService.create(commentMapper.fromRequestToComment(commentRequest), userService.findUserByAuth(auth), petitionId));
+                commentService.create(commentMapper.fromRequestToComment(commentRequest), userService.findUserByAuth(auth), petitionService.findById(petitionId)));
     }
 
     @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasRole('STUDENT') and @userSecurity.checkCreatorComment(#auth, #commentId)")
@@ -205,7 +205,7 @@ public class PetitionController {
 
     private PetitionListResponse fromPetitionToPetitionListResponseWithAllInfo(Petition petition, User user) {
         PetitionListResponse petitionListResponse = petitionMapper.fromPetitionToListResponse(petition);
-        petitionListResponse.setCountNeeded(petitionService.countAll(petition));
+        petitionListResponse.setCountNeeded(petition.getStatus().equals("ACTIVE") ? petitionService.countAll(petition) : petition.getCountNeeded());
         petitionListResponse.setCountSupported(petition.getCount());
         petitionListResponse.setSupportedByCurrentId(petition.getUsers().contains(user));
         return petitionListResponse;
@@ -213,7 +213,7 @@ public class PetitionController {
 
     private PetitionFullResponse fromPetitionToPetitionFullResponseWithAllInfo(Petition petition, User user) {
         PetitionFullResponse petitionFullResponse = petitionMapper.fromPetitionToFullResponse(petition);
-        petitionFullResponse.setCountNeeded(petitionService.countAll(petition));
+        petitionFullResponse.setCountNeeded(petition.getStatus().equals("ACTIVE") ? petitionService.countAll(petition) : petition.getCountNeeded());
         petitionFullResponse.setCountSupported(petition.getCount());
         petitionFullResponse.setSupportedByCurrentId(petition.getUsers().contains(user));
         return petitionFullResponse;

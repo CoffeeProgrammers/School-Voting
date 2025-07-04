@@ -32,6 +32,8 @@ public interface UserService {
 
     List<User> findAllByClass(long classId, long userId);
 
+    List<User> findAllByClass(long classId);
+
     User findUserByAuth(Authentication authentication);
 
     void unassignClassFromUser(User user);
@@ -43,10 +45,13 @@ public interface UserService {
     boolean isNotExistByEmail(String email);
 
     long countAllBySchool(long schoolId);
+    long countAllByClass(long classId);
 
     void assignClassToUser(Class clazz, User user);
 
     User createDirector(User director, String password);
 
     void checkEmail(String email);
+
+    void deleteBySchool(long schoolId);
 }

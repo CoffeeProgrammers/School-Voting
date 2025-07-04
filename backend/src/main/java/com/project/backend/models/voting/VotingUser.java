@@ -1,7 +1,6 @@
-package com.project.backend.models;
+package com.project.backend.models.voting;
 
-import com.project.backend.models.voting.Answer;
-import com.project.backend.models.voting.Voting;
+import com.project.backend.models.User;
 import jakarta.persistence.*;
 import lombok.*;
 

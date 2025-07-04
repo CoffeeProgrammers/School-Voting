@@ -6,7 +6,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import Divider from "@mui/material/Divider";
 import Groups2Icon from '@mui/icons-material/Groups2';
 import {Button, Stack} from "@mui/material";
-import {CustomPieChart} from "../../components/layouts/CustomPieChart";
+import {CustomPieChart} from "../../components/layouts/statistics/CustomPieChart";
 import Utils from "../../utils/Utils";
 import {blueGrey} from "@mui/material/colors";
 import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
@@ -15,7 +15,49 @@ import theme from "../../assets/theme";
 const petition = {
     id: 1,
     name: "Increase funding for school libraries",
-    description: "This petition calls for increased budget allocation to school libraries in order to enhance access to educational resources for students.",
+    description: "This petition calls for increased budget allocation to school libraries in order to enhance access to educational resources for students. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab alias\n" +
+        "                        aperiam\n" +
+        "                        aspernatur dolorem, ducimus eaque earum esse ex minima, necessitatibus quaerat quas\n" +
+        "                        reprehenderit\n" +
+        "                        vero. Aperiam dolores ex maiores! Omnis, quibusdam. Lorem ipsum dolor sit amet, consectetur\n" +
+        "                        adipisicing elit. Et tenetur, voluptatibus? Culpa dignissimos doloremque labore optio, possimus\n" +
+        "                        repellat saepe soluta? Itaque minus sit voluptates. Doloribus error iure modi possimus veniam.\n" +
+        "                        Lorem\n" +
+        "                        ipsum dolor sit amet, consectetur adipisicing elit. Lorem ipsum dolor sit amet, consectetur\n" +
+        "                        adipisicing elit. Ab alias aperiam aspernatur dolorem, ducimus eaque earum esse ex minima,\n" +
+        "                        necessitatibus quaerat quas reprehenderit vero. Aperiam dolores ex maiores! Omnis, quibusdam.\n" +
+        "                        Lorem\n" +
+        "                        ipsum dolor sit amet, consectetur adipisicing elit. Et tenetur, voluptatibus? Culpa dignissimos\n" +
+        "                        doloremque labore optio, possimus repellat saepe soluta? Itaque minus sit voluptates. Doloribus\n" +
+        "                        error iure modi possimus veniam. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Co\n" +
+        "                        Lorem\n" +
+        "                        ipsum dolor sit amet, consectetur adipisicing elit. Ab alias aperiam aspernatur dolorem, ducimus\n" +
+        "                        eaque earum esse ex minima, necessitatibus quaerat quas reprehenderit vero. Aperiam dolores ex\n" +
+        "                        maiores! Omnis, quibusdam. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Et tenetur,\n" +
+        "                        voluptatibus? Culpa dignissimos doloremque labore optio, possimus repellat saepe soluta? Itaque\n" +
+        "                        minus sit voluptates. Doloribus error iure modi possimus veniam. Lorem ipsum dolor sit amet,\n" +
+        "                        consectetur adipisicing elit. Co Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab\n" +
+        "                        alias\n" +
+        "                        aperiam aspernatur dolorem, ducimus eaque earum esse ex minima, necessitatibus quaerat quas\n" +
+        "                        reprehenderit vero. Aperiam dolores ex maiores! Omnis, quibusdam. Lorem ipsum dolor sit amet,\n" +
+        "                        consectetur adipisicing elit. Et tenetur, voluptatibus? Culpa dignissimos doloremque labore\n" +
+        "                        optio,\n" +
+        "                        possimus repellat saepe soluta? Itaque minus sit voluptates. Doloribus error iure modi possimus\n" +
+        "                        veniam. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Co Lorem ipsum dolor sit amet,\n" +
+        "                        consectetur adipisicing elit. Ab alias aperiam aspernatur dolorem, ducimus eaque earum esse ex\n" +
+        "                        minima, necessitatibus quaerat quas reprehenderit vero. Aperiam dolores ex maiores! Omnis,\n" +
+        "                        quibusdam. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Et tenetur, voluptatibus?\n" +
+        "                        Culpa\n" +
+        "                        dignissimos doloremque labore optio, possimus repellat saepe soluta? Itaque minus sit\n" +
+        "                        voluptates.\n" +
+        "                        Doloribus error iure modi possimus veniam. Lorem ipsum dolor sit amet, consectetur adipisicing\n" +
+        "                        elit.\n" +
+        "                        CoCommodi consectetur natus nemo quisquam quod rem similique sint sit tempore voluptatum. A\n" +
+        "                        cumque\n" +
+        "                        eligendi excepturi libero, officiis qui similique ut. Numquam? Lorem ipsum dolor sit amet,\n" +
+        "                        consectetur adipisicing elit. Cupiditate magni nisi sequi. Dicta ex illo illum labore nostrum?\n" +
+        "                        Beatae iusto officiis perferendis perspiciatis ratione, tempora. A laborum molestias natus\n" +
+        "                        tenetur?",
     endTime: "2025-09-30T23:59:59",
     levelType: "class",
     status: "ACTIVE",
@@ -59,7 +101,7 @@ const PetitionPage = () => {
     const renderTabButton = (title, width) => {
         return (
             <Button onClick={() => setTab(title)} sx={{height: 33, borderRadius: 0, width: width}}>
-                <Typography variant={'body1'} color={tab === title ? 'primary' : 'text.secondary'}
+                <Typography variant='body1' color={tab === title ? 'primary' : 'text.secondary'}
                             sx={{
                                 borderBottom: "2.5px solid",
                                 borderBottomColor: tab === title ? theme.palette.primary.main : "transparent",
@@ -75,49 +117,7 @@ const PetitionPage = () => {
             case 'Description':
                 return (
                     <Typography variant='body1' mt={1.25}>
-                        {petition.description} Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab alias
-                        aperiam
-                        aspernatur dolorem, ducimus eaque earum esse ex minima, necessitatibus quaerat quas
-                        reprehenderit
-                        vero. Aperiam dolores ex maiores! Omnis, quibusdam. Lorem ipsum dolor sit amet, consectetur
-                        adipisicing elit. Et tenetur, voluptatibus? Culpa dignissimos doloremque labore optio, possimus
-                        repellat saepe soluta? Itaque minus sit voluptates. Doloribus error iure modi possimus veniam.
-                        Lorem
-                        ipsum dolor sit amet, consectetur adipisicing elit. Lorem ipsum dolor sit amet, consectetur
-                        adipisicing elit. Ab alias aperiam aspernatur dolorem, ducimus eaque earum esse ex minima,
-                        necessitatibus quaerat quas reprehenderit vero. Aperiam dolores ex maiores! Omnis, quibusdam.
-                        Lorem
-                        ipsum dolor sit amet, consectetur adipisicing elit. Et tenetur, voluptatibus? Culpa dignissimos
-                        doloremque labore optio, possimus repellat saepe soluta? Itaque minus sit voluptates. Doloribus
-                        error iure modi possimus veniam. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Co
-                        Lorem
-                        ipsum dolor sit amet, consectetur adipisicing elit. Ab alias aperiam aspernatur dolorem, ducimus
-                        eaque earum esse ex minima, necessitatibus quaerat quas reprehenderit vero. Aperiam dolores ex
-                        maiores! Omnis, quibusdam. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Et tenetur,
-                        voluptatibus? Culpa dignissimos doloremque labore optio, possimus repellat saepe soluta? Itaque
-                        minus sit voluptates. Doloribus error iure modi possimus veniam. Lorem ipsum dolor sit amet,
-                        consectetur adipisicing elit. Co Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab
-                        alias
-                        aperiam aspernatur dolorem, ducimus eaque earum esse ex minima, necessitatibus quaerat quas
-                        reprehenderit vero. Aperiam dolores ex maiores! Omnis, quibusdam. Lorem ipsum dolor sit amet,
-                        consectetur adipisicing elit. Et tenetur, voluptatibus? Culpa dignissimos doloremque labore
-                        optio,
-                        possimus repellat saepe soluta? Itaque minus sit voluptates. Doloribus error iure modi possimus
-                        veniam. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Co Lorem ipsum dolor sit amet,
-                        consectetur adipisicing elit. Ab alias aperiam aspernatur dolorem, ducimus eaque earum esse ex
-                        minima, necessitatibus quaerat quas reprehenderit vero. Aperiam dolores ex maiores! Omnis,
-                        quibusdam. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Et tenetur, voluptatibus?
-                        Culpa
-                        dignissimos doloremque labore optio, possimus repellat saepe soluta? Itaque minus sit
-                        voluptates.
-                        Doloribus error iure modi possimus veniam. Lorem ipsum dolor sit amet, consectetur adipisicing
-                        elit.
-                        CoCommodi consectetur natus nemo quisquam quod rem similique sint sit tempore voluptatum. A
-                        cumque
-                        eligendi excepturi libero, officiis qui similique ut. Numquam? Lorem ipsum dolor sit amet,
-                        consectetur adipisicing elit. Cupiditate magni nisi sequi. Dicta ex illo illum labore nostrum?
-                        Beatae iusto officiis perferendis perspiciatis ratione, tempora. A laborum molestias natus
-                        tenetur?
+                        {petition.description}
                     </Typography>)
             case 'Comments':
                 return <Box mt={2.5}>Comments</Box>

@@ -12,8 +12,8 @@ import Classes from "./pages/classes/Classes";
 import PetitionsListPage from "./pages/petitions/PetitionsListPage";
 import PetitionPage from "./pages/petitions/PetitionPage";
 import ClassPage from "./pages/classes/ClassPage";
-import VotingListPage from "./pages/voitings/VotingListPage";
-import VotingPage from "./pages/voitings/VotingPage";
+import VotingListPage from "./pages/voting/VotingListPage";
+import VotingPage from "./pages/voting/VotingPage";
 
 const InitNavigation = ({children}) => {
     const navigate = useNavigate();

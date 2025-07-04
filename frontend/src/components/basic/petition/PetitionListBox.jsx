@@ -2,10 +2,11 @@ import React from 'react';
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import {Chip} from "@mui/material";
-import Progress from "../../layouts/Progress";
+import Progress from "../../layouts/statistics/Progress";
 import Utils from "../../../utils/Utils";
 import {useNavigate} from "react-router-dom";
 import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
+import {blueGrey} from "@mui/material/colors";
 
 const PetitionListBox = ({petition}) => {
     const navigate = useNavigate();
@@ -27,8 +28,12 @@ const PetitionListBox = ({petition}) => {
             paddingTop: '7px',
             paddingBottom: '15px',
             cursor: 'pointer',
-            '&:hover': {
-                backgroundColor: '#f5f5f5',
+            transition: "background-color 0.2s, border-color 0.2s, box-shadow 0.2s",
+            "&:hover": {
+                cursor: "pointer",
+                bgcolor: "#f5f5f5",
+                borderColor: "#c6c5c5",
+                boxShadow: "0px 0px 5px rgba(0, 0, 0, 0.2)",
             },
             '&:last-child': {
                 borderBottom: 'none',
@@ -57,7 +62,12 @@ const PetitionListBox = ({petition}) => {
                         {petition.countSupport}
                     </Typography>
 
-                    <Progress color={Utils.getStatusMUIColor(petition.status)} progressPercent={percentage}/>
+                    <Progress
+                        color={Utils.getStatusMUIColor(petition.status)}
+                        count={petition.countSupport}
+                        maxCount={petition.countNeeded}
+                    />
+
                 </Box>
                 <Box mt={0.75} display="flex" alignItems="center">
                     {Utils.getStatus(petition.status, {mr: 0.25, fontSize: 18}, {fontSize: 13})}
@@ -75,7 +85,7 @@ const PetitionListBox = ({petition}) => {
                             icon={<ThumbUpAltIcon color="success"/>}
                             label="Supported"
                             size="small"
-                            sx={{color: 'success.main', ml: 1, mr: 2}}
+                            sx={{color: 'success.main', backgroundColor: blueGrey[50], ml: 1, mr: 2}}
                         />
                     ) : <Box mt={1.5}/>}
                 </Box>

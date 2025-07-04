@@ -4,7 +4,7 @@ import com.project.backend.models.User;
 import com.project.backend.models.enums.LevelType;
 import com.project.backend.models.enums.Status;
 import com.project.backend.models.petitions.Petition;
-import com.project.backend.repositories.petitions.PetitionRepository;
+import com.project.backend.repositories.repos.petitions.PetitionRepository;
 import com.project.backend.repositories.specification.PetitionSpecification;
 import com.project.backend.services.inter.ClassService;
 import com.project.backend.services.inter.SchoolService;

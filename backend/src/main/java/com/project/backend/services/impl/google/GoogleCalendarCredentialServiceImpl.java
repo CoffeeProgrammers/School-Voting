@@ -5,7 +5,7 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.project.backend.models.google.GoogleCalendarCredential;
-import com.project.backend.repositories.google.GoogleCalendarCredentialRepository;
+import com.project.backend.repositories.repos.google.GoogleCalendarCredentialRepository;
 import com.project.backend.services.inter.google.GoogleCalendarCredentialService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;

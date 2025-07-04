@@ -3,7 +3,7 @@ package com.project.backend.services.impl;
 import com.project.backend.dto.wrapper.PasswordRequest;
 import com.project.backend.models.Class;
 import com.project.backend.models.User;
-import com.project.backend.repositories.UserRepository;
+import com.project.backend.repositories.repos.UserRepository;
 import com.project.backend.repositories.specification.UserSpecification;
 import com.project.backend.services.inter.SchoolService;
 import com.project.backend.services.inter.UserService;

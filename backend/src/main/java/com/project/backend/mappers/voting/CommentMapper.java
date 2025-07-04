@@ -1,4 +1,4 @@
-package com.project.backend.mappers;
+package com.project.backend.mappers.voting;
 
 
 import com.project.backend.dto.comment.CommentRequest;

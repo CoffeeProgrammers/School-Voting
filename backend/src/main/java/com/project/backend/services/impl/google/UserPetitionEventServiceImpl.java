@@ -4,7 +4,7 @@ import com.project.backend.models.User;
 import com.project.backend.models.google.UserPetitionEvent;
 import com.project.backend.models.google.UserPetitionEvent.UserPetitionEventId;
 import com.project.backend.models.petitions.Petition;
-import com.project.backend.repositories.google.UserPetitionEventRepository;
+import com.project.backend.repositories.repos.google.UserPetitionEventRepository;
 import com.project.backend.services.inter.google.UserPetitionEventService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;

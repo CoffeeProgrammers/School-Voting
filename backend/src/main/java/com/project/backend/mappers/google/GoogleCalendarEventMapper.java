@@ -1,4 +1,4 @@
-package com.project.backend.mappers;
+package com.project.backend.mappers.google;
 
 import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.model.Event;

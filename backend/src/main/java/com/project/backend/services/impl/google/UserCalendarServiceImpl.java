@@ -1,7 +1,7 @@
 package com.project.backend.services.impl.google;
 
 import com.project.backend.models.google.UserCalendar;
-import com.project.backend.repositories.google.UserCalendarRepository;
+import com.project.backend.repositories.repos.google.UserCalendarRepository;
 import com.project.backend.services.inter.google.UserCalendarService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package com.project.backend.repositories.voting;
+package com.project.backend.repositories.repos.voting;
 
 import com.project.backend.models.voting.VotingUser;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -2,8 +2,8 @@ package com.project.backend.controllers;
 
 import com.project.backend.dto.voting.*;
 import com.project.backend.dto.wrapper.PaginationListResponse;
-import com.project.backend.mappers.AnswerMapper;
-import com.project.backend.mappers.VotingMapper;
+import com.project.backend.mappers.petition.AnswerMapper;
+import com.project.backend.mappers.voting.VotingMapper;
 import com.project.backend.models.User;
 import com.project.backend.models.voting.Voting;
 import com.project.backend.services.inter.UserService;

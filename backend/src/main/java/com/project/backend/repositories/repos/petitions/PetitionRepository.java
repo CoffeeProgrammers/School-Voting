@@ -1,4 +1,4 @@
-package com.project.backend.repositories.petitions;
+package com.project.backend.repositories.repos.petitions;
 
 import com.project.backend.models.petitions.Petition;
 import org.springframework.data.jpa.repository.JpaRepository;

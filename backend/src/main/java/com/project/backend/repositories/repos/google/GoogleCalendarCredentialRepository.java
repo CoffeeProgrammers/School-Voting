@@ -1,4 +1,4 @@
-package com.project.backend.repositories.google;
+package com.project.backend.repositories.repos.google;
 
 import com.project.backend.models.google.GoogleCalendarCredential;
 import org.springframework.data.jpa.repository.JpaRepository;

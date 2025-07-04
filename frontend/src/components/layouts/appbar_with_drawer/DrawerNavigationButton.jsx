@@ -21,7 +21,11 @@ const DrawerNavigationButton = ({open, obj}) => {
                     minWidth: 0,
                     justifyContent: 'center',
                     color: isActive ? theme.palette.primary.main : "primary",
-                }, open ? {mr: 3,} : {mr: 'auto',}, isActive ? {color: theme.palette.primary.main} : {color: blueGrey[300]},]}>
+                }, open ? {mr: 3,} : {mr: 'auto',}, isActive ? {
+                    color: theme.palette.primary.main
+                } : {
+                    color: blueGrey[400]
+                },]}>
                     {obj.icon}
                 </ListItemIcon>
                 <ListItemText primary={obj.title} sx={[open ? {opacity: 1,} : {opacity: 0,},]}/>

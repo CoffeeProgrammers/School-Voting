@@ -8,6 +8,8 @@ import com.project.backend.dto.wrapper.PaginationListResponse;
 import com.project.backend.mappers.ClassMapper;
 import com.project.backend.models.Class;
 import com.project.backend.services.inter.ClassService;
+import com.project.backend.services.inter.PetitionService;
+import com.project.backend.services.inter.VotingUserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +29,8 @@ public class ClassController {
 
     private final ClassService classService;
     private final ClassMapper classMapper;
+    private final VotingUserService votingUserService;
+    private final PetitionService petitionService;
 
     @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasAnyRole('DIRECTOR', 'TEACHER')")
     @PostMapping("/create")
@@ -107,6 +111,10 @@ public class ClassController {
                               @RequestBody List<Long> userIds,
                               Authentication auth) {
         log.info("Controller: Unassigning users");
+        for(Long userId : userIds) {
+            votingUserService.deleteWithUser(userId);
+            petitionService.deleteVoteByUser(userId);
+        }
         classService.unassignUserFromClass(classId, userIds);
     }
 

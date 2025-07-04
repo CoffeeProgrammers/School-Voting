@@ -20,8 +20,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 import static com.project.backend.utils.SpecificationUtil.addSpecification;
 import static com.project.backend.utils.SpecificationUtil.isValid;
@@ -164,12 +162,15 @@ public class PetitionServiceImpl implements PetitionService {
     @Override
     public void deletingUser(long userId){
         log.info("Service: Deleting user {}", userId);
-        List<Petition> petitions = new ArrayList<>();
-        petitions.addAll(petitionRepository.findAll(PetitionSpecification.byCreator(userId)).stream()
+        petitionRepository.saveAll(petitionRepository.findAll(PetitionSpecification.byCreator(userId)).stream()
                 .peek(petition -> petition.setCreator(userService.findUserByEmail("!deleted-user!@deleted.com"))).toList());
-        petitions.addAll(petitionRepository.findAll(PetitionSpecification.byUser(userService.findById(userId))).stream()
+        deleteVoteByUser(userId);
+    }
+
+    @Override
+    public void deleteVoteByUser(long userId){
+        petitionRepository.saveAll(petitionRepository.findAll(PetitionSpecification.byUser(userService.findById(userId))).stream()
                 .peek(petition -> petition.setCount(petition.getCount() - 1)).toList());
-        petitionRepository.saveAll(petitions);
     }
 
     private Specification<Petition> createSpecification(String name, String status) {

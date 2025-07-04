@@ -47,9 +47,14 @@ public class ClassServiceImpl implements ClassService {
     }
 
     @Override
-    public void delete(long id) {
+    public void delete(long id, boolean deleteUsers) {
         log.info("Service: Deleting Class with id {}", id);
-        findById(id);
+        Class aClass = findById(id);
+        if(deleteUsers) {
+            for (User user : aClass.getUsers()) {
+                userService.delete(user.getId());
+            }
+        }
         classRepository.deleteById(id);
     }
 

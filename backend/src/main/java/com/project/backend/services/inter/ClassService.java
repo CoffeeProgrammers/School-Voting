@@ -9,7 +9,7 @@ public interface ClassService {
     Class create(Class classRequest, List<Long> userIds, long schoolId);
 
     Class update(Class classRequest, long id);
-    void delete(long id);
+    void delete(long id, boolean deleteUsers);
     Class findById(long id);
     void assignUserToClass(long classId, List<Long> userIds);
     void unassignUserFromClass(long classId, List<Long> userIds);

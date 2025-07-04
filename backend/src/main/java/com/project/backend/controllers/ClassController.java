@@ -60,9 +60,10 @@ public class ClassController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteClass(@PathVariable(value = "school_id") long schoolId,
                             @PathVariable(value = "class_id") long classId,
+                            @RequestParam boolean deletedUsers,
                             Authentication auth) {
         log.info("Controller: Deleting class with id {}", classId);
-        classService.delete(classId);
+        classService.delete(classId, deletedUsers);
     }
 
     @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasAnyRole('DIRECTOR', 'TEACHER')")

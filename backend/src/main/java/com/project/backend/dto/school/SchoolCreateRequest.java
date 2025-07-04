@@ -5,7 +5,7 @@ import jakarta.validation.Valid;
 import lombok.Data;
 
 @Data
-public class SchoolRequest {
+public class SchoolCreateRequest {
     private String name;
     @Valid
     private DirectorCreateRequest director;

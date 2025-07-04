@@ -4,7 +4,7 @@ import com.project.backend.models.User;
 import com.project.backend.models.UserVotingEvent;
 import com.project.backend.models.UserVotingEvent.UserVotingEventId;
 import com.project.backend.models.voting.Voting;
-import com.project.backend.repositories.UserVotingEventRepository;
+import com.project.backend.repositories.google.UserVotingEventRepository;
 import com.project.backend.services.inter.UserVotingEventService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;

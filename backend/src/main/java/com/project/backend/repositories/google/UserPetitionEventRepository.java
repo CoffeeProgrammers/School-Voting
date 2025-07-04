@@ -1,4 +1,4 @@
-package com.project.backend.repositories;
+package com.project.backend.repositories.google;
 
 import com.project.backend.models.UserPetitionEvent;
 import com.project.backend.models.UserPetitionEvent.UserPetitionEventId;

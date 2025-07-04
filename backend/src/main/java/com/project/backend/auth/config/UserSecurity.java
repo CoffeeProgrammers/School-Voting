@@ -33,6 +33,11 @@ public class UserSecurity {
         return userService.findById(userId).getKeycloakUserId().equals(authentication.getName());
     }
 
+    public boolean checkUserClass(Authentication authentication, long classId) {
+        log.info("preAuth: Checking if user in class {}", classId);
+        return userService.findUserByAuth(authentication).getMyClass().getId() == classId;
+    }
+
     public boolean checkUserSchool(Authentication authentication, long schoolId) {
         log.info("preAuth: Checking if user in school {}", schoolId);
         School school = userService.findUserByAuth(authentication).getSchool();

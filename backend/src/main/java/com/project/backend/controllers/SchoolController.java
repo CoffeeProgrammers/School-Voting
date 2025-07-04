@@ -3,23 +3,25 @@ package com.project.backend.controllers;
 import com.project.backend.auth.utils.CookieUtil;
 import com.project.backend.auth.utils.SecurityUtil;
 import com.project.backend.dto.school.SchoolRequest;
+import com.project.backend.dto.school.SchoolResponse;
 import com.project.backend.mappers.SchoolMapper;
 import com.project.backend.mappers.UserMapper;
 import com.project.backend.models.School;
 import com.project.backend.models.User;
+import com.project.backend.services.inter.SchoolService;
 import com.project.backend.services.inter.SchoolWithDirectorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
@@ -32,6 +34,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class SchoolController {
     private final SchoolWithDirectorService schoolWithDirectorService;
+    private final SchoolService schoolService;
     private final SchoolMapper schoolMapper;
     private final UserMapper userMapper;
     private final JwtDecoder jwtDecoder;
@@ -84,5 +87,12 @@ public class SchoolController {
                 .ok()
                 .headers(httpHeaders -> httpHeaders.put(HttpHeaders.SET_COOKIE, cookies))
                 .build();
+    }
+
+    @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId)")
+    @GetMapping("/{school_id}")
+    @ResponseStatus(HttpStatus.OK)
+    public SchoolResponse getSchoolById(@PathVariable("school_id") long schoolId, Authentication auth) {
+        return schoolMapper.fromSchoolToResponse(schoolService.findById(schoolId));
     }
 }

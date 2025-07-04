@@ -117,7 +117,7 @@ public class UserController {
         return userListResponse;
     }
 
-    @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasAnyRole('DIRECTOR', 'TEACHER')")
+    @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and (hasAnyRole('DIRECTOR', 'TEACHER') or @userSecurity.checkUserClass(#auth, #classId))")
     @GetMapping("/class/{class_id}")
     @ResponseStatus(HttpStatus.OK)
     public PaginationListResponse<UserListResponse> getUsersByClass(

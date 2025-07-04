@@ -160,8 +160,12 @@ public class VotingServiceImpl implements VotingService {
 
     private void checkTimeForVote(Voting voting) {
         log.info("Service: Checking time for voting {}", voting.getId());
-        if (LocalDateTime.now().isBefore(voting.getStartTime())) {
-            throw new IllegalArgumentException("Voting start time cannot be less than now for vote");
+        LocalDateTime now = LocalDateTime.now();
+        if (now.isBefore(voting.getStartTime())) {
+            throw new IllegalArgumentException("Voting start time cannot be more than now for vote");
+        }
+        if(now.isAfter(voting.getEndTime())) {
+            throw new IllegalArgumentException("Voting end time cannot be less than now for vote");
         }
     }
 

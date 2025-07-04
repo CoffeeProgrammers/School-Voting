@@ -132,7 +132,7 @@ public class AuthController {
         ResponseCookie accessTokenCookie = createCookie("accessToken", accessTokenString, Long.parseLong(response.get("expires_in").toString()), false);
         ResponseCookie refreshTokenCookie = createCookie("refreshToken", refreshTokenString, Long.parseLong(response.get("refresh_expires_in").toString()), false);
         ResponseCookie userIdCookie = createCookie("userId", String.valueOf(user.getId()), -1, false);
-        ResponseCookie schoolIdCookie = createCookie("userId", String.valueOf(user.getSchool().getId()), -1, false);
+        ResponseCookie schoolIdCookie = createCookie("schoolId", String.valueOf(user.getSchool().getId()), -1, false);
         ResponseCookie roleCookie = createCookie("role", role, -1, false);
 
         return ResponseEntity

@@ -1,6 +1,7 @@
 package com.project.backend.exception;
 
 import com.project.backend.dto.exception.ExceptionResponse;
+import com.project.backend.utils.JsonParserUtil;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.security.auth.message.AuthException;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.security.auth.login.LoginException;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -69,9 +71,9 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ResponseStatusException.class)
-    public ResponseEntity<String> handleResponseStatusException(ResponseStatusException e) {
+    public ResponseEntity<ExceptionResponse> handleResponseStatusException(ResponseStatusException e) {
         log.error("Exception: handleResponseStatusException: {}", e.getMessage());
-        String reason = e.getReason();
-        return ResponseEntity.status(e.getStatusCode().value()).body(reason);
+        List<String> reason = JsonParserUtil.extractErrorMessages(e.getReason());
+        return ResponseEntity.status(e.getStatusCode().value()).body(new ExceptionResponse(reason));
     }
 }

@@ -38,7 +38,9 @@ public class VotingController {
                                      @Valid @RequestBody VotingCreateRequest votingCreateRequest,
                                      Authentication auth) {
         log.info("Controller: Create vote with body {}", votingCreateRequest);
-        Voting createdVoting = votingService.create(votingMapper.fromRequestToVoting(votingCreateRequest), votingCreateRequest.getAnswers(), votingCreateRequest.getTargetIds(), schoolId, userService.findUserByAuth(auth).getId());
+        Voting createdVoting = votingService.create(votingMapper.fromRequestToVoting(votingCreateRequest),
+                votingCreateRequest.getAnswers(), votingCreateRequest.getTargetIds(), schoolId,
+                userService.findUserByAuth(auth).getId());
         return fromVotingToFullResponseWithStatistics(createdVoting);
     }
 

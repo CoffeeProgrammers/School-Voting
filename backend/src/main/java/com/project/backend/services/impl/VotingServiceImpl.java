@@ -40,17 +40,25 @@ public class VotingServiceImpl implements VotingService {
     @Override
     public Voting create(Voting votingRequest, List<String> answer, List<Long> targetIds, long schoolId, long userId) {
         log.info("Service: Creating voting {}", votingRequest);
-        votingRequest.setCreator(userService.findById(userId));
+        User creator = userService.findById(userId);
+        votingRequest.setCreator(creator);
         Voting voting = votingRepository.save(votingRequest);
         answerService.create(answer, voting);
         Stream<User> users = null;
         switch (voting.getLevelType()) {
             case SCHOOL -> {
                 log.info("Service: Adding users from school {}", schoolId);
+                Long schoolIdFromRequest = targetIds.get(0);
+                if(creator.getSchool().getId() != schoolId && schoolIdFromRequest != schoolId) {
+                    throw new IllegalArgumentException("Can`t create voting and not be in that school");
+                }
                 users = userService.findAllBySchool(schoolId, userId).stream();
             }
             case CLASS -> {
                 Long classId = targetIds.get(0);
+                if(creator.getMyClass().getId() != classId) {
+                    throw new IllegalArgumentException("Can`t create voting and not be in that class");
+                }
                 log.info("Service: Adding users from class {}", classId);
                 users = userService.findAllByClass(classId, userId).stream();
             }

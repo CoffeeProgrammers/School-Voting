@@ -47,4 +47,6 @@ public interface UserService {
     void assignClassToUser(Class clazz, User user);
 
     User createDirector(User director, String password);
+
+    void checkEmail(String email);
 }

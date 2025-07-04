@@ -79,9 +79,7 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("Teachers cant create teacher or director");
         }
         String email = user.getEmail();
-        if (userRepository.existsByEmail(email)) {
-            throw new EntityExistsException("User with email " + email + " already exists");
-        }
+        checkEmail(email);
 
         addUserToKeycloak(user, password);
 
@@ -214,7 +212,7 @@ public class UserServiceImpl implements UserService {
     public void delete(long id) {
         log.info("Service: Deleting user with id {}", id);
         User user = findById(id);
-        if(user.getRole().equals("DIRECTOR")){
+        if (user.getRole().equals("DIRECTOR")) {
             throw new IllegalArgumentException("Cannot delete director");
         }
         checkForDeletedUser(user);
@@ -333,6 +331,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createDirector(User director, String password) {
+
         addUserToKeycloak(director, password);
         User user = userRepository.save(director);
         return user;
@@ -349,6 +348,13 @@ public class UserServiceImpl implements UserService {
         log.info("Service: Finding user by email {}", email);
         return userRepository.findByEmail(email).orElseThrow(
                 () -> new EntityNotFoundException("User not found with email " + email));
+    }
+
+    @Override
+    public void checkEmail(String email) {
+        if (userRepository.existsByEmail(email)) {
+            throw new EntityExistsException("User with email " + email + " already exists");
+        }
     }
 
     private Specification<User> createSpecification(String email, String firstName, String lastName, String role) {

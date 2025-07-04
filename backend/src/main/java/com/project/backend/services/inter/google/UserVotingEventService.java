@@ -1,7 +1,7 @@
-package com.project.backend.services.inter;
+package com.project.backend.services.inter.google;
 
 import com.project.backend.models.User;
-import com.project.backend.models.UserVotingEvent;
+import com.project.backend.models.google.UserVotingEvent;
 import com.project.backend.models.voting.Voting;
 
 import java.util.List;

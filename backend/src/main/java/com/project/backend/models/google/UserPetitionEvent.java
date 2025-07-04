@@ -1,5 +1,6 @@
-package com.project.backend.models;
+package com.project.backend.models.google;
 
+import com.project.backend.models.User;
 import com.project.backend.models.petitions.Petition;
 import jakarta.persistence.*;
 import lombok.*;

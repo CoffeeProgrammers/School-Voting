@@ -1,6 +1,6 @@
-package com.project.backend.services.inter;
+package com.project.backend.services.inter.google;
 
-import com.project.backend.models.GoogleCalendarCredential;
+import com.project.backend.models.google.GoogleCalendarCredential;
 
 public interface GoogleCalendarCredentialService {
     GoogleCalendarCredential findByUserId(long userId);

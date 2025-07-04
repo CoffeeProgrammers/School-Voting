@@ -1,9 +1,13 @@
-package com.project.backend.services.impl;
+package com.project.backend.services.impl.google;
 
 import com.google.api.services.calendar.model.Event;
 import com.project.backend.models.petitions.Petition;
 import com.project.backend.models.voting.Voting;
-import com.project.backend.services.inter.*;
+import com.project.backend.services.inter.UserService;
+import com.project.backend.services.inter.google.GoogleCalendarCredentialService;
+import com.project.backend.services.inter.google.GoogleCalendarService;
+import com.project.backend.services.inter.petition.PetitionService;
+import com.project.backend.services.inter.voting.VotingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

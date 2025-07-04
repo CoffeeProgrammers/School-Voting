@@ -1,11 +1,11 @@
-package com.project.backend.services.impl;
+package com.project.backend.services.impl.petition;
 
 import com.project.backend.models.User;
 import com.project.backend.models.petitions.Comment;
 import com.project.backend.repositories.petitions.CommentRepository;
-import com.project.backend.services.inter.CommentService;
-import com.project.backend.services.inter.PetitionService;
 import com.project.backend.services.inter.UserService;
+import com.project.backend.services.inter.petition.CommentService;
+import com.project.backend.services.inter.petition.PetitionService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

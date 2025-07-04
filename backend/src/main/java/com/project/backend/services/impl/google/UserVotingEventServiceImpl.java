@@ -1,11 +1,11 @@
-package com.project.backend.services.impl;
+package com.project.backend.services.impl.google;
 
 import com.project.backend.models.User;
-import com.project.backend.models.UserVotingEvent;
-import com.project.backend.models.UserVotingEvent.UserVotingEventId;
+import com.project.backend.models.google.UserVotingEvent;
+import com.project.backend.models.google.UserVotingEvent.UserVotingEventId;
 import com.project.backend.models.voting.Voting;
 import com.project.backend.repositories.google.UserVotingEventRepository;
-import com.project.backend.services.inter.UserVotingEventService;
+import com.project.backend.services.inter.google.UserVotingEventService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

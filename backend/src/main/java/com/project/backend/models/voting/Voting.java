@@ -1,9 +1,8 @@
 package com.project.backend.models.voting;
 
 import com.project.backend.models.User;
-import com.project.backend.models.UserVotingEvent;
-import com.project.backend.models.VotingUser;
 import com.project.backend.models.enums.LevelType;
+import com.project.backend.models.google.UserVotingEvent;
 import jakarta.persistence.*;
 import lombok.*;
 

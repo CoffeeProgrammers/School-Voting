@@ -1,7 +1,7 @@
 package com.project.backend.repositories.specification;
 
 import com.project.backend.models.User;
-import com.project.backend.models.VotingUser;
+import com.project.backend.models.voting.VotingUser;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Predicate;

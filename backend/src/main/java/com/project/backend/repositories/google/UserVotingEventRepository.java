@@ -1,7 +1,7 @@
 package com.project.backend.repositories.google;
 
-import com.project.backend.models.UserVotingEvent;
-import com.project.backend.models.UserVotingEvent.UserVotingEventId;
+import com.project.backend.models.google.UserVotingEvent;
+import com.project.backend.models.google.UserVotingEvent.UserVotingEventId;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

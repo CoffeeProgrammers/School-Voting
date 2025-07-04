@@ -1,12 +1,12 @@
-package com.project.backend.services.impl;
+package com.project.backend.services.impl.voiting;
 
 import com.project.backend.models.User;
-import com.project.backend.models.VotingUser;
 import com.project.backend.models.voting.Answer;
 import com.project.backend.models.voting.Voting;
+import com.project.backend.models.voting.VotingUser;
 import com.project.backend.repositories.voting.VotingUserRepository;
-import com.project.backend.services.inter.AnswerService;
-import com.project.backend.services.inter.VotingUserService;
+import com.project.backend.services.inter.voting.AnswerService;
+import com.project.backend.services.inter.voting.VotingUserService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Service

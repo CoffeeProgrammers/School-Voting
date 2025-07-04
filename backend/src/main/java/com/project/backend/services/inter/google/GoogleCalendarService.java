@@ -1,4 +1,4 @@
-package com.project.backend.services.inter;
+package com.project.backend.services.inter.google;
 
 import com.google.api.services.calendar.model.Event;
 import com.project.backend.models.petitions.Petition;

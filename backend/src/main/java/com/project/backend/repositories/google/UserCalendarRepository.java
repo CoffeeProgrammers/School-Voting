@@ -1,6 +1,6 @@
 package com.project.backend.repositories.google;
 
-import com.project.backend.models.UserCalendar;
+import com.project.backend.models.google.UserCalendar;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

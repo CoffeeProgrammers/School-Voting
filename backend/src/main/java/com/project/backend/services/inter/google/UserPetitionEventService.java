@@ -1,7 +1,7 @@
-package com.project.backend.services.inter;
+package com.project.backend.services.inter.google;
 
 import com.project.backend.models.User;
-import com.project.backend.models.UserPetitionEvent;
+import com.project.backend.models.google.UserPetitionEvent;
 import com.project.backend.models.petitions.Petition;
 
 import java.util.List;

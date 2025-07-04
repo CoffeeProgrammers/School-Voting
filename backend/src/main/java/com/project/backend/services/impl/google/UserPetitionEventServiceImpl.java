@@ -1,11 +1,11 @@
-package com.project.backend.services.impl;
+package com.project.backend.services.impl.google;
 
 import com.project.backend.models.User;
-import com.project.backend.models.UserPetitionEvent;
-import com.project.backend.models.UserPetitionEvent.UserPetitionEventId;
+import com.project.backend.models.google.UserPetitionEvent;
+import com.project.backend.models.google.UserPetitionEvent.UserPetitionEventId;
 import com.project.backend.models.petitions.Petition;
 import com.project.backend.repositories.google.UserPetitionEventRepository;
-import com.project.backend.services.inter.UserPetitionEventService;
+import com.project.backend.services.inter.google.UserPetitionEventService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

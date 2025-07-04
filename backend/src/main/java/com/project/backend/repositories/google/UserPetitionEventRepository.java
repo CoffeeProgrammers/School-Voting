@@ -1,7 +1,7 @@
 package com.project.backend.repositories.google;
 
-import com.project.backend.models.UserPetitionEvent;
-import com.project.backend.models.UserPetitionEvent.UserPetitionEventId;
+import com.project.backend.models.google.UserPetitionEvent;
+import com.project.backend.models.google.UserPetitionEvent.UserPetitionEventId;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

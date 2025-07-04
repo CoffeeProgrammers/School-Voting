@@ -1,6 +1,6 @@
-package com.project.backend.services.inter;
+package com.project.backend.services.inter.google;
 
-import com.project.backend.models.UserCalendar;
+import com.project.backend.models.google.UserCalendar;
 
 public interface UserCalendarService {
     UserCalendar findByUser(long userId);

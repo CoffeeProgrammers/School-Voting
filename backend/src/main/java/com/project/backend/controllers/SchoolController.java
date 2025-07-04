@@ -10,6 +10,7 @@ import com.project.backend.models.School;
 import com.project.backend.models.User;
 import com.project.backend.services.inter.SchoolService;
 import com.project.backend.services.inter.SchoolWithDirectorService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -52,7 +53,7 @@ public class SchoolController {
     private final WebClient webClient;
 
     @PostMapping("/create")
-    public ResponseEntity<String> createSchool(@RequestBody SchoolRequest schoolRequest) {
+    public ResponseEntity<String> createSchool(@Valid @RequestBody SchoolRequest schoolRequest) {
         School school = schoolMapper.fromRequestToSchool(schoolRequest);
         User director = userMapper.fromDirectorRequestToUser(schoolRequest.getDirector());
         try {
@@ -61,7 +62,8 @@ public class SchoolController {
             log.error("Controller: {} Error response from Keycloak: {}", e.getRawStatusCode(), e.getResponseBodyAsString());
 
             return ResponseEntity.status(e.getRawStatusCode()).body(e.getResponseBodyAsString());
-        }director = school.getDirector();
+        }
+        director = school.getDirector();
 
         MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
         formData.add("grant_type", "password");

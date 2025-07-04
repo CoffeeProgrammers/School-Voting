@@ -22,6 +22,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.net.URI;
 import java.util.List;
@@ -111,6 +113,7 @@ public class UserServiceImpl implements UserService {
             log.info("Service: Failed to create user. Status: " + response.getStatus());
             String error = response.readEntity(String.class);
             log.info("Service: Error response: " + error);
+            throw new ResponseStatusException(HttpStatusCode.valueOf(response.getStatus()), error);
         }
         response.close();
 

@@ -6,12 +6,14 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.security.auth.message.AuthException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.security.auth.login.LoginException;
 import java.util.stream.Collectors;
@@ -64,5 +66,12 @@ public class GlobalExceptionHandler {
     public ExceptionResponse handleAuthException(AuthException e) {
         log.error("Exception: handleAuthException: {}", e.getMessage());
         return new ExceptionResponse(e.getMessage());
+    }
+
+    @ExceptionHandler(ResponseStatusException.class)
+    public ResponseEntity<String> handleResponseStatusException(ResponseStatusException e) {
+        log.error("Exception: handleResponseStatusException: {}", e.getMessage());
+        String reason = e.getReason();
+        return ResponseEntity.status(e.getStatusCode().value()).body(reason);
     }
 }

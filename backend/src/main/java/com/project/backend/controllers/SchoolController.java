@@ -52,8 +52,13 @@ public class SchoolController {
     public ResponseEntity<String> createSchool(@RequestBody SchoolRequest schoolRequest) {
         School school = schoolMapper.fromRequestToSchool(schoolRequest);
         User director = userMapper.fromDirectorRequestToUser(schoolRequest.getDirector());
-        school = schoolWithDirectorService.createSchoolWithDirector(school, director, schoolRequest.getDirector().getPassword());
-        director = school.getDirector();
+        try {
+            school = schoolWithDirectorService.createSchoolWithDirector(school, director, schoolRequest.getDirector().getPassword());
+        } catch (WebClientResponseException e) {
+            log.error("Controller: {} Error response from Keycloak: {}", e.getRawStatusCode(), e.getResponseBodyAsString());
+
+            return ResponseEntity.status(e.getRawStatusCode()).body(e.getResponseBodyAsString());
+        }director = school.getDirector();
 
         MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
         formData.add("grant_type", "password");

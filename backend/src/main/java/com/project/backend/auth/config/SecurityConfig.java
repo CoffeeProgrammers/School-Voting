@@ -43,6 +43,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(a -> a
                         .requestMatchers("/api/auth/logout", "/api/auth/callback", "/ws/**", "/api/auth/refresh").permitAll()
+                        .requestMatchers("/api/schools/create").anonymous()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))  // Using STATELESS for JWT

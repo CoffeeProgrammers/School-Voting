@@ -3,7 +3,6 @@ package com.project.backend.services.impl;
 import com.project.backend.dto.wrapper.PasswordRequest;
 import com.project.backend.models.Class;
 import com.project.backend.models.User;
-import com.project.backend.models.petitions.Petition;
 import com.project.backend.repositories.UserRepository;
 import com.project.backend.repositories.specification.UserSpecification;
 import com.project.backend.services.inter.SchoolService;
@@ -82,6 +81,13 @@ public class UserServiceImpl implements UserService {
             throw new EntityExistsException("User with email " + email + " already exists");
         }
 
+        addUserToKeycloak(user, password);
+
+        return createUserKeycloak(user, schoolId);
+    }
+
+    private void addUserToKeycloak(User user, String password) {
+
         UserRepresentation userRepresentation = new UserRepresentation();
 
         CredentialRepresentation credentialRepresentation = new CredentialRepresentation();
@@ -113,8 +119,6 @@ public class UserServiceImpl implements UserService {
                 .roles()
                 .clientLevel(clientUUID)
                 .add(List.of(clientRoles.get(user.getRole())));
-
-        return createUserKeycloak(user, schoolId);
     }
 
     @Override
@@ -207,16 +211,15 @@ public class UserServiceImpl implements UserService {
     public void delete(long id) {
         log.info("Service: Deleting user with id {}", id);
         User user = findById(id);
+        if(user.getRole().equals("DIRECTOR")){
+            throw new IllegalArgumentException("Cannot delete director");
+        }
         checkForDeletedUser(user);
         user.setSchool(null);
         user.setMyClass(null);
         user.setPetitions(null);
         user.setVotingUsers(null);
         userRepository.save(user);
-
-        if(user.getRole().equals("DIRECTOR")){
-            throw new IllegalArgumentException("Cannot delete director");
-        }
 
         realmResource.users().delete(user.getKeycloakUserId());
         userRepository.deleteById(id);
@@ -323,6 +326,13 @@ public class UserServiceImpl implements UserService {
     public void assignClassToUser(Class clazz, User user) {
         user.setMyClass(clazz);
         userRepository.save(user);
+    }
+
+    @Override
+    public User createDirector(User director, String password) {
+        addUserToKeycloak(director, password);
+        User user = userRepository.save(director);
+        return user;
     }
 
     @Override

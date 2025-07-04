@@ -1,5 +1,7 @@
 package com.project.backend.auth.controllers;
 
+import com.project.backend.auth.utils.CookieUtil;
+import com.project.backend.auth.utils.SecurityUtil;
 import com.project.backend.dto.wrapper.PasswordRequest;
 import com.project.backend.models.User;
 import com.project.backend.services.inter.UserService;
@@ -9,7 +11,6 @@ import org.keycloak.admin.client.resource.RealmResource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -23,7 +24,6 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 import java.util.List;
 import java.util.Map;
 
-import static com.project.backend.auth.utils.CookieUtil.createCookie;
 import static com.project.backend.auth.utils.CookieUtil.deleteCookie;
 import static com.project.backend.auth.utils.SecurityUtil.extractRole;
 
@@ -88,14 +88,7 @@ public class AuthController {
     private ResponseEntity<Void> requestToken(MultiValueMap<String, String> formData) {
         try {
             return handleResponse(
-                    webClient.post()
-                            .uri("/realms/" + realm + "/protocol/openid-connect/token")
-                            .header("Content-Type", "application/x-www-form-urlencoded")
-                            .bodyValue(formData)
-                            .retrieve()
-                            .toEntity(Map.class)
-                            .block()
-                            .getBody()
+                    SecurityUtil.sendRequestToTokenEndpoint(webClient, realm, formData)
             );
         } catch (WebClientResponseException e) {
             log.error("Controller: {} Error response from Keycloak: {}", e.getRawStatusCode(), e.getResponseBodyAsString());
@@ -129,23 +122,17 @@ public class AuthController {
             user= userService.updateUserKeycloak(user, userService.findUserByEmail(email).getId());
         }
 
-        ResponseCookie accessTokenCookie = createCookie("accessToken", accessTokenString, Long.parseLong(response.get("expires_in").toString()), false);
-        ResponseCookie refreshTokenCookie = createCookie("refreshToken", refreshTokenString, Long.parseLong(response.get("refresh_expires_in").toString()), false);
-        ResponseCookie userIdCookie = createCookie("userId", String.valueOf(user.getId()), -1, false);
-        ResponseCookie schoolIdCookie = createCookie("schoolId", String.valueOf(user.getSchool().getId()), -1, false);
-        ResponseCookie roleCookie = createCookie("role", role, -1, false);
-
+        List<String> cookies = CookieUtil.createCookiesFromJWTs(
+                user,
+                accessTokenString,
+                refreshTokenString,
+                role,
+                Long.parseLong(response.get("expires_id").toString()),
+                Long.parseLong(response.get("refresh_expires_in").toString())
+        );
         return ResponseEntity
                 .ok()
-                .headers(httpHeaders -> {
-                    httpHeaders.put(HttpHeaders.SET_COOKIE, List.of(
-                            accessTokenCookie.toString(),
-                            userIdCookie.toString(),
-                            schoolIdCookie.toString(),
-                            roleCookie.toString(),
-                            refreshTokenCookie.toString())
-                    );
-                })
+                .headers(httpHeaders -> httpHeaders.put(HttpHeaders.SET_COOKIE, cookies))
                 .build();
     }
 

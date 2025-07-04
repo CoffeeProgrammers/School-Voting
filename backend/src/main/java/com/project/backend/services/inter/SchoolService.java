@@ -4,4 +4,6 @@ import com.project.backend.models.School;
 
 public interface SchoolService {
     School findById(long schoolId);
+
+    School save(School school);
 }

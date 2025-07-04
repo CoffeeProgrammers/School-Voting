@@ -2,6 +2,8 @@ package com.project.backend.auth.utils;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
 import java.util.Map;
@@ -39,5 +41,16 @@ public class SecurityUtil {
                     log.warn("No role found for client '{}', returning empty string", clientId);
                     return "";
                 });
+    }
+
+    public static Map sendRequestToTokenEndpoint(WebClient webClient, String realm, MultiValueMap<String, String> formData) {
+        return webClient.post()
+                .uri("/realms/" + realm + "/protocol/openid-connect/token")
+                .header("Content-Type", "application/x-www-form-urlencoded")
+                .bodyValue(formData)
+                .retrieve()
+                .toEntity(Map.class)
+                .block()
+                .getBody();
     }
 }

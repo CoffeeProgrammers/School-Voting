@@ -124,14 +124,15 @@ public class AuthController {
         user.setRole(role);
 
         if (userService.isNotExistByEmail(email)) {
-            user.setId(userService.createUserKeycloak(user, 1).getId());
+            user = userService.createUserKeycloak(user, 1);
         } else {
-            user.setId(userService.updateUserKeycloak(user, userService.findUserByEmail(email).getId()).getId());
+            user= userService.updateUserKeycloak(user, userService.findUserByEmail(email).getId());
         }
 
         ResponseCookie accessTokenCookie = createCookie("accessToken", accessTokenString, Long.parseLong(response.get("expires_in").toString()), false);
         ResponseCookie refreshTokenCookie = createCookie("refreshToken", refreshTokenString, Long.parseLong(response.get("refresh_expires_in").toString()), false);
         ResponseCookie userIdCookie = createCookie("userId", String.valueOf(user.getId()), -1, false);
+        ResponseCookie schoolIdCookie = createCookie("userId", String.valueOf(user.getSchool().getId()), -1, false);
         ResponseCookie roleCookie = createCookie("role", role, -1, false);
 
         return ResponseEntity
@@ -140,6 +141,7 @@ public class AuthController {
                     httpHeaders.put(HttpHeaders.SET_COOKIE, List.of(
                             accessTokenCookie.toString(),
                             userIdCookie.toString(),
+                            schoolIdCookie.toString(),
                             roleCookie.toString(),
                             refreshTokenCookie.toString())
                     );
@@ -155,6 +157,7 @@ public class AuthController {
         return ResponseEntity.ok()
                 .headers(headers ->
                         headers.put(HttpHeaders.SET_COOKIE, List.of(
+                                deleteCookie("schoolId").toString(),
                                 deleteCookie("accessToken").toString(),
                                 deleteCookie("refreshToken").toString(),
                                 deleteCookie("userId").toString(),

@@ -50,6 +50,7 @@ public class VotingUserServiceImpl implements VotingUserService {
 
     @Override
     public boolean exitsById(long votingId, long userId) {
+        log.info("Service: check if existing voting user with voting {} and user {}", votingId, userId);
         return votingUserRepository.existsById(new VotingUser.VotingUserId(userId, votingId));
     }
 

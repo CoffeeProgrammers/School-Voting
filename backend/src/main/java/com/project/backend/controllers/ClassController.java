@@ -1,9 +1,9 @@
 package com.project.backend.controllers;
 
-import com.project.backend.dto.classDTO.ClassCreateRequest;
-import com.project.backend.dto.classDTO.ClassFullResponse;
-import com.project.backend.dto.classDTO.ClassListResponse;
-import com.project.backend.dto.classDTO.ClassUpdateRequest;
+import com.project.backend.dto.clazz.ClassCreateRequest;
+import com.project.backend.dto.clazz.ClassFullResponse;
+import com.project.backend.dto.clazz.ClassListResponse;
+import com.project.backend.dto.clazz.ClassUpdateRequest;
 import com.project.backend.dto.wrapper.PaginationListResponse;
 import com.project.backend.mappers.ClassMapper;
 import com.project.backend.models.Class;

@@ -352,6 +352,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void checkEmail(String email) {
+        log.info("Service: Checking if user with email {}", email);
         if (userRepository.existsByEmail(email)) {
             throw new EntityExistsException("User with email " + email + " already exists");
         }

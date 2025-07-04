@@ -1,4 +1,4 @@
-package com.project.backend.dto.classDTO;
+package com.project.backend.dto.clazz;
 
 import com.project.backend.dto.user.UserListResponse;
 import lombok.Data;

@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +29,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/schools/{school_id}/petitions")
 @RequiredArgsConstructor
 public class PetitionController {
+
+    private final SimpMessagingTemplate messagingTemplate;
     private final PetitionService petitionService;
     private final PetitionMapper petitionMapper;
     private final CommentService commentService;
@@ -123,7 +126,8 @@ public class PetitionController {
                                 @PathVariable(name = "petition_id") long petitionId,
                                 Authentication auth) {
         log.info("Controller: Support petition with id {}", petitionId);
-        petitionService.support(petitionId, userService.findUserByAuth(auth));
+        long newCount = petitionService.support(petitionId, userService.findUserByAuth(auth));
+        messagingTemplate.convertAndSend("/topic/petitions/" + petitionId + "/counter", newCount);
     }
 
     @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasRole('DIRECTOR')")

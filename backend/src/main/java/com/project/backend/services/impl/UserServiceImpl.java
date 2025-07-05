@@ -3,6 +3,8 @@ package com.project.backend.services.impl;
 import com.project.backend.dto.wrapper.PasswordRequest;
 import com.project.backend.models.Class;
 import com.project.backend.models.User;
+import com.project.backend.models.petition.Petition;
+import com.project.backend.models.voting.Voting;
 import com.project.backend.repositories.repos.UserRepository;
 import com.project.backend.repositories.specification.UserSpecification;
 import com.project.backend.services.inter.SchoolService;
@@ -377,6 +379,18 @@ public class UserServiceImpl implements UserService {
     @Override
     public User save(User user) {
         return userRepository.save(user);
+    }
+
+    @Override
+    public List<User> findAllByPetition(Petition petition){
+        return userRepository.findAll(
+                UserSpecification.byPetition(petition).and(UserSpecification.connectedToGoogle()));
+    }
+
+    @Override
+    public List<User> findAllByVoting(Voting voting){
+        return userRepository.findAll(
+                UserSpecification.byVoting(voting).and(UserSpecification.connectedToGoogle()));
     }
 
     private Specification<User> createSpecification(String email, String firstName, String lastName, String role) {

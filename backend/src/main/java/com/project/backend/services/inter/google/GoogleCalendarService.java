@@ -24,4 +24,12 @@ public interface GoogleCalendarService {
     Event[] updateVotingInUserCalendar(Voting voting, long userId);
 
     void deleteCalendar(long userId);
+
+    Event[] savePetitionToUserCalendar(Petition petition);
+
+    Event[] saveVotingToUserCalendar(Voting voting);
+
+    Event[] updatePetitionToUserCalendar(Petition petition);
+
+    Event[] updateVotingToUserCalendar(Voting voting);
 }

@@ -3,6 +3,8 @@ package com.project.backend.services.inter;
 import com.project.backend.dto.wrapper.PasswordRequest;
 import com.project.backend.models.Class;
 import com.project.backend.models.User;
+import com.project.backend.models.petition.Petition;
+import com.project.backend.models.voting.Voting;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 
@@ -56,4 +58,8 @@ public interface UserService {
     void deleteBySchool(long schoolId);
 
     User save(User user);
+
+    List<User> findAllByPetition(Petition petition);
+
+    List<User> findAllByVoting(Voting voting);
 }

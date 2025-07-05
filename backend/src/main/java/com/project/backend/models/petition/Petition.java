@@ -3,6 +3,7 @@ package com.project.backend.models.petition;
 import com.project.backend.models.User;
 import com.project.backend.models.enums.LevelType;
 import com.project.backend.models.enums.Status;
+import com.project.backend.models.google.UserPetitionEvent;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;

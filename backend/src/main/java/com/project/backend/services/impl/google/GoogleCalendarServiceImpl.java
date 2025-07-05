@@ -207,5 +207,55 @@ public class GoogleCalendarServiceImpl implements GoogleCalendarService {
         }
     }
 
+    @Override
+    public Event[] savePetitionToUserCalendar(Petition petition){
+        List<User> users = userService.findAllByPetition(petition);
+        Event[] result = new Event[users.size() * 2];
+        Event[] events;
+        for(int i = 0; i < users.size(); i++){
+            events = savePetitionToUserCalendar(petition, users.get(i).getId());
+            result[i++] = events[0];
+            result[i] = events[1];
+        }
+        return result;
+    }
 
+    @Override
+    public Event[] saveVotingToUserCalendar(Voting voting){
+        List<User> users = userService.findAllByVoting(voting);
+        Event[] result = new Event[users.size() * 2];
+        Event[] events;
+        for(int i = 0; i < users.size(); i++){
+            events = saveVotingToUserCalendar(voting, users.get(i).getId());
+            result[i++] = events[0];
+            result[i] = events[1];
+        }
+        return result;
+    }
+
+    @Override
+    public Event[] updatePetitionToUserCalendar(Petition petition){
+        List<User> users = userService.findAllByPetition(petition);
+        Event[] result = new Event[users.size() * 2];
+        Event[] events;
+        for(int i = 0; i < users.size(); i++){
+            events = updatePetitionInUserCalendar(petition, users.get(i).getId());
+            result[i++] = events[0];
+            result[i] = events[1];
+        }
+        return result;
+    }
+
+    @Override
+    public Event[] updateVotingToUserCalendar(Voting voting){
+        List<User> users = userService.findAllByVoting(voting);
+        Event[] result = new Event[users.size() * 2];
+        Event[] events;
+        for(int i = 0; i < users.size(); i++){
+            events = updateVotingInUserCalendar(voting, users.get(i).getId());
+            result[i++] = events[0];
+            result[i] = events[1];
+        }
+        return result;
+    }
 }

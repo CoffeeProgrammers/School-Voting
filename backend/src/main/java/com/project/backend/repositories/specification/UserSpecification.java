@@ -1,6 +1,8 @@
 package com.project.backend.repositories.specification;
 
 import com.project.backend.models.User;
+import com.project.backend.models.petition.Petition;
+import com.project.backend.models.voting.Voting;
 import com.project.backend.models.voting.VotingUser;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.JoinType;
@@ -72,4 +74,20 @@ public class UserSpecification {
         };
     }
 
+    public static Specification<User> connectedToGoogle() {
+        return (root, query, cb) ->
+            cb.isNotNull(root.get("googleCalendarCredential"));
+    }
+
+    public static Specification<User> byPetition(Petition petition) {
+        return ((root, query, cb) ->
+                cb.isMember(petition, root.get("petitions")));
+    }
+
+    public static Specification<User> byVoting(Voting voting) {
+        return ((root, query, cb) -> {
+            Join<User, VotingUser> votingUserJoin = root.join("votingUsers", JoinType.LEFT);
+            return cb.equal(votingUserJoin.get("voting"), voting);
+        });
+    }
 }

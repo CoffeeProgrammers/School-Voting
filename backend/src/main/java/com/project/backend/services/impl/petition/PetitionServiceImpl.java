@@ -6,10 +6,7 @@ import com.project.backend.models.enums.Status;
 import com.project.backend.models.petition.Petition;
 import com.project.backend.repositories.repos.petition.PetitionRepository;
 import com.project.backend.repositories.specification.PetitionSpecification;
-import com.project.backend.services.inter.ClassService;
-import com.project.backend.services.inter.SchoolService;
 import com.project.backend.services.inter.UserService;
-import com.project.backend.services.inter.petition.PetitionService;
 import com.project.backend.services.inter.petition.CommentService;
 import com.project.backend.services.inter.petition.PetitionService;
 import jakarta.persistence.EntityNotFoundException;
@@ -211,7 +208,7 @@ public class PetitionServiceImpl implements PetitionService {
     public void deleteVoteByUser(long userId) {
         petitionRepository.saveAll(
                 petitionRepository.findAll(
-                                PetitionSpecification.byUser(userService.findById(userId)))
+                                PetitionSpecification.byUserWithVote(userService.findById(userId)))
                         .stream().peek(petition ->
                         {
                             if (petition.now()) {

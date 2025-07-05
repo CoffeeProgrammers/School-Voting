@@ -5,7 +5,7 @@ import com.project.backend.models.enums.LevelType;
 import com.project.backend.models.voting.Answer;
 import com.project.backend.models.voting.Voting;
 import com.project.backend.repositories.specification.VotingSpecification;
-import com.project.backend.repositories.voting.VotingRepository;
+import com.project.backend.repositories.votings.VotingRepository;
 import com.project.backend.services.inter.AnswerService;
 import com.project.backend.services.inter.UserService;
 import com.project.backend.services.inter.VotingService;

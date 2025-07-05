@@ -4,7 +4,7 @@ import com.project.backend.models.User;
 import com.project.backend.models.voting.Answer;
 import com.project.backend.models.voting.Voting;
 import com.project.backend.models.voting.VotingUser;
-import com.project.backend.repositories.voting.VotingUserRepository;
+import com.project.backend.repositories.votings.VotingUserRepository;
 import com.project.backend.services.inter.AnswerService;
 import com.project.backend.services.inter.VotingUserService;
 import jakarta.persistence.EntityNotFoundException;

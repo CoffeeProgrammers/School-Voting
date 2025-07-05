@@ -15,6 +15,8 @@ public interface VotingService {
     void deleteBy(LevelType levelType, long targetId);
 
     Voting findById(long id);
+
+    List<Voting> findAllByUser(long userId);
     Page<Voting> findAllByUser(long userId, String name, Boolean now, Boolean isNotVoted, int page, int size);
     Page<Voting> findAllByCreator(long userId, String name, Boolean now, Boolean notStarted, int page, int size);
     Page<Voting> findAllForDirector(long userId, String name, int page, int size);

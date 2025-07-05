@@ -54,4 +54,6 @@ public interface UserService {
     void checkEmail(String email);
 
     void deleteBySchool(long schoolId);
+
+    User save(User user);
 }

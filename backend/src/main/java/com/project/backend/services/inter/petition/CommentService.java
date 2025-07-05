@@ -3,6 +3,7 @@ package com.project.backend.services.inter.petition;
 import com.project.backend.models.User;
 import com.project.backend.models.petition.Comment;
 import com.project.backend.models.petition.Petition;
+import com.project.backend.models.petition.Comment;
 import org.springframework.data.domain.Page;
 
 public interface CommentService {

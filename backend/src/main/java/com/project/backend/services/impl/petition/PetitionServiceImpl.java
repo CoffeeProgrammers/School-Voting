@@ -6,7 +6,10 @@ import com.project.backend.models.enums.Status;
 import com.project.backend.models.petition.Petition;
 import com.project.backend.repositories.repos.petition.PetitionRepository;
 import com.project.backend.repositories.specification.PetitionSpecification;
+import com.project.backend.services.inter.ClassService;
+import com.project.backend.services.inter.SchoolService;
 import com.project.backend.services.inter.UserService;
+import com.project.backend.services.inter.petition.PetitionService;
 import com.project.backend.services.inter.petition.CommentService;
 import com.project.backend.services.inter.petition.PetitionService;
 import jakarta.persistence.EntityNotFoundException;
@@ -141,6 +144,11 @@ public class PetitionServiceImpl implements PetitionService {
     public Petition findById(long id) {
         log.info("Service: Finding a petition {}", id);
         return petitionRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Petition with id " + id + " not found"));
+    }
+
+    @Override
+    public List<Petition> findAllMy(long userId) {
+        return petitionRepository.findAll(PetitionSpecification.byUser(userService.findById(userId)));
     }
 
     @Override

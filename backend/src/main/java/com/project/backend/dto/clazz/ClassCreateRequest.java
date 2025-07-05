@@ -1,10 +1,8 @@
-package com.project.backend.dto.classDTO;
+package com.project.backend.dto.clazz;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
-import lombok.NonNull;
 
 import java.util.List;
 

@@ -362,6 +362,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void checkEmail(String email) {
+        log.info("Service: Checking if user with email {}", email);
         if (userRepository.existsByEmail(email)) {
             throw new EntityExistsException("User with email " + email + " already exists");
         }
@@ -371,6 +372,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteBySchool(long schoolId) {
         userRepository.deleteAllBySchool_Id(schoolId);
+    }
+
+    @Override
+    public User save(User user) {
+        return userRepository.save(user);
     }
 
     private Specification<User> createSpecification(String email, String firstName, String lastName, String role) {

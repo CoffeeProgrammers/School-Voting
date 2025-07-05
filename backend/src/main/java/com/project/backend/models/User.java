@@ -2,10 +2,17 @@ package com.project.backend.models;
 
 import com.project.backend.models.petition.Petition;
 import com.project.backend.models.voting.VotingUser;
+import com.project.backend.models.google.GoogleCalendarCredential;
+import com.project.backend.models.google.UserPetitionEvent;
+import com.project.backend.models.google.UserVotingEvent;
+import com.project.backend.models.petition.Petition;
+import com.project.backend.models.voting.VotingUser;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -35,7 +42,12 @@ public class User {
     private Set<VotingUser> votingUsers = new HashSet<>();
     @ManyToMany(mappedBy = "users")
     private Set<Petition> petitions = new HashSet<>();
-
+    @OneToOne(mappedBy = "user")
+    private GoogleCalendarCredential googleCalendarCredential;
+    @OneToMany(mappedBy = "user")
+    private List<UserVotingEvent> userVotingEvents = new ArrayList<>();
+    @OneToMany(mappedBy = "user")
+    private List<UserPetitionEvent> userPetitionEvents = new ArrayList<>();
 
     public User(String keycloakUserId, String email, String firstName,
                 String lastName, String role) {

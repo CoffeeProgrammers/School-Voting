@@ -8,7 +8,9 @@ import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Slf4j
@@ -41,6 +43,8 @@ public class Petition {
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     private Set<User> users = new HashSet<>();
+    @OneToMany(mappedBy = "petition")
+    private List<UserPetitionEvent> userPetitionEvents = new ArrayList<>();
     private long targetId;
 
     public void incrementCount() {

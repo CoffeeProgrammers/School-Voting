@@ -40,7 +40,7 @@ public class SecurityConfig {
                 .cors(withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(a -> a
-                        .requestMatchers("/api/auth/logout", "/api/auth/callback", "/ws/**", "/api/auth/refresh", "api/auth/callback").permitAll()
+                        .requestMatchers("/api/auth/logout", "/api/auth/callback", "/ws/**", "/api/auth/refresh", "api/auth/google/callback").permitAll()
                         .requestMatchers("/api/schools/create").anonymous()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .anyRequest().authenticated())

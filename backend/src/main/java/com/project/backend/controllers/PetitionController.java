@@ -65,7 +65,8 @@ public class PetitionController {
     @DeleteMapping("/delete/{petition_id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletePetition(@PathVariable(name = "school_id") long schoolId,
-                               @PathVariable(name = "petition_id") long petitionId) {
+                               @PathVariable(name = "petition_id") long petitionId,
+                               Authentication auth) {
         log.info("Controller: Deleting a petition for school {}", schoolId);
         googleCalendarService.deletePetitionFromUserCalendar(petitionId);
         petitionService.delete(petitionId);

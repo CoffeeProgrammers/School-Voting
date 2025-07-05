@@ -3,6 +3,7 @@ package com.project.backend.services.impl;
 import com.project.backend.dto.wrapper.PasswordRequest;
 import com.project.backend.models.Class;
 import com.project.backend.models.User;
+import com.project.backend.models.enums.LevelType;
 import com.project.backend.models.petition.Petition;
 import com.project.backend.models.voting.Voting;
 import com.project.backend.repositories.repos.UserRepository;
@@ -383,8 +384,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> findAllByPetition(Petition petition){
-        return userRepository.findAll(
-                UserSpecification.byPetition(petition).and(UserSpecification.connectedToGoogle()));
+        if(petition.getLevelType() == LevelType.SCHOOL){
+            return userRepository.findAll(UserSpecification.bySchool(petition.getCreator().getSchool().getId()).and(UserSpecification.connectedToGoogle()));
+        } else if (petition.getLevelType() == LevelType.CLASS) {
+            return userRepository.findAll(UserSpecification.byClass(petition.getTargetId()).and(UserSpecification.connectedToGoogle()));
+        }
+        return List.of();
     }
 
     @Override

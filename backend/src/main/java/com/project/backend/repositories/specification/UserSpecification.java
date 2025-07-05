@@ -84,6 +84,7 @@ public class UserSpecification {
                 cb.isMember(petition, root.get("petitions")));
     }
 
+
     public static Specification<User> byVoting(Voting voting) {
         return ((root, query, cb) -> {
             Join<User, VotingUser> votingUserJoin = root.join("votingUsers", JoinType.LEFT);

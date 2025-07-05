@@ -2,7 +2,7 @@ package com.project.backend.auth.config;
 
 import com.project.backend.models.School;
 import com.project.backend.models.enums.LevelType;
-import com.project.backend.models.petitions.Petition;
+import com.project.backend.models.petition.Petition;
 import com.project.backend.services.inter.ClassService;
 import com.project.backend.services.inter.SchoolService;
 import com.project.backend.services.inter.UserService;

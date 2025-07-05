@@ -2,7 +2,7 @@ package com.project.backend.services.inter.google;
 
 import com.project.backend.models.User;
 import com.project.backend.models.google.UserPetitionEvent;
-import com.project.backend.models.petitions.Petition;
+import com.project.backend.models.petition.Petition;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;

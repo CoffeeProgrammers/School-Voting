@@ -2,7 +2,7 @@ package com.project.backend.services.inter.google;
 
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.model.Event;
-import com.project.backend.models.petitions.Petition;
+import com.project.backend.models.petition.Petition;
 import com.project.backend.models.voting.Voting;
 
 public interface GoogleCalendarService {

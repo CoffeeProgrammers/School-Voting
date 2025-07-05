@@ -1,4 +1,4 @@
-package com.project.backend.models.petitions;
+package com.project.backend.models.petition;
 
 import com.project.backend.models.Class;
 import com.project.backend.models.School;

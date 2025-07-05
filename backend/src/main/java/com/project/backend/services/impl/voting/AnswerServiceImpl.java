@@ -2,7 +2,7 @@ package com.project.backend.services.impl.voting;
 
 import com.project.backend.models.voting.Answer;
 import com.project.backend.models.voting.Voting;
-import com.project.backend.repositories.repos.votings.AnswerRepository;
+import com.project.backend.repositories.repos.voting.AnswerRepository;
 import com.project.backend.services.inter.voting.AnswerService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;

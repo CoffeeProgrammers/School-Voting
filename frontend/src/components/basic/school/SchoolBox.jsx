@@ -30,21 +30,21 @@ const SchoolBox = ({school}) => {
                             fontWeight='bold'>Name:</Typography>
                 <Box sx={{display: 'flex', gap: 0.375}}>
                     <NotesRoundedIcon sx={{fontSize: 18, marginLeft: 1, mt: 0.3}} color='primary'/>
-                    <Typography sx={{fontSize: 15}}>{school.name}</Typography>
+                    <Typography sx={{fontSize: 14.75}}>{school.name}</Typography>
                 </Box>
                 <Typography sx={{fontSize: 15, display: 'flex', justifyContent: 'center'}}
                             fontWeight='bold'> Director:</Typography>
+
                 <Box sx={{display: 'flex', gap: 0.375}}>
                     <AccountCircleIcon sx={{fontSize: 20, marginLeft: 1, mt: 0.3}} color='primary'/>
-                    <Typography sx={{fontSize: 15}}>
+                    <Typography sx={{fontSize: 14.75}}>
                         {school.director.firstName + " " + school.director.lastName}
                     </Typography>
-
                 </Box>
 
                 <Box sx={{display: 'flex', gap: 0.375}}>
                     <EmailIcon sx={{fontSize: 20, marginLeft: 1, mt: 0.3}} color='primary'/>
-                    <Typography sx={{fontSize: 15,}}>
+                    <Typography sx={{fontSize: 14.75,}}>
                         {school.director.email}
                     </Typography>
                 </Box>

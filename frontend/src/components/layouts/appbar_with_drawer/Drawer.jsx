@@ -12,9 +12,9 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import theme from "../../../assets/theme";
 import BalanceRoundedIcon from '@mui/icons-material/BalanceRounded';
 import HistoryEduRoundedIcon from '@mui/icons-material/HistoryEduRounded';
-import Groups2Icon from '@mui/icons-material/Groups2';
 import HomeWorkIcon from '@mui/icons-material/HomeWork';
 import BuildCircleOutlinedIcon from '@mui/icons-material/BuildCircleOutlined';
+import FlakyRoundedIcon from '@mui/icons-material/FlakyRounded';
 
 const drawerWidth = 240;
 
@@ -75,13 +75,28 @@ const MUIStyledDrawer = styled(MuiDrawer, {shouldForwardProp: (prop) => prop !==
 
 
 const Drawer = ({open, handleDrawerClose}) => {
+    const isStudent = false;
 
     const navigation = [
         {type: "navigation", icon: <HistoryEduRoundedIcon sx={{fontSize: 28, ml: -0.25}}/>, title: "Petitions", path: "/petitions"},
         {type: "navigation", icon: <BalanceRoundedIcon sx={{fontSize: 25}}/>, title: "Voting", path: "/voting"},
         {type: "divider"},
+
+        {
+            type: "navigation",
+            icon: <FlakyRoundedIcon sx={{fontSize: 25}}/>,
+            title: "Petitions Review",
+            path: "/petitions-review"
+        },
+
+        {type: "divider"},
         {type: "navigation", icon: <HomeWorkIcon sx={{fontSize: 25}}/>, title: "School", path: "/school"},
-        {type: "navigation", icon: <BuildCircleOutlinedIcon sx={{fontSize: 25 }}/>, title: "Control panel", path: "/control-panel"},
+        !isStudent && {
+            type: "navigation",
+            icon: <BuildCircleOutlinedIcon sx={{fontSize: 25}}/>,
+            title: "Control Panel",
+            path: "/control-panel"
+        },
         {type: "divider"},
         {type: "navigation", icon: <AccountCircleIcon/>, title: "Profile", path: "/profile"},
     ]

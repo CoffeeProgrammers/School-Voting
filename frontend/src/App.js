@@ -8,14 +8,15 @@ import {useEffect} from "react";
 import {ErrorProvider} from "./contexts/ErrorContext";
 import PageContainer from "./components/layouts/appbar_with_drawer/PageContainer";
 import NotFoundPage from "./pages/not_found_page/NotFoundPage";
-import ClassList from "./pages/classes/ClassList";
 import PetitionsListPage from "./pages/petitions/PetitionsListPage";
 import PetitionPage from "./pages/petitions/PetitionPage";
-import ClassPage from "./pages/classes/ClassPage";
+import ClassPage from "./pages/class/ClassPage";
 import VotingListPage from "./pages/voting/VotingListPage";
 import VotingPage from "./pages/voting/VotingPage";
 import SchoolPage from "./pages/school/SchoolPage";
 import ControlPanel from "./pages/control_panel/ControlPanel";
+import Profile from "./pages/user/Profile";
+import PetitionsReviewPage from "./pages/petitions/PetitionsReviewPage";
 
 const InitNavigation = ({children}) => {
     const navigate = useNavigate();
@@ -38,11 +39,15 @@ function App() {
         {path: "/voting", element: <VotingListPage/>},
         {path: "/voting/:id", element: <VotingPage/>},
 
+        {path: "/petitions-review", element: <PetitionsReviewPage/>},
+
+
         {path: "/school", element: <SchoolPage/>},
         !isStudent && {path: "/school/class/:id", element: <ClassPage/>},
 
-        {path: "/control-panel", element: <ControlPanel/>},
+        !isStudent && {path: "/control-panel", element: <ControlPanel/>},
 
+        {path: "/profile", element: <Profile/>},
 
         {path: "*", element:<NotFoundPage/>},
 

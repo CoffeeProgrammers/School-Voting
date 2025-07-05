@@ -47,14 +47,14 @@ public class GoogleOAuthController {
     private final JacksonFactory jsonFactory = JacksonFactory.getDefaultInstance();
 
     @GetMapping("/auth")
-    public void auth(HttpServletResponse response) throws IOException, GeneralSecurityException {
+    public void auth(Authentication authentication, HttpServletResponse response) throws IOException, GeneralSecurityException {
         GoogleAuthorizationCodeRequestUrl url = new GoogleAuthorizationCodeFlow.Builder(
                 GoogleNetHttpTransport.newTrustedTransport(),
                 jsonFactory,
                 clientId,
                 clientSecret,
                 CalendarScopes.all()
-        ).setAccessType("offline").build().newAuthorizationUrl().setRedirectUri(REDIRECT_URI);
+        ).setAccessType("offline").build().newAuthorizationUrl().setRedirectUri(REDIRECT_URI).setState(userService.findUserByAuth(authentication).getId() + "");
 
         response.sendRedirect(url.build());
     }
@@ -70,7 +70,7 @@ public class GoogleOAuthController {
     }
 
     @GetMapping("/callback")
-    public void callback(@RequestParam("code") String code, Authentication authentication, HttpServletResponse response) throws IOException {
+    public void callback(@RequestParam("code") String code, @RequestParam("state") Long userId, HttpServletResponse response) throws IOException {
         GoogleTokenResponse tokenResponse = new GoogleAuthorizationCodeTokenRequest(
                 new NetHttpTransport(),
                 jsonFactory,
@@ -85,7 +85,6 @@ public class GoogleOAuthController {
         String refreshToken = tokenResponse.getRefreshToken();
 
         log.info(tokenResponse.toPrettyString());
-        long userId = userService.findUserByAuth(authentication).getId();
         if(googleCalendarCredentialService.existsByUserId(userId)) {
             GoogleCalendarCredential googleCalendarCredential = new GoogleCalendarCredential();
             googleCalendarCredential.setAccessToken(accessToken);

@@ -9,7 +9,6 @@ import Divider from "@mui/material/Divider";
 import AttributionRoundedIcon from '@mui/icons-material/AttributionRounded';
 import PetitionListBox from "../../components/basic/petition/PetitionListBox";
 import VotingListBox from "../../components/basic/voting/VotingListBox";
-import {blueGrey} from "@mui/material/colors";
 
 const SCHOOL_PETITIONS = [
     {
@@ -360,9 +359,7 @@ const Profile = () => {
         }}>
             <Box>
                 <Box sx={{
-                    backgroundColor: blueGrey[50],
-                    border: '1px solid',
-                    borderColor: blueGrey[100],
+                    border: '1px solid #ddd',
                     borderRadius: '5px',
                     padding: '17px',
                     display: 'flex',

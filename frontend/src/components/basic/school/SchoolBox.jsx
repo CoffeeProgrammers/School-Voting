@@ -5,6 +5,7 @@ import HomeWorkIcon from "@mui/icons-material/HomeWork";
 import {blueGrey} from "@mui/material/colors";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import EmailIcon from "@mui/icons-material/Email";
+import NotesRoundedIcon from '@mui/icons-material/NotesRounded';
 
 const SchoolBox = ({school}) => {
     return (
@@ -24,11 +25,11 @@ const SchoolBox = ({school}) => {
                 <Typography variant='h4' fontWeight='bold'>School</Typography>
             </Box>
 
-            <Box marginX={2}>
+            <Box marginX={0.5} display='flex' flexDirection='column' justifyContent='center'>
                 <Typography sx={{fontSize: 15, display: 'flex', justifyContent: 'center'}}
                             fontWeight='bold'>Name:</Typography>
                 <Box sx={{display: 'flex', gap: 0.375}}>
-                    <HomeWorkIcon sx={{fontSize: 18, marginLeft: 1, mt: 0.3}} color='primary'/>
+                    <NotesRoundedIcon sx={{fontSize: 18, marginLeft: 1, mt: 0.3}} color='primary'/>
                     <Typography sx={{fontSize: 15}}>{school.name}</Typography>
                 </Box>
                 <Typography sx={{fontSize: 15, display: 'flex', justifyContent: 'center'}}

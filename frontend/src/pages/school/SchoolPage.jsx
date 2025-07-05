@@ -1,8 +1,10 @@
 import React from 'react';
 import Box from "@mui/material/Box";
 import ClassList from "../classes/ClassList";
-import UserList from "../../components/basic/user/UserList";
 import SchoolPageWrapper from "../../components/basic/school/SchoolPageWrapper";
+import Divider from "@mui/material/Divider";
+import UserList from "../../components/basic/user/UserList";
+import Typography from "@mui/material/Typography";
 
 const users = [
     {id: 1, firstName: "Alice", lastName: "Johnson", email: "alice.johnson@example.com"},
@@ -23,14 +25,23 @@ const SchoolPage = () => {
         <SchoolPageWrapper>
             <Box sx={{border: '1px solid #ddd', borderRadius: '5px', marginY: '5px', paddingTop: '15px'}}>
                 {isStudent ? (
-                    <UserList users={users}/>
+                    <>
+                        <Box sx={{paddingX: '15px', mb: 0.55}}>
+                            <Typography variant={"h6"} fontWeight={'bold'}>My class: 11-A</Typography>
+                        </Box>
+
+                        <Divider/>
+
+                        <UserList users={users}/>
+                    </>
                 ) : (
                     <ClassList/>
                 )}
 
             </Box>
         </SchoolPageWrapper>
-    );
+    )
+        ;
 };
 
 export default SchoolPage;

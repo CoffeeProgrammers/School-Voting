@@ -6,9 +6,11 @@ import SchoolPageWrapper from "../../components/basic/school/SchoolPageWrapper";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 import {grey} from "@mui/material/colors";
+import Divider from "@mui/material/Divider";
 
 const ClassPage = () => {
     const navigate = useNavigate();
+
     const users = [
         {id: 1, firstName: "Alice", lastName: "Johnson", email: "alice.johnson@example.com"},
         {id: 2, firstName: "Bob", lastName: "Smith", email: "bob.smith@example.com"},
@@ -34,6 +36,11 @@ const ClassPage = () => {
                     </Link>
                 </Box>
                 <Box>
+                    <Box sx={{paddingX: '15px', mb: 0.55}}>
+                        <Typography variant={"h6"} fontWeight={'bold'}>My class: 11-A</Typography>
+                    </Box>
+
+                    <Divider/>
                     <UserList users={users}/>
                 </Box>
             </Box>

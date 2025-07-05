@@ -12,6 +12,7 @@ import com.project.backend.models.User;
 import com.project.backend.models.petition.Comment;
 import com.project.backend.models.petition.Petition;
 import com.project.backend.services.inter.UserService;
+import com.project.backend.services.inter.google.GoogleCalendarService;
 import com.project.backend.services.inter.petition.CommentService;
 import com.project.backend.services.inter.petition.PetitionService;
 import jakarta.validation.Valid;
@@ -30,6 +31,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class PetitionController {
 
+    private final GoogleCalendarService googleCalendarService;
     private final SimpMessagingTemplate messagingTemplate;
     private final PetitionService petitionService;
     private final PetitionMapper petitionMapper;
@@ -46,8 +48,9 @@ public class PetitionController {
             Authentication auth) {
         log.info("Controller: Creating a petition for school {}", schoolId);
         User user = userService.findUserByAuth(auth);
-        return this.fromPetitionToPetitionFullResponseWithAllInfo(
-                petitionService.create(petitionMapper.fromRequestToPetition(petitionRequest), petitionRequest.getLevelId(), user), user);
+        Petition petition = petitionService.create(petitionMapper.fromRequestToPetition(petitionRequest), petitionRequest.getLevelId(), user);
+        googleCalendarService.savePetitionToUserCalendar(petition);
+        return this.fromPetitionToPetitionFullResponseWithAllInfo(petition, user);
     }
 
     @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and @userSecurity.checkCreatorPetition(#auth, #petitionId)")
@@ -56,6 +59,7 @@ public class PetitionController {
     public void deletePetition(@PathVariable(name = "school_id") long schoolId,
                                @PathVariable(name = "petition_id") long petitionId) {
         log.info("Controller: Deleting a petition for school {}", schoolId);
+        googleCalendarService.deletePetitionFromUserCalendar(petitionId);
         petitionService.delete(petitionId);
     }
 

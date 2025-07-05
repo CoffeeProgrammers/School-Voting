@@ -6,10 +6,8 @@ import com.project.backend.mappers.voting.AnswerMapper;
 import com.project.backend.mappers.voting.VotingMapper;
 import com.project.backend.models.User;
 import com.project.backend.models.voting.Voting;
-import com.project.backend.services.inter.voting.AnswerService;
 import com.project.backend.services.inter.UserService;
-import com.project.backend.services.inter.voting.VotingService;
-import com.project.backend.services.inter.voting.VotingUserService;
+import com.project.backend.services.inter.google.GoogleCalendarService;
 import com.project.backend.services.inter.voting.AnswerService;
 import com.project.backend.services.inter.voting.VotingService;
 import com.project.backend.services.inter.voting.VotingUserService;
@@ -27,12 +25,14 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/schools/{school_id}/votings")
 @RequiredArgsConstructor
 public class VotingController {
-    private final VotingService votingService;
+
+    private final GoogleCalendarService googleCalendarService;
     private final VotingUserService votingUserService;
+    private final VotingService votingService;
     private final AnswerService answerService;
-    private final UserService userService;
     private final VotingMapper votingMapper;
     private final AnswerMapper answerMapper;
+    private final UserService userService;
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
@@ -44,6 +44,7 @@ public class VotingController {
         Voting createdVoting = votingService.create(votingMapper.fromRequestToVoting(votingCreateRequest),
                 votingCreateRequest.getAnswers(), votingCreateRequest.getTargetIds(), schoolId,
                 userService.findUserByAuth(auth).getId());
+        googleCalendarService.saveVotingToUserCalendar(createdVoting);
         return fromVotingToFullResponseWithStatistics(createdVoting);
     }
 
@@ -56,6 +57,7 @@ public class VotingController {
                                      Authentication auth) {
         log.info("Controller: Update vote with id {} with body {}", votingId, votingUpdateRequest);
         Voting updatedVoting = votingService.update(votingMapper.fromRequestToVoting(votingUpdateRequest), votingUpdateRequest.getAnswers(), votingId);
+        googleCalendarService.updateVotingToUserCalendar(updatedVoting);
         return fromVotingToFullResponseWithStatistics(updatedVoting);
     }
 
@@ -66,6 +68,7 @@ public class VotingController {
                        @PathVariable("voting_id") Long votingId,
                        Authentication auth) {
         log.info("Controller: Delete voting with id {}", votingId);
+        googleCalendarService.deleteVotingFromUserCalendar(votingId);
         votingService.delete(votingId);
     }
 

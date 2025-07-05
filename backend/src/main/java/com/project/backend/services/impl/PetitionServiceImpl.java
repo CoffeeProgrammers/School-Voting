@@ -79,6 +79,10 @@ public class PetitionServiceImpl implements PetitionService {
         if (!(petition.getStatus().equals(Status.ACTIVE))) {
             throw new IllegalStateException("Petition is not active.");
         }
+        if(!(petition.now())){
+            petition.setStatus(Status.UNSUCCESSFUL);
+            throw new IllegalStateException("Petition is ended.");
+        }
         boolean ifCanSupport = petition.getUsers().add(user);
         if (!ifCanSupport) {
             throw new IllegalArgumentException("Cannot support petition because user is already petition");
@@ -95,8 +99,9 @@ public class PetitionServiceImpl implements PetitionService {
             petition.setCountNeeded(countAll(petition));
             petition.setStatus(Status.WAITING_FOR_CONSIDERATION);
         } else {
-            petition.setCountNeeded(0);
-            petition.setStatus(Status.ACTIVE);
+            if (!petition.now()){
+                petition.setStatus(Status.UNSUCCESSFUL);
+            }
         }
     }
 
@@ -214,7 +219,7 @@ public class PetitionServiceImpl implements PetitionService {
             specification = addSpecification(specification, PetitionSpecification::byName, name);
         }
         if (isValid(status)) {
-            specification = addSpecification(specification, PetitionSpecification::byStatus, status);
+            specification = addSpecification(specification, PetitionSpecification::byStatus, Status.valueOf(status));
         }
 
         return specification;

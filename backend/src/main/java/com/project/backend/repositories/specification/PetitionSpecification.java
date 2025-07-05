@@ -2,6 +2,7 @@ package com.project.backend.repositories.specification;
 
 import com.project.backend.models.User;
 import com.project.backend.models.enums.LevelType;
+import com.project.backend.models.enums.Status;
 import com.project.backend.models.petitions.Petition;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
@@ -50,7 +51,7 @@ public class PetitionSpecification {
                 cb.equal(root.get("creator").get("id"), userId);
     }
 
-    public static Specification<Petition> byStatus(String status) {
+    public static Specification<Petition> byStatus(Status status) {
         return (root, query, cb) ->
                 cb.equal(root.get("status"), status);
     }

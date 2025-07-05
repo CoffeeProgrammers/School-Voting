@@ -40,6 +40,9 @@ public class VotingServiceImpl implements VotingService {
     @Override
     public Voting create(Voting votingRequest, List<String> answer, List<Long> targetIds, long schoolId, long userId) {
         log.info("Service: Creating voting {}", votingRequest);
+        if (targetIds == null || targetIds.isEmpty() ) {
+            throw new IllegalArgumentException("targetIds is null or empty");
+        }
         User creator = userService.findById(userId);
         votingRequest.setCreator(creator);
         Voting voting = votingRepository.save(votingRequest);

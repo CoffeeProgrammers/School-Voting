@@ -11,6 +11,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,10 +24,10 @@ public class VotingUserServiceImpl implements VotingUserService {
     private final AnswerService answerService;
 
     @Override
-    public List<VotingUser> create(Voting voting, List<User> user) {
+    public List<VotingUser> create(Voting voting, List<User> users) {
         log.info("Service: Creating voting {} users for users", voting.getId());
         List<VotingUser> result = new ArrayList<>();
-        user.forEach(u -> {
+        users.forEach(u -> {
             result.add(new VotingUser(voting, u));
         });
         return votingUserRepository.saveAll(result);
@@ -49,7 +50,7 @@ public class VotingUserServiceImpl implements VotingUserService {
     }
 
     @Override
-    public boolean exitsById(long votingId, long userId) {
+    public boolean existsById(long votingId, long userId) {
         return votingUserRepository.existsById(new VotingUser.VotingUserId(userId, votingId));
     }
 
@@ -65,9 +66,13 @@ public class VotingUserServiceImpl implements VotingUserService {
         return votingUserRepository.countAllByVoting_IdAndAnswerNotNull(votingId);
     }
 
+    @Transactional
     @Override
     public void deleteWithUser(long userId) {
         List<VotingUser> votingUsers = votingUserRepository.findAllByUser_Id(userId);
+        if (votingUsers.isEmpty()) {
+            return;
+        }
         Answer answer;
         for (VotingUser votingUser : votingUsers) {
             if(votingUser.getVoting().now()) {

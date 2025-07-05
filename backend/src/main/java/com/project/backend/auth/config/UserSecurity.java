@@ -74,7 +74,7 @@ public class UserSecurity {
 
     public boolean checkUserVoting(Authentication authentication, long votingId) {
         log.info("preAuth: Checking if user in voting {}", votingId);
-        return votingUserService.exitsById(votingId, userService.findUserByAuth(authentication).getId());
+        return votingUserService.existsById(votingId, userService.findUserByAuth(authentication).getId());
     }
 
 }

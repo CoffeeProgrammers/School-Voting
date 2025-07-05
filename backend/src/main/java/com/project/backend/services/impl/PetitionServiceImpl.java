@@ -45,7 +45,7 @@ public class PetitionServiceImpl implements PetitionService {
         petition.setEndTime(now.plusDays(45));
         petition.setCreator(creator);
         petition.setStatus(Status.ACTIVE);
-        petition.setTargetId(petition.getTargetId());
+        petition.setTargetId(levelId);
         return petitionRepository.save(petition);
     }
 
@@ -81,6 +81,7 @@ public class PetitionServiceImpl implements PetitionService {
         }
         if(!(petition.now())){
             petition.setStatus(Status.UNSUCCESSFUL);
+            petitionRepository.save(petition);
             throw new IllegalStateException("Petition is ended.");
         }
         boolean ifCanSupport = petition.getUsers().add(user);
@@ -95,8 +96,9 @@ public class PetitionServiceImpl implements PetitionService {
     @Override
     public void checkingStatus(Petition petition) {
         log.info("Service: Checking status for petition {}", petition.getId());
-        if (petition.getCount() >= countAll(petition)) {
-            petition.setCountNeeded(countAll(petition));
+        long needed = countAll(petition);
+        if (petition.getCount() >= needed) {
+            petition.setCountNeeded(needed);
             petition.setStatus(Status.WAITING_FOR_CONSIDERATION);
         } else {
             if (!petition.now()){
@@ -183,7 +185,7 @@ public class PetitionServiceImpl implements PetitionService {
                     PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "endTime")));
         } else {
             return petitionRepository.findAll(
-                    createSpecification(name, status), PageRequest.of(
+                    petitionSpecification, PageRequest.of(
                             page, size, Sort.by(
                                     Sort.Direction.ASC, "endTime")));
         }

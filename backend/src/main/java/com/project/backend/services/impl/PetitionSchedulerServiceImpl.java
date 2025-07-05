@@ -27,7 +27,9 @@ public class PetitionSchedulerServiceImpl implements PetitionSchedulerService {
     public void checkAndUpdateExpiredPetitions() {
         log.info("Scheduler: Checking expired petitions");
 
-        List<Petition> petitions = petitionRepository.findAll(PetitionSpecification.byStatus(Status.ACTIVE));
+        List<Petition> petitions = petitionRepository.findAll(
+                PetitionSpecification.byStatus(Status.ACTIVE)
+                        .and(PetitionSpecification.expired()));
 
         for (Petition petition : petitions) {
             if (!petition.now()) {

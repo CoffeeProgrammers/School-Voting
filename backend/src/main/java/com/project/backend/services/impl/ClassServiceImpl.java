@@ -82,6 +82,9 @@ public class ClassServiceImpl implements ClassService {
         log.info("Service: Assigning User with id {} to Class with id {}", userIds, classId);
         Class clazz = findById(classId);
         User user;
+        if (userIds.isEmpty()){
+            return;
+        }
         for(Long userId : userIds) {
             user = userService.findById(userId);
             if(user.getRole().equals("STUDENT")) {
@@ -97,6 +100,9 @@ public class ClassServiceImpl implements ClassService {
         log.info("Service: Unassigning User with id {} from Class with id {}", userIds, classId);
         Class clazz = findById(classId);
         User user;
+        if (userIds.isEmpty()){
+            return;
+        }
         for(Long userId : userIds) {
             user = userService.findById(userId);
             if(user.getRole().equals("STUDENT")) {

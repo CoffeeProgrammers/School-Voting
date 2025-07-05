@@ -11,7 +11,7 @@ public interface VotingUserService {
     List<VotingUser> create(Voting voting, List<User> user);
     VotingUser update(Voting voting, User user, Answer answer);
     VotingUser findById(long votingId, long userId);
-    boolean exitsById(long votingId, long userId);
+    boolean existsById(long votingId, long userId);
 
     Long countAllByVoting(long votingId);
     Long countAllByVotingAnswered(long votingId);

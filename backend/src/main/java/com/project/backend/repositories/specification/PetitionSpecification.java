@@ -8,6 +8,7 @@ import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,5 +65,9 @@ public class PetitionSpecification {
     public static Specification<Petition> byUser(User user) {
         return (root, query, cb) ->
                 cb.isMember(user, root.get("users"));
+    }
+
+    public static Specification<Petition> expired() {
+        return (root, query, cb) -> cb.lessThan(root.get("endTime"), LocalDateTime.now());
     }
 }

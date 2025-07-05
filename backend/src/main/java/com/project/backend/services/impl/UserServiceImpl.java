@@ -75,7 +75,7 @@ public class UserServiceImpl implements UserService {
         }
         if (roleOfCreator.equals("DIRECTOR") &&
                 user.getRole().equals("DIRECTOR")) {
-            throw new IllegalArgumentException("Teachers cant create teacher or director");
+            throw new IllegalArgumentException("DIRECTOR cant create director");
         }
         String email = user.getEmail();
         checkEmail(email);

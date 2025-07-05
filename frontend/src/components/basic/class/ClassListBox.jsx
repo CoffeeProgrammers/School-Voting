@@ -19,15 +19,15 @@ const ClassListBox = ({studentClass}) => {
             },
             display:'flex',
             gap:1,
-            height: 100,
+            height: 80,
             padding: [15, 4],
             border: '1px solid #ddd',
             borderRadius: '5px',
             alignItems:"center"
             }} onClick={() => {
-                navigate(`${studentClass.id}`)
+                navigate(`classes/${studentClass.id}`)
             }}>
-            <Groups2Icon color={'primary'}></Groups2Icon>
+            <Groups2Icon sx={{fontSize: 35}} color={'primary'}></Groups2Icon>
             <Typography>{studentClass.className}</Typography>
         </Box>
     );

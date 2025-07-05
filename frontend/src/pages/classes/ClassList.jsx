@@ -5,12 +5,15 @@ import Search from "../../components/layouts/list/Search";
 import {Button, Grid, Stack} from "@mui/material";
 import ClassListBox from "../../components/basic/class/ClassListBox";
 import Divider from "@mui/material/Divider";
+import {useNavigate} from "react-router-dom";
 
 
-const Classes = () => {
+const ClassList = () => {
+    const navigate = useNavigate();
+
     const schoolClassesCombined = [
         {
-            id: 1, // Унікальний ідентифікатор
+            id: 1,
             className: "1-А",
             numberOfStudents: 28,
             classTeacher: "Олена Іванівна Шевченко",
@@ -88,98 +91,24 @@ const Classes = () => {
             classTeacher: "Лариса Вікторівна Поліщук",
             specialization: "Загальноосвітній",
             isPrimary: false
-        },
-        {
-            id: 11,
-            className: "1-А",
-            numberOfStudents: 28,
-            classTeacher: "Олена Іванівна Шевченко",
-            specialization: "Загальноосвітній",
-            isPrimary: true
-        },
-        {
-            id: 12,
-            className: "5-Б",
-            numberOfStudents: 25,
-            classTeacher: "Ігор Петрович Ковальчук",
-            specialization: "Поглиблене вивчення англійської мови",
-            isPrimary: false
-        },
-        {
-            id: 13,
-            className: "9-В",
-            numberOfStudents: 22,
-            classTeacher: "Наталія Олегівна Бондаренко",
-            specialization: "Фізико-математичний профіль",
-            isPrimary: false
-        },
-        {
-            id: 14,
-            className: "11-А",
-            numberOfStudents: 20,
-            classTeacher: "Сергій Миколайович Мельник",
-            specialization: "Гуманітарний профіль",
-            isPrimary: false
-        },
-        {
-            id: 15,
-            className: "7-Г",
-            numberOfStudents: 27,
-            classTeacher: "Лариса Вікторівна Поліщук",
-            specialization: "Загальноосвітній",
-            isPrimary: false
-        },
-        {
-            id: 16,
-            className: "1-А",
-            numberOfStudents: 28,
-            classTeacher: "Олена Іванівна Шевченко",
-            specialization: "Загальноосвітній",
-            isPrimary: true
-        },
-        {
-            id: 17,
-            className: "5-Б",
-            numberOfStudents: 25,
-            classTeacher: "Ігор Петрович Ковальчук",
-            specialization: "Поглиблене вивчення англійської мови",
-            isPrimary: false
-        },
-        {
-            id: 18,
-            className: "9-В",
-            numberOfStudents: 22,
-            classTeacher: "Наталія Олегівна Бондаренко",
-            specialization: "Фізико-математичний профіль",
-            isPrimary: false
-        },
-        {
-            id: 19,
-            className: "11-А",
-            numberOfStudents: 20,
-            classTeacher: "Сергій Миколайович Мельник",
-            specialization: "Гуманітарний профіль",
-            isPrimary: false
-        },
-        {
-            id: 20,
-            className: "7-Г",
-            numberOfStudents: 27,
-            classTeacher: "Лариса Вікторівна Поліщук",
-            specialization: "Загальноосвітній",
-            isPrimary: false
         }
     ]
 
 
-
     return (
         <>
-            <Stack direction="row" sx={{alignItems: 'center', display: "flex", justifyContent: "space-between "}}>
-                <Typography variant="h6" fontWeight={'bold'}>Classes</Typography>
+            <Stack direction="row" sx={{
+                alignItems: 'center',
+                display: "flex",
+                justifyContent: "space-between",
+                paddingX: '15px',
+            }}>
+
+                <Typography variant={"h6"} fontWeight={'bold'}>Classes</Typography>
+
                 <Box sx={{alignItems: 'center', display: "flex", justifyContent: "space-between"}} gap={0.5}>
                     <Search
-                        // label={"Title"}
+                        label={"Name"}
                         // searchQuery={searchName}
                         // setSearchQuery={setSearchName}
                         sx={{mr: 1}}
@@ -190,13 +119,12 @@ const Classes = () => {
                 </Box>
             </Stack>
 
-            <Divider sx={{mt: 0.75, mb: 0.75}}/>
+            <Divider sx={{mt: 0.5, mb: 0.75}}/>
 
-
-            <Grid container rowSpacing={1} columnSpacing={0.7}  paddingX={1}>
+            <Grid container rowSpacing={0.5} columnSpacing={0.5} paddingX={"10px"} pb={1}>
                 {schoolClassesCombined.map(studentsClass => (
-                    <Grid size={{xs: 12, sm: 6, md: 4, lg: 6}} key={studentsClass.id}>
-                        <ClassListBox  studentClass={studentsClass}></ClassListBox>
+                    <Grid size={{xs: 12, sm: 6, md: 4, lg: 6}} key={studentsClass.id} onClick={() => navigate(`class/${studentsClass.id}`)}>
+                        <ClassListBox studentClass={studentsClass}></ClassListBox>
                     </Grid>
                 ))}
             </Grid>
@@ -204,4 +132,4 @@ const Classes = () => {
     )
 };
 
-export default Classes;
+export default ClassList;

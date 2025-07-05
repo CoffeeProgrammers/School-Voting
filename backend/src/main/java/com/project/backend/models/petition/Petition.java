@@ -47,6 +47,7 @@ public class Petition {
     @OneToMany(mappedBy = "petition")
     private List<UserPetitionEvent> userPetitionEvents = new ArrayList<>();
     private long targetId;
+    private String targetName;
 
     public void incrementCount() {
         log.info("Model: Increment count {} of petition {}", count, this.id);

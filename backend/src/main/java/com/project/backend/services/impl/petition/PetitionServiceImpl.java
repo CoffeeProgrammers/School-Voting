@@ -34,7 +34,7 @@ public class PetitionServiceImpl implements PetitionService {
     private final CommentService commentService;
 
     @Override
-    public Petition create(Petition petition, long levelId, User creator) {
+    public Petition create(Petition petition, long levelId, User creator, String targetName) {
         log.info("Service: Creating a new petition {}", petition);
         if (petition.getLevelType().equals(LevelType.GROUP_OF_PARENTS_AND_STUDENTS)
                 || petition.getLevelType().equals(LevelType.GROUP_OF_TEACHERS)) {
@@ -46,6 +46,7 @@ public class PetitionServiceImpl implements PetitionService {
         petition.setCreator(creator);
         petition.setStatus(Status.ACTIVE);
         petition.setTargetId(levelId);
+        petition.setTargetName(targetName);
         return petitionRepository.save(petition);
     }
 

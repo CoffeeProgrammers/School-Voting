@@ -9,8 +9,11 @@ import com.project.backend.dto.wrapper.PaginationListResponse;
 import com.project.backend.mappers.petition.CommentMapper;
 import com.project.backend.mappers.petition.PetitionMapper;
 import com.project.backend.models.User;
+import com.project.backend.models.enums.LevelType;
 import com.project.backend.models.petition.Comment;
 import com.project.backend.models.petition.Petition;
+import com.project.backend.services.inter.ClassService;
+import com.project.backend.services.inter.SchoolService;
 import com.project.backend.services.inter.UserService;
 import com.project.backend.services.inter.google.GoogleCalendarService;
 import com.project.backend.services.inter.petition.CommentService;
@@ -33,6 +36,8 @@ public class PetitionController {
 
     private final GoogleCalendarService googleCalendarService;
     private final SimpMessagingTemplate messagingTemplate;
+    private final SchoolService schoolService;
+    private final ClassService classService;
     private final PetitionService petitionService;
     private final PetitionMapper petitionMapper;
     private final CommentService commentService;
@@ -48,7 +53,10 @@ public class PetitionController {
             Authentication auth) {
         log.info("Controller: Creating a petition for school {}", schoolId);
         User user = userService.findUserByAuth(auth);
-        Petition petition = petitionService.create(petitionMapper.fromRequestToPetition(petitionRequest), petitionRequest.getLevelId(), user);
+        LevelType levelType = LevelType.valueOf(petitionRequest.getLevelType());
+        long targetId = petitionRequest.getLevelId();
+        Petition petition = petitionService.create(petitionMapper.fromRequestToPetition(petitionRequest), targetId, user,
+                levelType == LevelType.SCHOOL ? schoolService.findById(targetId).getName() : classService.findById(targetId).getName());
         googleCalendarService.savePetitionToUserCalendar(petition);
         return this.fromPetitionToPetitionFullResponseWithAllInfo(petition, user);
     }

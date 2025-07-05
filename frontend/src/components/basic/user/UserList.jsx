@@ -5,11 +5,9 @@ import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from "
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import Box from "@mui/material/Box";
 import Search from "../../layouts/list/Search";
-import Typography from "@mui/material/Typography";
-import Divider from "@mui/material/Divider";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 
-const UserList = ({users, actions = true}) => {
+const UserList = ({users, actions = false}) => {
         const [page, setPage] = React.useState(1);
 
         const columns = [
@@ -63,7 +61,7 @@ const UserList = ({users, actions = true}) => {
                         width: "37px",
                         height: "37px",
                         mr: 0.85
-                    }} >
+                    }}>
                         <AddCircleIcon sx={{
                             fontSize: 30, color: 'primary.main', borderRadius: 15,
                         }}/>

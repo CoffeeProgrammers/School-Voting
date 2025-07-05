@@ -150,15 +150,14 @@ const VotingPage = () => {
                     <Divider sx={{marginY: 0.5}}/>
 
                     <Box sx={{alignItems: 'center', display: 'flex', justifyContent: 'center',}}>
-                        <Stack direction={'column'} width={'85%'}>
+                        <Stack direction={'column'} width={'100%'} maxWidth={270}>
                             {voting.statistics.answers.map((answer) => (
                                 <Box key={answer.id}>
                                     <VotingAnswerBox
                                         answer={answer}
                                         maxAnswerCount={voting.statistics.countAllAnswered}
                                         selectedAnswer={1}
-                                        setSelectedValue={() => {
-                                        }}/>
+                                        setSelectedValue={() => {}}/>
                                 </Box>
                             ))}
                         </Stack>

@@ -28,7 +28,6 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -52,7 +51,6 @@ public class UserServiceImpl implements UserService {
     private final String clientUUID;
     private final Map<String, RoleRepresentation> clientRoles;
     private final SchoolService schoolService;
-
     private final WebClient webClient;
 
     @Value("${realm}")
@@ -211,24 +209,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void delete(long id) {
-        log.info("Service: Deleting user with id {}", id);
-        User user = findById(id);
-        if (user.getRole().equals("DIRECTOR")) {
-            throw new IllegalArgumentException("Cannot delete director");
-        }
-        checkForDeletedUser(user);
-        user.setSchool(null);
-        user.setMyClass(null);
-        user.setPetitions(null);
-        user.setVotingUsers(null);
-        userRepository.save(user);
-
-        realmResource.users().delete(user.getKeycloakUserId());
-        userRepository.deleteById(id);
-    }
-
-    @Override
     public User findById(long id) {
         log.info("Service: Finding user with id {}", id);
         return userRepository.findById(id).orElseThrow(
@@ -369,12 +349,6 @@ public class UserServiceImpl implements UserService {
         if (userRepository.existsByEmail(email)) {
             throw new EntityExistsException("User with email " + email + " already exists");
         }
-    }
-
-    @Transactional
-    @Override
-    public void deleteBySchool(long schoolId) {
-        userRepository.deleteAllBySchool_Id(schoolId);
     }
 
     @Override

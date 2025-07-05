@@ -62,11 +62,7 @@ public class GoogleOAuthController {
     @GetMapping("/revoke")
     public void revokeAccess(Authentication authentication) {
         User user = userService.findUserByAuth(authentication);
-        googleCalendarService.deleteCalendar(user.getId());
-        googleCalendarCredentialService.revokeAccess(user.getId()).block();
-        user.setGoogleCalendarCredential(null);
-        userService.save(user);
-        googleCalendarCredentialService.deleteByUser(user.getId());
+        googleCalendarService.deleteCalendarAndRevoke(user);
     }
 
     @GetMapping("/callback")

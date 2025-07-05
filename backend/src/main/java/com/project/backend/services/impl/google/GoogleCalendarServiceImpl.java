@@ -7,15 +7,12 @@ import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.model.Event;
 import com.project.backend.mappers.google.GoogleCalendarEventMapper;
 import com.project.backend.models.User;
-import com.project.backend.models.enums.LevelType;
 import com.project.backend.models.google.GoogleCalendarCredential;
 import com.project.backend.models.google.UserCalendar;
 import com.project.backend.models.google.UserPetitionEvent;
 import com.project.backend.models.google.UserVotingEvent;
 import com.project.backend.models.petition.Petition;
 import com.project.backend.models.voting.Voting;
-import com.project.backend.services.inter.ClassService;
-import com.project.backend.services.inter.SchoolService;
 import com.project.backend.services.inter.UserService;
 import com.project.backend.services.inter.google.*;
 import com.project.backend.services.inter.petition.PetitionService;
@@ -39,8 +36,6 @@ public class GoogleCalendarServiceImpl implements GoogleCalendarService {
     private final GoogleCalendarCredentialService googleCalendarCredentialService;
     private final PetitionService petitionService;
     private final VotingService votingService;
-    private final ClassService classService;
-    private final SchoolService schoolService;
 
     @Override
     public com.google.api.services.calendar.model.Calendar createCalendar(Calendar service, String name, String timeZone, long userId) {
@@ -79,13 +74,12 @@ public class GoogleCalendarServiceImpl implements GoogleCalendarService {
     @Override
     public void firstUploadPetitionsToUserCalendar(long userId) {
         List<Petition> myPetitions = petitionService.findAllMy(userId);
-        myPetitions.forEach(p -> savePetitionToUserCalendar(GoogleCalendarEventMapper.fromPetitionToEvent(p,
-                p.getLevelType() == LevelType.SCHOOL ?
-                        schoolService.findById(p.getTargetId()).getName() :
-                        (p.getLevelType() == LevelType.CLASS ?
-                                classService.findById(p.getTargetId()).getName() :
-                                "undefined")
-        ), GoogleCalendarEventMapper.fromPetitionToReminderEvent(p), userId));
+        myPetitions.forEach(p ->
+                savePetitionToUserCalendar(
+                        GoogleCalendarEventMapper.fromPetitionToEvent(p),
+                        GoogleCalendarEventMapper.fromPetitionToReminderEvent(p),
+                        userId)
+        );
     }
 
     @Override
@@ -238,12 +232,7 @@ public class GoogleCalendarServiceImpl implements GoogleCalendarService {
     public void savePetitionToUserCalendar(Petition petition){
         List<User> users = userService.findAllByPetition(petition);
         Event[] events;
-        Event petitionEvent = GoogleCalendarEventMapper.fromPetitionToEvent(petition, petition.getLevelType() == LevelType.SCHOOL ?
-                schoolService.findById(petition.getTargetId()).getName() :
-                (petition.getLevelType() == LevelType.CLASS ?
-                        classService.findById(petition.getTargetId()).getName() :
-                        "undefined")
-        );
+        Event petitionEvent = GoogleCalendarEventMapper.fromPetitionToEvent(petition);
         Event petitionReminderEvent = GoogleCalendarEventMapper.fromPetitionToReminderEvent(petition);
         for(User user : users){
             events = savePetitionToUserCalendar(petitionEvent, petitionReminderEvent, user.getId());
@@ -269,12 +258,7 @@ public class GoogleCalendarServiceImpl implements GoogleCalendarService {
     @Override
     public void updatePetitionToUserCalendar(Petition petition){
         List<User> users = userService.findAllByPetition(petition);
-        Event petitionEvent = GoogleCalendarEventMapper.fromPetitionToEvent(petition, petition.getLevelType() == LevelType.SCHOOL ?
-                schoolService.findById(petition.getTargetId()).getName() :
-                (petition.getLevelType() == LevelType.CLASS ?
-                        classService.findById(petition.getTargetId()).getName() :
-                        "undefined")
-        );
+        Event petitionEvent = GoogleCalendarEventMapper.fromPetitionToEvent(petition);
         Event petitionReminderEvent = GoogleCalendarEventMapper.fromPetitionToReminderEvent(petition);
         long petitionId = petition.getId();
         for(User user : users){
@@ -292,6 +276,17 @@ public class GoogleCalendarServiceImpl implements GoogleCalendarService {
         for(User user : users){
             updateVotingInUserCalendar(votingEvent, votingReminderEvent, votingId, user.getId());
             log.info("Service: Updated voting calendar events for user {} and voting {}", user.getId(), votingId);
+        }
+    }
+
+    @Override
+    public void deleteCalendarAndRevoke(User user) {
+        if(googleCalendarCredentialService.existsByUserId(user.getId())) {
+            deleteCalendar(user.getId());
+            googleCalendarCredentialService.revokeAccess(user.getId()).subscribe();
+            user.setGoogleCalendarCredential(null);
+            userService.save(user);
+            googleCalendarCredentialService.deleteByUser(user.getId());
         }
     }
 

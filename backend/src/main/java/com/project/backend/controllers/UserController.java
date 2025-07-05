@@ -7,16 +7,8 @@ import com.project.backend.dto.user.UserUpdateRequest;
 import com.project.backend.dto.wrapper.PaginationListResponse;
 import com.project.backend.mappers.UserMapper;
 import com.project.backend.models.User;
-import com.project.backend.services.inter.*;
-import com.project.backend.services.inter.petition.CommentService;
-import com.project.backend.services.inter.petition.PetitionService;
-import com.project.backend.services.inter.voting.VotingService;
-import com.project.backend.services.inter.voting.VotingUserService;
+import com.project.backend.services.inter.UserDeletionService;
 import com.project.backend.services.inter.UserService;
-import com.project.backend.services.inter.petition.CommentService;
-import com.project.backend.services.inter.petition.PetitionService;
-import com.project.backend.services.inter.voting.VotingService;
-import com.project.backend.services.inter.voting.VotingUserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,10 +26,7 @@ public class UserController {
 
     private final UserMapper userMapper;
     private final UserService userService;
-    private final VotingService votingService;
-    private final CommentService commentService;
-    private final PetitionService petitionService;
-    private final VotingUserService votingUserService;
+    private final UserDeletionService userDeletionService;
 
     @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasAnyRole('DIRECTOR', 'TEACHER')")
     @PostMapping("/create")
@@ -72,11 +61,8 @@ public class UserController {
                            @PathVariable(value = "user_id") long userId,
                            Authentication auth) {
         log.info("Controller: Delete user with id: {}", userId);
-        commentService.deleteingUser(userId);
-        petitionService.deletingUser(userId);
-        votingService.deletingUser(userId);
-        votingUserService.deleteWithUser(userId);
-        userService.delete(userId);
+        User user = userService.findById(userId);
+        userDeletionService.delete(user, false);
     }
 
     @GetMapping("/my")

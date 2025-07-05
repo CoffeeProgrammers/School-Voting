@@ -17,7 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class GoogleCalendarEventMapper {
-    public static Event fromPetitionToEvent(Petition petition, String name) {
+    public static Event fromPetitionToEvent(Petition petition) {
         Event event = new Event()
                 .setSummary("PETITION: " + petition.getName())
                 .setDescription(petition.getDescription());
@@ -37,9 +37,9 @@ public class GoogleCalendarEventMapper {
         event.setEnd(new EventDateTime().setDateTime(end).setTimeZone(timezone));
 
         if (petition.getLevelType() == LevelType.CLASS) {
-            event.setLocation("CLASS: " + name);
+//            event.setLocation("CLASS: " + petition.getTargetName());
         } else if (petition.getLevelType() == LevelType.SCHOOL) {
-            event.setLocation("SCHOOL: " + name);
+//            event.setLocation("SCHOOL: " + petition.getTargetName());
         }
 
         List<EventReminder> reminders = new ArrayList<>();

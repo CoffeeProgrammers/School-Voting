@@ -48,6 +48,7 @@ public class SchoolController {
     private final UserMapper userMapper;
     private final JwtDecoder jwtDecoder;
     private final UserService userService;
+    private final UserDeletionService userDeletionService;
 
     @Value("${client-id}")
     private String clientId;
@@ -127,7 +128,7 @@ public class SchoolController {
         petitionService.deleteBy(LevelType.SCHOOL, schoolId);
         votingService.deleteBy(LevelType.SCHOOL, schoolId);
         classService.deleteBySchool(schoolId);
-        userService.deleteBySchool(schoolId);
+        userDeletionService.deleteBySchool(schoolId);
         schoolService.delete(schoolId);
     }
 }

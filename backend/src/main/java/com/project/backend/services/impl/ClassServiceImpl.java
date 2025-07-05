@@ -4,9 +4,11 @@ import com.project.backend.models.Class;
 import com.project.backend.models.User;
 import com.project.backend.models.enums.LevelType;
 import com.project.backend.repositories.repos.ClassRepository;
-import com.project.backend.repositories.repos.ClassRepository;
 import com.project.backend.repositories.specification.ClassSpecification;
-import com.project.backend.services.inter.*;
+import com.project.backend.services.inter.ClassService;
+import com.project.backend.services.inter.SchoolService;
+import com.project.backend.services.inter.UserDeletionService;
+import com.project.backend.services.inter.UserService;
 import com.project.backend.services.inter.petition.PetitionService;
 import com.project.backend.services.inter.voting.VotingService;
 import jakarta.persistence.EntityNotFoundException;
@@ -28,11 +30,13 @@ import static com.project.backend.utils.SpecificationUtil.isValid;
 @RequiredArgsConstructor
 public class ClassServiceImpl implements ClassService {
 
+    private final UserDeletionService userDeletionService;
     private final ClassRepository classRepository;
     private final UserService userService;
     private final SchoolService schoolService;
     private final PetitionService petitionService;
     private final VotingService votingService;
+
 
     @Override
     public Class create(Class classRequest, List<Long> userIds, long schoolId) {
@@ -67,7 +71,7 @@ public class ClassServiceImpl implements ClassService {
         petitionService.deleteBy(LevelType.CLASS, id);
         if(deleteUsers) {
             for (User user : aClass.getUsers()) {
-                userService.delete(user.getId());
+                userDeletionService.delete(user, false);
             }
         }
         classRepository.deleteById(id);

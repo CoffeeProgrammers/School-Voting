@@ -19,7 +19,6 @@ public interface UserService {
 
     boolean updatePassword(PasswordRequest passwordRequest, User user);
 
-    void delete(long id);
     User findById(long id);
 
     Page<User> findAllByVoting(long votingId, String email, String firstName, String lastName, int page, int size);
@@ -54,8 +53,6 @@ public interface UserService {
     User createDirector(User director, String password);
 
     void checkEmail(String email);
-
-    void deleteBySchool(long schoolId);
 
     User save(User user);
 

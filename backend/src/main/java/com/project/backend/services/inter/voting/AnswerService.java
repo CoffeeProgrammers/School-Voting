@@ -1,4 +1,4 @@
-package com.project.backend.services.inter;
+package com.project.backend.services.inter.voting;
 
 import com.project.backend.models.voting.Answer;
 import com.project.backend.models.voting.Voting;

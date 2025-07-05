@@ -11,6 +11,8 @@ import com.project.backend.models.School;
 import com.project.backend.models.User;
 import com.project.backend.models.enums.LevelType;
 import com.project.backend.services.inter.*;
+import com.project.backend.services.inter.petition.PetitionService;
+import com.project.backend.services.inter.voting.VotingService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

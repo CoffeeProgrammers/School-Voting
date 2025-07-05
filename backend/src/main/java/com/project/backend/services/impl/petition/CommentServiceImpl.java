@@ -1,10 +1,10 @@
-package com.project.backend.services.impl;
+package com.project.backend.services.impl.petition;
 
 import com.project.backend.models.User;
 import com.project.backend.models.petitions.Comment;
 import com.project.backend.models.petitions.Petition;
-import com.project.backend.repositories.petitions.CommentRepository;
-import com.project.backend.services.inter.CommentService;
+import com.project.backend.repositories.repos.petitions.CommentRepository;
+import com.project.backend.services.inter.petition.CommentService;
 import com.project.backend.services.inter.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;

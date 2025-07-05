@@ -3,9 +3,11 @@ package com.project.backend.services.impl;
 import com.project.backend.models.Class;
 import com.project.backend.models.User;
 import com.project.backend.models.enums.LevelType;
-import com.project.backend.repositories.ClassRepository;
+import com.project.backend.repositories.repos.ClassRepository;
 import com.project.backend.repositories.specification.ClassSpecification;
 import com.project.backend.services.inter.*;
+import com.project.backend.services.inter.petition.PetitionService;
+import com.project.backend.services.inter.voting.VotingService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -120,5 +122,11 @@ public class ClassServiceImpl implements ClassService {
                 ClassSpecification.bySchool(schoolId).and(ClassSpecification.byName(name)) : ClassSpecification.bySchool(schoolId);
         return classRepository.findAll(specification,
                 PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "name")));
+    }
+
+    @Override
+    public Class findByUser(User user) {
+        List<Class> clazz = classRepository.findAll(ClassSpecification.hasUser(user));
+        return clazz.isEmpty() ? null : clazz.get(0);
     }
 }

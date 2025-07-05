@@ -1,4 +1,4 @@
-package com.project.backend.services.inter;
+package com.project.backend.services.inter.petition;
 
 import com.project.backend.models.User;
 import com.project.backend.models.petitions.Comment;

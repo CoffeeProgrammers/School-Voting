@@ -1,7 +1,7 @@
 package com.project.backend.services.impl;
 
 import com.project.backend.models.School;
-import com.project.backend.repositories.SchoolRepository;
+import com.project.backend.repositories.repos.SchoolRepository;
 import com.project.backend.services.inter.SchoolService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;

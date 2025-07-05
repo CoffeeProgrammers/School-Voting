@@ -1,6 +1,7 @@
 package com.project.backend.repositories.specification;
 
 import com.project.backend.models.Class;
+import com.project.backend.models.User;
 import org.springframework.data.jpa.domain.Specification;
 
 public class ClassSpecification {
@@ -8,8 +9,14 @@ public class ClassSpecification {
         return (root, criteriaQuery, cb) ->
                 cb.equal(root.get("school").get("id"), schoolId);
     }
+
     public static Specification<Class> byName(String name) {
         return (root, criteriaQuery, cb) ->
                 cb.like(root.get("name"), name);
+    }
+
+    public static Specification<Class> hasUser(User user) {
+        return (root, criteriaQuery, cb) ->
+                cb.isMember(user, root.get("users"));
     }
 }

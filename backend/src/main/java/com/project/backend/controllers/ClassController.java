@@ -7,9 +7,11 @@ import com.project.backend.dto.classDTO.ClassUpdateRequest;
 import com.project.backend.dto.wrapper.PaginationListResponse;
 import com.project.backend.mappers.ClassMapper;
 import com.project.backend.models.Class;
+import com.project.backend.models.User;
 import com.project.backend.services.inter.ClassService;
-import com.project.backend.services.inter.PetitionService;
-import com.project.backend.services.inter.VotingUserService;
+import com.project.backend.services.inter.petition.PetitionService;
+import com.project.backend.services.inter.UserService;
+import com.project.backend.services.inter.voting.VotingUserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +33,7 @@ public class ClassController {
     private final ClassMapper classMapper;
     private final VotingUserService votingUserService;
     private final PetitionService petitionService;
+    private final UserService userService;
 
     @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasAnyRole('DIRECTOR', 'TEACHER')")
     @PostMapping("/create")
@@ -74,6 +77,17 @@ public class ClassController {
                                           Authentication auth) {
         log.info("Controller: Getting class with id {}", classId);
         return classMapper.fromClassToFullResponse(classService.findById(classId));
+    }
+
+    @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasAnyRole('STUDENT')")
+    @GetMapping("/my")
+    @ResponseStatus(HttpStatus.OK)
+    public ClassFullResponse getClassById(@PathVariable(value = "school_id") long schoolId,
+                                          Authentication auth) {
+        log.info("Controller: Getting my class user");
+        User user = userService.findUserByAuth(auth);
+        Class clazz = classService.findByUser(user);
+        return clazz != null ? classMapper.fromClassToFullResponse(clazz) : null;
     }
 
     @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasAnyRole('DIRECTOR', 'TEACHER')")

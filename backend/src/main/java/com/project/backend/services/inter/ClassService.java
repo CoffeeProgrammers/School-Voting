@@ -1,6 +1,7 @@
 package com.project.backend.services.inter;
 
 import com.project.backend.models.Class;
+import com.project.backend.models.User;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -17,4 +18,6 @@ public interface ClassService {
     void assignUserToClass(long classId, List<Long> userIds);
     void unassignUserFromClass(long classId, List<Long> userIds);
     Page<Class> findAllBySchool(long schoolId, String name, int page, int size);
+
+    Class findByUser(User user);
 }

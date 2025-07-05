@@ -1,4 +1,4 @@
-package com.project.backend.mappers;
+package com.project.backend.mappers.petition;
 
 import com.project.backend.dto.petition.PetitionFullResponse;
 import com.project.backend.dto.petition.PetitionListResponse;

@@ -1,11 +1,11 @@
-package com.project.backend.services.impl;
+package com.project.backend.services.impl.petition;
 
 import com.project.backend.models.enums.Status;
 import com.project.backend.models.petitions.Petition;
-import com.project.backend.repositories.petitions.PetitionRepository;
+import com.project.backend.repositories.repos.petitions.PetitionRepository;
 import com.project.backend.repositories.specification.PetitionSpecification;
-import com.project.backend.services.inter.PetitionSchedulerService;
-import com.project.backend.services.inter.PetitionService;
+import com.project.backend.services.inter.petition.PetitionSchedulerService;
+import com.project.backend.services.inter.petition.PetitionService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

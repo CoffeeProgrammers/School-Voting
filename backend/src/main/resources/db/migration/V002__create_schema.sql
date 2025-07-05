@@ -85,6 +85,7 @@ CREATE TABLE "petitions"
     "count"         BIGINT       NOT NULL,
     "target_id"     BIGINT,
     "count_needed"  BIGINT,
+    "target_name"   varchar(255),
     FOREIGN KEY ("creator_id") REFERENCES "users" ("id") ON DELETE SET NULL
 );
 

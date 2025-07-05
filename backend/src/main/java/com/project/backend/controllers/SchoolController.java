@@ -128,7 +128,7 @@ public class SchoolController {
         petitionService.deleteBy(LevelType.SCHOOL, schoolId);
         votingService.deleteBy(LevelType.SCHOOL, schoolId);
         classService.deleteBySchool(schoolId);
-        userDeletionService.deleteBySchool(schoolId);
+        // TODO implementation of deleting other users but without method in UserDeletionServiceImpl
         schoolService.delete(schoolId);
     }
 }

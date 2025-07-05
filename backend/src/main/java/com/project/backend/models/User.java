@@ -40,7 +40,7 @@ public class User {
     private Set<VotingUser> votingUsers = new HashSet<>();
     @ManyToMany(mappedBy = "users")
     private Set<Petition> petitions = new HashSet<>();
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private GoogleCalendarCredential googleCalendarCredential;
     @OneToMany(mappedBy = "user")
     private List<UserVotingEvent> userVotingEvents = new ArrayList<>();

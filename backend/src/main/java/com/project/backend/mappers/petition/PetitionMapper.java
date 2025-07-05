@@ -3,7 +3,7 @@ package com.project.backend.mappers.petition;
 import com.project.backend.dto.petition.PetitionFullResponse;
 import com.project.backend.dto.petition.PetitionListResponse;
 import com.project.backend.dto.petition.PetitionRequest;
-import com.project.backend.models.petitions.Petition;
+import com.project.backend.models.petition.Petition;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")

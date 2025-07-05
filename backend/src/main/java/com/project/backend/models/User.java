@@ -1,6 +1,6 @@
 package com.project.backend.models;
 
-import com.project.backend.models.petitions.Petition;
+import com.project.backend.models.petition.Petition;
 import com.project.backend.models.voting.VotingUser;
 import jakarta.persistence.*;
 import lombok.*;

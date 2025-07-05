@@ -1,8 +1,8 @@
 package com.project.backend.services.impl.petition;
 
 import com.project.backend.models.enums.Status;
-import com.project.backend.models.petitions.Petition;
-import com.project.backend.repositories.repos.petitions.PetitionRepository;
+import com.project.backend.models.petition.Petition;
+import com.project.backend.repositories.repos.petition.PetitionRepository;
 import com.project.backend.repositories.specification.PetitionSpecification;
 import com.project.backend.services.inter.petition.PetitionSchedulerService;
 import com.project.backend.services.inter.petition.PetitionService;

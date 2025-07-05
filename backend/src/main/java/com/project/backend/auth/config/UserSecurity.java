@@ -2,8 +2,8 @@ package com.project.backend.auth.config;
 
 import com.project.backend.models.School;
 import com.project.backend.models.enums.LevelType;
-import com.project.backend.models.petitions.Petition;
-import com.project.backend.services.inter.*;
+import com.project.backend.models.petition.Petition;
+import com.project.backend.services.inter.UserService;
 import com.project.backend.services.inter.petition.CommentService;
 import com.project.backend.services.inter.petition.PetitionService;
 import com.project.backend.services.inter.voting.VotingService;

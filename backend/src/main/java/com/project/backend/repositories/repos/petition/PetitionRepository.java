@@ -1,7 +1,7 @@
-package com.project.backend.repositories.repos.petitions;
+package com.project.backend.repositories.repos.petition;
 
 import com.project.backend.models.enums.LevelType;
-import com.project.backend.models.petitions.Petition;
+import com.project.backend.models.petition.Petition;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 

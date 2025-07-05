@@ -1,6 +1,6 @@
-package com.project.backend.repositories.repos.petitions;
+package com.project.backend.repositories.repos.petition;
 
-import com.project.backend.models.petitions.Comment;
+import com.project.backend.models.petition.Comment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

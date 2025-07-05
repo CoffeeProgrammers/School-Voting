@@ -1,6 +1,6 @@
 import React from 'react';
 import Box from "@mui/material/Box";
-import ClassList from "../classes/ClassList";
+import ClassList from "../class/ClassList";
 import SchoolPageWrapper from "../../components/basic/school/SchoolPageWrapper";
 import Divider from "@mui/material/Divider";
 import UserList from "../../components/basic/user/UserList";

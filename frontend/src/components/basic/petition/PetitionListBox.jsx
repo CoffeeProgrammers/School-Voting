@@ -39,7 +39,7 @@ const PetitionListBox = ({petition}) => {
             },
         }}
              onClick={() => {
-                 navigate(`${petition.id}`)
+                 navigate(`/petitions/${petition.id}`)
              }}
         >
             <Box mt={0.5}>

@@ -5,7 +5,6 @@ import {Link as RouterLink, useNavigate, useParams} from "react-router-dom";
 import SchoolPageWrapper from "../../components/basic/school/SchoolPageWrapper";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
-import {grey} from "@mui/material/colors";
 import Divider from "@mui/material/Divider";
 
 const ClassPage = () => {

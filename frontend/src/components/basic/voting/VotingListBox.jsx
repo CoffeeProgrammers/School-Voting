@@ -33,7 +33,7 @@ const VotingListBox = ({voting}) => {
             },
         }}
              onClick={() => {
-                 navigate(`${voting.id}`)
+                 navigate(`/voting/${voting.id}`)
              }}
         >
             <Box mt={0.5}>

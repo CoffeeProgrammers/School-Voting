@@ -358,6 +358,11 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Override
+    public User save(User user) {
+        return userRepository.save(user);
+    }
+
     private Specification<User> createSpecification(String email, String firstName, String lastName, String role) {
         log.info("Service: Creating specification for user with email {}, first name {}, last name {} and role {}", email, firstName, lastName, role);
         Specification<User> specification = null;

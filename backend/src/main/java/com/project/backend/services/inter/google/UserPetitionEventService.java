@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 public interface UserPetitionEventService {
-    UserPetitionEvent create(User user, Petition petition, String eventId);
+    UserPetitionEvent create(User user, Petition petition, String eventId, String reminderEventId);
 
     UserPetitionEvent findByUserAndPetition(long userId, long petitionId);
 

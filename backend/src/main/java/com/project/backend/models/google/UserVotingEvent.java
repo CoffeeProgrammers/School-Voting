@@ -30,6 +30,7 @@ public class UserVotingEvent {
     private User user;
 
     private String eventId;
+    private String reminderEventId;
 
     @Embeddable
     @Data

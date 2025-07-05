@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 public interface UserVotingEventService {
-    UserVotingEvent create(User user, Voting voting, String eventId);
+    UserVotingEvent create(User user, Voting voting, String eventId, String reminderEventId);
 
     UserVotingEvent findByUserAndVoting(long userId, long votingId);
 

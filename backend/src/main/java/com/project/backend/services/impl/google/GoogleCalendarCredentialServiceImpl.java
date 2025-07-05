@@ -12,7 +12,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -26,6 +28,45 @@ public class GoogleCalendarCredentialServiceImpl implements GoogleCalendarCreden
     @Value("${google.client-secret}")
     private String clientSecret;
     private final GoogleCalendarCredentialRepository googleCalendarCredentialRepository;
+    private final WebClient webClient = WebClient.builder().baseUrl("https://oauth2.googleapis.com")
+            .filter(logRequest())
+            .filter(logResponse())
+            .build();
+
+    private static ExchangeFilterFunction logRequest() {
+        return ExchangeFilterFunction.ofRequestProcessor(request -> {
+            System.out.println(">>> REQUEST: " + request.method() + " " + request.url());
+            request.headers().forEach((name, values) -> values.forEach(value ->
+                    System.out.println(name + ": " + value)));
+            return Mono.just(request);
+        });
+    }
+
+    private static ExchangeFilterFunction logResponse() {
+        return ExchangeFilterFunction.ofResponseProcessor(response -> {
+            System.out.println("<<< RESPONSE: " + response.statusCode());
+            return Mono.just(response);
+        });
+    }
+
+    @Override
+    public Mono<Void> revokeAccess(long userId) {
+        String token = findByUserId(userId).getRefreshToken();
+        return webClient.post()
+                .uri("/revoke")
+                .header("Content-Type", "application/x-www-form-urlencoded")
+                .bodyValue("token=" + token + "&token_type_hint=refresh_token")
+                .exchangeToMono(response -> {
+                    if (response.statusCode().is2xxSuccessful()) {
+                        return Mono.empty(); // успіх
+                    } else {
+                        return response.bodyToMono(String.class)
+                                .flatMap(errorBody ->
+                                        Mono.error(new RuntimeException("Failed to revoke token: " + errorBody)));
+                    }
+                });
+    }
+
 
     @Override
     public GoogleCalendarCredential findByUserId(long userId) {
@@ -57,7 +98,7 @@ public class GoogleCalendarCredentialServiceImpl implements GoogleCalendarCreden
     public GoogleCalendarCredential refresh(long userId) {
         log.info("Service: refresh google calendar credential");
         GoogleCalendarCredential googleCalendarCredential = findByUserId(userId);
-        if(LocalDateTime.now().isBefore(googleCalendarCredential.getExpiresAt())) {
+        if (LocalDateTime.now().isBefore(googleCalendarCredential.getExpiresAt())) {
             return googleCalendarCredential;
         }
 
@@ -84,10 +125,9 @@ public class GoogleCalendarCredentialServiceImpl implements GoogleCalendarCreden
         }
     }
 
-    @Transactional
     @Override
-    public void deleteByUser(long userId){
-        log.info("Service: delete all google calendar credential with user id {}", userId);
-        googleCalendarCredentialRepository.deleteAllByUser_Id(userId);
+    public void deleteByUser(long userId) {
+        log.info("Service: delete google calendar credential with user id {}", userId);
+        googleCalendarCredentialRepository.deleteByUser_Id(userId);
     }
 }

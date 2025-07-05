@@ -22,7 +22,7 @@ public class UserVotingEventServiceImpl implements UserVotingEventService {
     private final UserVotingEventRepository userVotingEventRepository;
 
     @Override
-    public UserVotingEvent create(User user, Voting voting, String eventId) {
+    public UserVotingEvent create(User user, Voting voting, String eventId, String reminderEventId) {
         log.info("Service: create user voting event");
         UserVotingEventId id = new UserVotingEventId(user.getId(), voting.getId());
         return userVotingEventRepository.findById(id).orElseGet(() -> {
@@ -31,6 +31,7 @@ public class UserVotingEventServiceImpl implements UserVotingEventService {
             event.setUser(user);
             event.setVoting(voting);
             event.setEventId(eventId);
+            event.setReminderEventId(reminderEventId);
             return userVotingEventRepository.save(event);
         });
     }

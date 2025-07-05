@@ -49,4 +49,6 @@ public interface UserService {
     User createDirector(User director, String password);
 
     void checkEmail(String email);
+
+    User save(User user);
 }

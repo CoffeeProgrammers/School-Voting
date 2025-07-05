@@ -11,6 +11,8 @@ public interface VotingService {
     Voting update(Voting votingRequest, List<String> answer, long id);
     void delete(long id);
     Voting findById(long id);
+
+    List<Voting> findAllByUser(long userId);
     Page<Voting> findAllByUser(long userId, String name, Boolean now, Boolean isNotVoted, int page, int size);
     Page<Voting> findAllByCreator(long userId, String name, Boolean now, Boolean notStarted, int page, int size);
     Page<Voting> findAllForDirector(long userId, String name, int page, int size);

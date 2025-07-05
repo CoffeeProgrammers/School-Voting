@@ -22,7 +22,7 @@ public class UserPetitionEventServiceImpl implements UserPetitionEventService {
     private final UserPetitionEventRepository userPetitionEventRepository;
 
     @Override
-    public UserPetitionEvent create(User user, Petition petition, String eventId) {
+    public UserPetitionEvent create(User user, Petition petition, String eventId, String reminderEventId) {
         log.info("Service: create user petition event");
         UserPetitionEventId id = new UserPetitionEventId(user.getId(), petition.getId());
         return userPetitionEventRepository.findById(id).orElseGet(() -> {
@@ -31,6 +31,7 @@ public class UserPetitionEventServiceImpl implements UserPetitionEventService {
             event.setUser(user);
             event.setPetition(petition);
             event.setEventId(eventId);
+            event.setReminderEventId(reminderEventId);
             return userPetitionEventRepository.save(event);
         });
     }

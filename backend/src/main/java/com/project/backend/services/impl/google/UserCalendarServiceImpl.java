@@ -36,6 +36,6 @@ public class UserCalendarServiceImpl implements UserCalendarService {
     @Override
     public void deleteByUser(long userId){
         log.info("Service: delete user calendar with user id {}", userId);
-        userCalendarRepository.deleteById(userId);
+        userCalendarRepository.deleteByUser_Id(userId);
     }
 }

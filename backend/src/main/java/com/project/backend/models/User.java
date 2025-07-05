@@ -1,7 +1,5 @@
 package com.project.backend.models;
 
-import com.project.backend.models.petition.Petition;
-import com.project.backend.models.voting.VotingUser;
 import com.project.backend.models.google.GoogleCalendarCredential;
 import com.project.backend.models.google.UserPetitionEvent;
 import com.project.backend.models.google.UserVotingEvent;
@@ -20,8 +18,8 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
-@ToString(exclude = {"myClass", "school", "votingUsers", "petitions"})
-@EqualsAndHashCode(exclude = {"myClass", "school", "votingUsers", "petitions"})
+@ToString(exclude = {"myClass", "school", "votingUsers", "petitions", "googleCalendarCredential", "userVotingEvents", "userPetitionEvents"})
+@EqualsAndHashCode(exclude = {"myClass", "school", "votingUsers", "petitions", "googleCalendarCredential", "userVotingEvents", "userPetitionEvents"})
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

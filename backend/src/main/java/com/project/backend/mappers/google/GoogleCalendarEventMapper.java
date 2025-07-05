@@ -4,6 +4,7 @@ import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.EventDateTime;
 import com.google.api.services.calendar.model.EventReminder;
+import com.project.backend.models.enums.LevelType;
 import com.project.backend.models.petition.Petition;
 import com.project.backend.models.voting.Voting;
 
@@ -16,7 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class GoogleCalendarEventMapper {
-    public static Event fromPetitionToEvent(Petition petition) {
+    public static Event fromPetitionToEvent(Petition petition, String name) {
         Event event = new Event()
                 .setSummary("PETITION: " + petition.getName())
                 .setDescription(petition.getDescription());
@@ -35,11 +36,10 @@ public class GoogleCalendarEventMapper {
         event.setStart(new EventDateTime().setDateTime(start).setTimeZone(timezone));
         event.setEnd(new EventDateTime().setDateTime(end).setTimeZone(timezone));
 
-        // TODO MATCH WITH CHANGES IN BACKEND BRANCH
-        if (petition.getMyClass() != null) {
-            event.setLocation("CLASS: " + petition.getMyClass().getName());
-        } else if (petition.getSchool() != null) {
-            event.setLocation("SCHOOL: " + petition.getSchool().getName());
+        if (petition.getLevelType() == LevelType.CLASS) {
+            event.setLocation("CLASS: " + name);
+        } else if (petition.getLevelType() == LevelType.SCHOOL) {
+            event.setLocation("SCHOOL: " + name);
         }
 
         List<EventReminder> reminders = new ArrayList<>();

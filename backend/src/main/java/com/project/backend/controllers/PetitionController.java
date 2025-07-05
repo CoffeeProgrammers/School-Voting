@@ -50,6 +50,15 @@ public class PetitionController {
                 petitionService.create(petitionMapper.fromRequestToPetition(petitionRequest), petitionRequest.getLevelId(), user), user);
     }
 
+    @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and @userSecurity.checkCreatorPetition(#auth, #petitionId)")
+    @DeleteMapping("/delete/{petition_id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deletePetition(@PathVariable(name = "school_id") long schoolId,
+                               @PathVariable(name = "petition_id") long petitionId) {
+        log.info("Controller: Deleting a petition for school {}", schoolId);
+        petitionService.delete(petitionId);
+    }
+
     @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasAnyRole('DIRECTOR', 'STUDENT')")
     @GetMapping("/{petition_id}")
     @ResponseStatus(HttpStatus.OK)

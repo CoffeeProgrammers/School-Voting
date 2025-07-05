@@ -40,23 +40,17 @@ public class UserDeletionServiceImpl implements UserDeletionService {
         }
 
         googleCalendarService.deleteCalendarAndRevoke(user);
-        log.info("Service: delete users info in other panels with user id {}", userId);
 
         commentService.deleteingUser(userId);
         petitionService.deletingUser(userId);
         votingService.deletingUser(userId);
         votingUserService.deleteWithUser(userId);
 
-        user.setSchool(null);
-        user.setMyClass(null);
-        user.setPetitions(null);
-        user.setVotingUsers(null);
-
-        userRepository.save(user);
-
         realmResource.users().delete(user.getKeycloakUserId());
-        userRepository.deleteById(userId);
+
+        userRepository.delete(user);
 
         log.info("Service: Deleted user with id {}", userId);
     }
+
 }

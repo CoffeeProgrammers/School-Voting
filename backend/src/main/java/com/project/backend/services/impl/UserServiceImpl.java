@@ -274,6 +274,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<User> findAllBySchool(long schoolId) {
+        log.info("Service: Finding list of all users by school {}", schoolId);
+        return userRepository.findAll(UserSpecification.bySchool(schoolId));
+    }
+
+    @Override
     public List<User> findAllByClass(long classId, long userId) {
         log.info("Service: Finding list of all users by class {}", classId);
         return userRepository.findAll(UserSpecification.byClass(classId).and(UserSpecification.notUser(userId)));

@@ -128,7 +128,8 @@ public class SchoolController {
         petitionService.deleteBy(LevelType.SCHOOL, schoolId);
         votingService.deleteBy(LevelType.SCHOOL, schoolId);
         classService.deleteBySchool(schoolId);
-        // TODO implementation of deleting other users but without method in UserDeletionServiceImpl
+        userService.findAllBySchool(schoolId).forEach(user -> {userDeletionService.delete(user, true);});
+        // TODO implementation of deleting other users but without Transactional error
         schoolService.delete(schoolId);
     }
 }

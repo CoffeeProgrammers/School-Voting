@@ -11,4 +11,5 @@ public interface UserVotingEventRepository extends JpaRepository<UserVotingEvent
     List<UserVotingEvent> findAllById_UserId(long userId);
     List<UserVotingEvent> findAllById_VotingId(long votingId);
     Optional<UserVotingEvent> findById_UserIdAndId_VotingId(long userId, long votingId);
+    boolean deleteAllByUser_Id(long userId);
 }

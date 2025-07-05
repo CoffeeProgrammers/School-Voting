@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -81,5 +82,12 @@ public class GoogleCalendarCredentialServiceImpl implements GoogleCalendarCreden
         } catch (IOException e) {
             throw new RuntimeException("Failed to refresh token for user " + userId, e);
         }
+    }
+
+    @Transactional
+    @Override
+    public void deleteByUser(long userId){
+        log.info("Service: delete all google calendar credential with user id {}", userId);
+        googleCalendarCredentialRepository.deleteAllByUser_Id(userId);
     }
 }

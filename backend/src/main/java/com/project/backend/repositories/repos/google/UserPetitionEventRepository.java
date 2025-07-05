@@ -11,4 +11,5 @@ public interface UserPetitionEventRepository extends JpaRepository<UserPetitionE
     List<UserPetitionEvent> findAllById_UserId(long userId);
     List<UserPetitionEvent> findAllById_PetitionId(long petitionId);
     Optional<UserPetitionEvent> findById_UserIdAndId_PetitionId(long userId, long petitionId);
+    void deleteAllByUser_Id(long userId);
 }

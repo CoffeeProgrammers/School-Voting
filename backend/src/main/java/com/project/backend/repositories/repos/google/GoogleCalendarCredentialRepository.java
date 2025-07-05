@@ -10,4 +10,5 @@ import java.util.Optional;
 public interface GoogleCalendarCredentialRepository extends JpaRepository<GoogleCalendarCredential, Long> {
     Optional<GoogleCalendarCredential> findByUser_Id(long userId);
     boolean existsByUser_Id(long userId);
+    void deleteAllByUser_Id(long userId);
 }

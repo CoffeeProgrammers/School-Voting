@@ -1,6 +1,7 @@
 package com.project.backend.services.inter.google;
 
 import com.project.backend.models.google.GoogleCalendarCredential;
+import org.springframework.transaction.annotation.Transactional;
 
 public interface GoogleCalendarCredentialService {
     GoogleCalendarCredential findByUserId(long userId);
@@ -8,4 +9,7 @@ public interface GoogleCalendarCredentialService {
     GoogleCalendarCredential create(GoogleCalendarCredential googleCalendarCredential);
     GoogleCalendarCredential update(GoogleCalendarCredential googleCalendarCredential, long userId);
     GoogleCalendarCredential refresh(long userId);
+
+    @Transactional
+    void deleteByUser(long userId);
 }

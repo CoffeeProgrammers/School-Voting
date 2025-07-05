@@ -8,4 +8,5 @@ import java.util.Optional;
 public interface UserCalendarRepository extends JpaRepository<UserCalendar, Long> {
     Optional<UserCalendar> findByUser_Id(long userId);
     boolean existsByUser_Id(long userId);
+    void deleteAllByUser_Id(long userId);
 }

@@ -10,6 +10,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -58,5 +59,12 @@ public class UserVotingEventServiceImpl implements UserVotingEventService {
     public List<UserVotingEvent> findAllByVoting(long votingId) {
         log.info("Service: find all user`s voting events with voting id {}", votingId);
         return userVotingEventRepository.findAllById_VotingId(votingId);
+    }
+
+    @Transactional
+    @Override
+    public void deleteByUser(long userId){
+        log.info("Service: delete user voting events with user id {}", userId);
+        userVotingEventRepository.deleteAllByUser_Id(userId);
     }
 }

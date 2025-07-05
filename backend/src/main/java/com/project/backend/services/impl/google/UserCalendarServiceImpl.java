@@ -7,12 +7,19 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserCalendarServiceImpl implements UserCalendarService {
     private final UserCalendarRepository userCalendarRepository;
+
+    @Override
+    public UserCalendar create(UserCalendar userCalendar){
+        return userCalendarRepository.save(userCalendar);
+    }
+
     @Override
     public UserCalendar findByUser(long userId) {
         log.info("Service: get user calendar existing user {}", userId);
@@ -23,5 +30,12 @@ public class UserCalendarServiceImpl implements UserCalendarService {
     public boolean existsByUser(long userId) {
         log.info("Service: check if existing user {}", userId);
         return userCalendarRepository.existsByUser_Id(userId);
+    }
+
+    @Transactional
+    @Override
+    public void deleteByUser(long userId){
+        log.info("Service: delete user calendar with user id {}", userId);
+        userCalendarRepository.deleteById(userId);
     }
 }

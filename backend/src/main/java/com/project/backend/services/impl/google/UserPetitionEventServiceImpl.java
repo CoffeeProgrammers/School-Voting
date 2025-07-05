@@ -10,6 +10,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -56,5 +57,12 @@ public class UserPetitionEventServiceImpl implements UserPetitionEventService {
     public List<UserPetitionEvent> findAllByPetition(long petitionId) {
         log.info("Service: find all petition events by petition id {}",  petitionId);
         return userPetitionEventRepository.findAllById_PetitionId(petitionId);
+    }
+
+    @Transactional
+    @Override
+    public void deleteByUser(long userId) {
+        log.info("Service: delete user petition event by user {}",  userId);
+        userPetitionEventRepository.deleteAllByUser_Id(userId);
     }
 }

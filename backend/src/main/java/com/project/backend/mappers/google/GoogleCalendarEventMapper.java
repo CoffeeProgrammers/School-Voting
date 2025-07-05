@@ -4,7 +4,7 @@ import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.EventAttendee;
 import com.google.api.services.calendar.model.EventDateTime;
-import com.project.backend.models.petitions.Petition;
+import com.project.backend.models.petition.Petition;
 import com.project.backend.models.voting.Voting;
 
 import java.time.LocalDateTime;

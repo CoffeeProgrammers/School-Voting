@@ -1,7 +1,7 @@
 package com.project.backend.repositories.specification;
 
 import com.project.backend.models.User;
-import com.project.backend.models.petitions.Petition;
+import com.project.backend.models.petition.Petition;
 import jakarta.persistence.criteria.Join;
 import org.springframework.data.jpa.domain.Specification;
 

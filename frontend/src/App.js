@@ -8,12 +8,13 @@ import {useEffect} from "react";
 import {ErrorProvider} from "./contexts/ErrorContext";
 import PageContainer from "./components/layouts/appbar_with_drawer/PageContainer";
 import NotFoundPage from "./pages/not_found_page/NotFoundPage";
-import Classes from "./pages/classes/Classes";
+import ClassList from "./pages/classes/ClassList";
 import PetitionsListPage from "./pages/petitions/PetitionsListPage";
 import PetitionPage from "./pages/petitions/PetitionPage";
 import ClassPage from "./pages/classes/ClassPage";
 import VotingListPage from "./pages/voting/VotingListPage";
 import VotingPage from "./pages/voting/VotingPage";
+import SchoolPage from "./pages/school/SchoolPage";
 
 const InitNavigation = ({children}) => {
     const navigate = useNavigate();
@@ -36,8 +37,9 @@ function App() {
         {path: "/voting", element: <VotingListPage/>},
         {path: "/voting/:id", element: <VotingPage/>},
 
-        {path: "/classes", element: <Classes/>},
-        {path: "/classes/:id", element: <ClassPage/>},
+        {path: "/school", element: <SchoolPage/>},
+
+        {path: "/school/classes/:id", element: <ClassPage/>},
 
         {path: "*", element:<NotFoundPage/>},
 

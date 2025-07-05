@@ -15,6 +15,7 @@ import ClassPage from "./pages/classes/ClassPage";
 import VotingListPage from "./pages/voting/VotingListPage";
 import VotingPage from "./pages/voting/VotingPage";
 import SchoolPage from "./pages/school/SchoolPage";
+import ControlPanel from "./pages/control_panel/ControlPanel";
 
 const InitNavigation = ({children}) => {
     const navigate = useNavigate();
@@ -38,8 +39,10 @@ function App() {
         {path: "/voting/:id", element: <VotingPage/>},
 
         {path: "/school", element: <SchoolPage/>},
-
         !isStudent && {path: "/school/class/:id", element: <ClassPage/>},
+
+        {path: "/control-panel", element: <ControlPanel/>},
+
 
         {path: "*", element:<NotFoundPage/>},
 

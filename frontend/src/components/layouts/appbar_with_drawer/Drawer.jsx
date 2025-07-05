@@ -14,6 +14,7 @@ import BalanceRoundedIcon from '@mui/icons-material/BalanceRounded';
 import HistoryEduRoundedIcon from '@mui/icons-material/HistoryEduRounded';
 import Groups2Icon from '@mui/icons-material/Groups2';
 import HomeWorkIcon from '@mui/icons-material/HomeWork';
+import BuildCircleOutlinedIcon from '@mui/icons-material/BuildCircleOutlined';
 
 const drawerWidth = 240;
 
@@ -79,7 +80,8 @@ const Drawer = ({open, handleDrawerClose}) => {
         {type: "navigation", icon: <HistoryEduRoundedIcon sx={{fontSize: 28, ml: -0.25}}/>, title: "Petitions", path: "/petitions"},
         {type: "navigation", icon: <BalanceRoundedIcon sx={{fontSize: 25}}/>, title: "Voting", path: "/voting"},
         {type: "divider"},
-        {type: "navigation", icon: <HomeWorkIcon sx={{fontSize: 22, ml: 0.2}}/>, title: "School", path: "/school"},
+        {type: "navigation", icon: <HomeWorkIcon sx={{fontSize: 25}}/>, title: "School", path: "/school"},
+        {type: "navigation", icon: <BuildCircleOutlinedIcon sx={{fontSize: 25 }}/>, title: "Control panel", path: "/control-panel"},
         {type: "divider"},
         {type: "navigation", icon: <AccountCircleIcon/>, title: "Profile", path: "/profile"},
     ]

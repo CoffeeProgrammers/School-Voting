@@ -62,14 +62,14 @@ const UserList = ({users, actions = true}) => {
                         borderRadius: 15,
                         width: "37px",
                         height: "37px",
-                        ml: 0.5
+                        mr: 0.85
                     }} >
                         <AddCircleIcon sx={{
                             fontSize: 30, color: 'primary.main', borderRadius: 15,
                         }}/>
                     </IconButton>
                 ,
-                align: 'center',
+                align: 'right',
                 render: user => (
                     <IconButton size="small">
                         <DeleteIcon sx={{color: 'error.main'}}/>
@@ -79,12 +79,6 @@ const UserList = ({users, actions = true}) => {
         }
         return (
             <>
-                <Box sx={{paddingX: '15px', mb: 0.55}}>
-                    <Typography variant={"h6"} fontWeight={'bold'}>My class: 11-A</Typography>
-                </Box>
-
-                <Divider/>
-
                 <Box>
                     <TableContainer>
                         <Table>

@@ -76,16 +76,8 @@ public class PetitionSpecification {
     }
 
     public static Specification<Petition> byUserWithVote(User user) {
-        return (root, query, cb) -> cb.or(
-                cb.and(
-                        cb.equal(root.get("levelType"), LevelType.SCHOOL),
-                        cb.equal(root.get("creator").get("school").get("id"), user.getSchool().getId())
-                ),
-                cb.and(
-                        cb.equal(root.get("levelType"), LevelType.CLASS),
-                        cb.equal(root.get("targetId"), user.getMyClass().getId())
-                )
-        );
+        return (root, query, cb) ->
+                cb.isMember(user, root.get("users"));
     }
 
 

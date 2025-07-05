@@ -5,9 +5,12 @@ import Search from "../../components/layouts/list/Search";
 import {Button, Grid, Stack} from "@mui/material";
 import ClassListBox from "../../components/basic/class/ClassListBox";
 import Divider from "@mui/material/Divider";
+import {useNavigate} from "react-router-dom";
 
 
 const ClassList = () => {
+    const navigate = useNavigate();
+
     const schoolClassesCombined = [
         {
             id: 1,
@@ -100,10 +103,12 @@ const ClassList = () => {
                 justifyContent: "space-between",
                 paddingX: '15px',
             }}>
+
                 <Typography variant={"h6"} fontWeight={'bold'}>Classes</Typography>
+
                 <Box sx={{alignItems: 'center', display: "flex", justifyContent: "space-between"}} gap={0.5}>
                     <Search
-                        // label={"Title"}
+                        label={"Name"}
                         // searchQuery={searchName}
                         // setSearchQuery={setSearchName}
                         sx={{mr: 1}}
@@ -114,17 +119,15 @@ const ClassList = () => {
                 </Box>
             </Stack>
 
-            <Divider sx={{mt: 0.75, mb: 0.75}}/>
+            <Divider sx={{mt: 0.5, mb: 0.75}}/>
 
-            <Grid container rowSpacing={0.75} columnSpacing={0.5} paddingX={0.75}>
+            <Grid container rowSpacing={0.5} columnSpacing={0.5} paddingX={"10px"} pb={1}>
                 {schoolClassesCombined.map(studentsClass => (
-                    <Grid size={{xs: 12, sm: 6, md: 4, lg: 6}} key={studentsClass.id}>
+                    <Grid size={{xs: 12, sm: 6, md: 4, lg: 6}} key={studentsClass.id} onClick={() => navigate(`class/${studentsClass.id}`)}>
                         <ClassListBox studentClass={studentsClass}></ClassListBox>
                     </Grid>
                 ))}
             </Grid>
-
-            <Divider sx={{mt: 0.75, mb: 0.75}}/>
         </>
     )
 };

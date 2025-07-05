@@ -6,97 +6,93 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import Box from "@mui/material/Box";
 import Search from "../../layouts/list/Search";
 import Typography from "@mui/material/Typography";
+import Divider from "@mui/material/Divider";
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 
-const users = [
-    {id: 1, firstName: "Alice", lastName: "Johnson", email: "alice.johnson@example.com"},
-    {id: 2, firstName: "Bob", lastName: "Smith", email: "bob.smith@example.com"},
-    {id: 3, firstName: "Charlie", lastName: "Brown", email: "charlie.brown@example.com"},
-    {id: 4, firstName: "Diana", lastName: "Williams", email: "diana.williams@example.com"},
-    {id: 5, firstName: "Ethan", lastName: "Davis", email: "ethan.davis@example.com"},
-    {id: 6, firstName: "Fiona", lastName: "Clark", email: "fiona.clark@example.com"},
-    {id: 7, firstName: "George", lastName: "Miller", email: "george.miller@example.com"},
-    {id: 8, firstName: "Hannah", lastName: "Taylor", email: "hannah.taylor@example.com"},
-    {id: 9, firstName: "Ian", lastName: "Anderson", email: "ian.anderson@example.com"},
-    {id: 10, firstName: "Julia", lastName: "Thomas", email: "julia.thomas@example.com"}
-];
+const UserList = ({users, actions = true}) => {
+        const [page, setPage] = React.useState(1);
 
+        const columns = [
+            {
+                id: 'firstName',
+                label: <Search
+                    label={"First Name"}
+                    // searchQuery={searchFirstName}
+                    // setSearchQuery={setSearchFirstName}
+                    sx={{width: '100%'}}
 
-const UserList = () => {
-    const [page, setPage] = React.useState(1);
-
-    const columns = [
-        {
-            id: 'firstName',
-            label: <Search
-                label={"First Name"}
-                // searchQuery={searchFirstName}
-                // setSearchQuery={setSearchFirstName}
-                sx={{width: '100%'}}
-
-            />,
-            render: user => (
-                <Box sx={{display: 'flex', alignItems: 'center', gap: 0.5,}}>
-                    <AccountCircleIcon color="primary"/>
-                    {user.firstName}
-                </Box>
-            )
-        },
-        {
-            id: 'lastName',
-            label: <Search
-                label={"Last Name"}
-                // searchQuery={searchLastName}
-                // setSearchQuery={setSearchLastName}
-                sx={{width: '100%'}}
+                />,
+                render: user => (
+                    <Box sx={{display: 'flex', alignItems: 'center', gap: 0.5,}}>
+                        <AccountCircleIcon color="primary"/>
+                        {user.firstName}
+                    </Box>
+                )
+            },
+            {
+                id: 'lastName',
+                label: <Search
+                    label={"Last Name"}
+                    // searchQuery={searchLastName}
+                    // setSearchQuery={setSearchLastName}
+                    sx={{width: '100%'}}
 
 
-            />,
-            render: user => user.lastName
-        },
-        {
-            id: 'email',
-            label: <Search
-                label={"Email"}
-                // searchQuery={searchEmail}
-                // setSearchQuery={setSearchEmail}
-                sx={{width: '100%'}}
+                />,
+                render: user => user.lastName
+            },
+            {
+                id: 'email',
+                label: <Search
+                    label={"Email"}
+                    // searchQuery={searchEmail}
+                    // setSearchQuery={setSearchEmail}
+                    sx={{width: '100%'}}
 
-            />,
-            render: user => user.email
-        },
-        {
-            id: 'actions',
-            label:
-                <IconButton size="small"
-                    // onClick={(e) => handleDelete(e, user.id)}
-                >
-                    <DeleteIcon sx={{color: 'error'}}/>
-                </IconButton>,
-            // <CreateUserDialog handleCreate={handleCreate}/>,
-            align: 'center',
-            render: (user) => (
-                <IconButton size="small"
-                    // onClick={(e) => handleDelete(e, user.id)}
-                >
-                    <DeleteIcon sx={{color: 'error.main'}}/>
-                </IconButton>
-            )
+                />,
+                render: user => user.email
+            }
+        ];
+
+        if (actions) {
+            columns.push({
+                id: 'actions',
+                label:
+                    <IconButton sx={{
+                        borderRadius: 15,
+                        width: "37px",
+                        height: "37px",
+                        ml: 0.5
+                    }} >
+                        <AddCircleIcon sx={{
+                            fontSize: 30, color: 'primary.main', borderRadius: 15,
+                        }}/>
+                    </IconButton>
+                ,
+                align: 'center',
+                render: user => (
+                    <IconButton size="small">
+                        <DeleteIcon sx={{color: 'error.main'}}/>
+                    </IconButton>
+                )
+            });
         }
-    ];
-    return (
-        <>
-            <Box sx={{paddingX: '15px', mb: 0.55}}>
-                <Typography variant={"h6"} fontWeight={'bold'}>My class: 11-A</Typography>
-            </Box>
+        return (
+            <>
+                <Box sx={{paddingX: '15px', mb: 0.55}}>
+                    <Typography variant={"h6"} fontWeight={'bold'}>My class: 11-A</Typography>
+                </Box>
 
-            <Box sx={{border: '1px solid #ddd', borderRadius: '5px'}}>
-                <Box sx={{}}>
+                <Divider/>
+
+                <Box>
                     <TableContainer>
                         <Table>
                             <TableHead>
                                 <TableRow>
                                     {columns.map(col => (
-                                        <TableCell key={col.id} align={col.align || "left"} sx={{padding: "10px"}}>
+                                        <TableCell key={col.id} align={col.align || "left"}
+                                                   sx={{paddingY: '10px', paddingX: "7.5px"}}>
                                             {col.label}
                                         </TableCell>
                                     ))}
@@ -107,11 +103,14 @@ const UserList = () => {
                                     <TableRow
                                         key={user.id}
                                         hover
-                                        sx={{cursor: 'pointer', height: "36px"}}
+                                        sx={{height: "36px"}}
                                     >
                                         {columns.map(col => (
                                             <TableCell key={col.id} align={col.align || "left"}
-                                                       sx={{paddingY: "7px", paddingLeft: "20px"}}>
+                                                       sx={{
+                                                           borderBottom: index === users.length - 1 ? 'none' : '1px solid #ddd',
+                                                           paddingY: "7px", paddingLeft: "20px"
+                                                       }}>
                                                 {col.render(user, index)}
                                             </TableCell>
                                         ))}
@@ -121,10 +120,9 @@ const UserList = () => {
                         </Table>
                     </TableContainer>
                 </Box>
-            </Box>
-
-        </>
-    );
-};
+            </>
+        );
+    }
+;
 
 export default UserList;

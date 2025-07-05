@@ -27,7 +27,7 @@ const InitNavigation = ({children}) => {
 };
 
 function App() {
-
+    const isStudent = false
     const routes = [
         { path: "/", element: <Navigate to="/petitions" replace /> },
 
@@ -39,7 +39,7 @@ function App() {
 
         {path: "/school", element: <SchoolPage/>},
 
-        {path: "/school/classes/:id", element: <ClassPage/>},
+        !isStudent && {path: "/school/class/:id", element: <ClassPage/>},
 
         {path: "*", element:<NotFoundPage/>},
 

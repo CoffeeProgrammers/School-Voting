@@ -125,8 +125,8 @@ const VotingPage = () => {
                 </Stack>
 
                 <Stack direction="row" width={'100%'}>
-                    {renderTabButton('Description', 105)}
-                    {renderTabButton('Participants', 100)}
+                    {renderTabButton('Description', 110)}
+                    {renderTabButton('Participants', 105)}
                 </Stack>
 
                 <Divider/>

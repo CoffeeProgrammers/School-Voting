@@ -14,22 +14,27 @@ public interface GoogleCalendarService {
 
     void firstUploadVotingToUserCalendar(long userId);
 
-    Event[] savePetitionToUserCalendar(Petition petition, long userId);
+    Event[] savePetitionToUserCalendar(Event petitionEvent, Event petitionReminderEvent, long userId);
 
-    Event[] saveVotingToUserCalendar(Voting voting, long userId);
+    Event[] saveVotingToUserCalendar(Event votingEvent, Event votingReminderEvent, long userId);
 
     void deletePetitionFromUserCalendar(long petitionId, long userId);
     void deleteVotingFromUserCalendar(long votingId, long userId);
-    Event[] updatePetitionInUserCalendar(Petition petition, long userId);
-    Event[] updateVotingInUserCalendar(Voting voting, long userId);
+    Event[] updatePetitionInUserCalendar(Event petitionEvent, Event petitionReminderEvent, long petitionId, long userId);
+
+    Event[] updateVotingInUserCalendar(Event votingEvent, Event votingReminderEvent, long votingId, long userId);
+
+    void deletePetitionFromUserCalendar(long petitionId);
+
+    void deleteVotingFromUserCalendar(long votingId);
 
     void deleteCalendar(long userId);
 
-    Event[] savePetitionToUserCalendar(Petition petition);
+    void savePetitionToUserCalendar(Petition petition);
 
-    Event[] saveVotingToUserCalendar(Voting voting);
+    void saveVotingToUserCalendar(Voting voting);
 
-    Event[] updatePetitionToUserCalendar(Petition petition);
+    void updatePetitionToUserCalendar(Petition petition);
 
-    Event[] updateVotingToUserCalendar(Voting voting);
+    void updateVotingToUserCalendar(Voting voting);
 }

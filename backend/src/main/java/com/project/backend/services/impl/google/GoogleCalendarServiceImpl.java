@@ -68,44 +68,41 @@ public class GoogleCalendarServiceImpl implements GoogleCalendarService {
     @Override
     public void firstUploadPetitionsToUserCalendar(long userId) {
         List<Petition> myPetitions = petitionService.findAllMy(userId);
-        myPetitions.forEach(p -> savePetitionToUserCalendar(p, userId));
+        myPetitions.forEach(p -> savePetitionToUserCalendar(GoogleCalendarEventMapper.fromPetitionToEvent(p), GoogleCalendarEventMapper.fromPetitionToReminderEvent(p), userId));
     }
 
     @Override
     public void firstUploadVotingToUserCalendar(long userId) {
         List<Voting> myVoting = votingService.findAllByUser(userId);
-        myVoting.forEach(v -> saveVotingToUserCalendar(v, userId));
+        myVoting.forEach(v -> saveVotingToUserCalendar(GoogleCalendarEventMapper.fromVotingToEvent(v), GoogleCalendarEventMapper.fromVotingToReminderEvent(v), userId));
     }
 
     @Override
-    public Event[] savePetitionToUserCalendar(Petition petition, long userId) {
+    public Event[] savePetitionToUserCalendar(Event petitionEvent, Event petitionReminderEvent, long userId) {
         Calendar service = getCalendarService(userId);
         UserCalendar userCalendar = userCalendarService.findByUser(userId);
-        User user = userService.findById(userId);
         Event[] result = new Event[2];
         try {
-            result[0] = service.events().insert(userCalendar.getCalendarId(), GoogleCalendarEventMapper.fromPetitionToEvent(petition)).execute();
-            result[1] = service.events().insert(userCalendar.getCalendarId(), GoogleCalendarEventMapper.fromPetitionToReminderEvent(petition)).execute();
+            result[1] = service.events().insert(userCalendar.getCalendarId(), petitionEvent).execute();
+            result[0] = service.events().insert(userCalendar.getCalendarId(), petitionReminderEvent).execute();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        userPetitionEventService.create(user, petition, result[0].getId(), result[1].getId());
         return result;
     }
 
     @Override
-    public Event[] saveVotingToUserCalendar(Voting voting, long userId) {
+    public Event[] saveVotingToUserCalendar(Event votingEvent, Event votingReminderEvent, long userId) {
         Calendar service = getCalendarService(userId);
         UserCalendar userCalendar = userCalendarService.findByUser(userId);
-        User user = userService.findById(userId);
+
         Event[] result = new Event[2];
         try {
-            result[0] = service.events().insert(userCalendar.getCalendarId(), GoogleCalendarEventMapper.fromVotingToEvent(voting)).execute();
-            result[1] = service.events().insert(userCalendar.getCalendarId(), GoogleCalendarEventMapper.fromVotingToReminderEvent(voting)).execute();
+            result[1] = service.events().insert(userCalendar.getCalendarId(), votingEvent).execute();
+            result[0] = service.events().insert(userCalendar.getCalendarId(), votingReminderEvent).execute();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        userVotingEventService.create(user, voting, result[0].getId(), result[1].getId());
         return result;
     }
 
@@ -136,14 +133,14 @@ public class GoogleCalendarServiceImpl implements GoogleCalendarService {
     }
 
     @Override
-    public Event[] updatePetitionInUserCalendar(Petition petition, long userId) {
+    public Event[] updatePetitionInUserCalendar(Event petitionEvent, Event petitionReminderEvent, long petitionId, long userId) {
         Calendar service = getCalendarService(userId);
-        UserPetitionEvent userPetitionEvent = userPetitionEventService.findByUserAndPetition(userId, petition.getId());
+        UserPetitionEvent userPetitionEvent = userPetitionEventService.findByUserAndPetition(userId, petitionId);
         UserCalendar userCalendar = userCalendarService.findByUser(userId);
         Event[] result = new Event[2];
         try {
-            result[0] = service.events().update(userCalendar.getCalendarId(), userPetitionEvent.getEventId(), GoogleCalendarEventMapper.fromPetitionToEvent(petition)).execute();
-            result[1] = service.events().update(userCalendar.getCalendarId(), userPetitionEvent.getReminderEventId(), GoogleCalendarEventMapper.fromPetitionToReminderEvent(petition)).execute();
+            result[0] = service.events().update(userCalendar.getCalendarId(), userPetitionEvent.getEventId(), petitionEvent).execute();
+            result[1] = service.events().update(userCalendar.getCalendarId(), userPetitionEvent.getReminderEventId(), petitionReminderEvent).execute();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -151,14 +148,14 @@ public class GoogleCalendarServiceImpl implements GoogleCalendarService {
     }
 
     @Override
-    public Event[] updateVotingInUserCalendar(Voting voting, long userId) {
+    public Event[] updateVotingInUserCalendar(Event votingEvent, Event votingReminderEvent, long votingId, long userId) {
         Calendar service = getCalendarService(userId);
-        UserVotingEvent userVotingEvent = userVotingEventService.findByUserAndVoting(userId, voting.getId());
+        UserVotingEvent userVotingEvent = userVotingEventService.findByUserAndVoting(userId, votingId);
         UserCalendar userCalendar = userCalendarService.findByUser(userId);
         Event[] result = new Event[2];
         try {
-            result[0] = service.events().update(userCalendar.getCalendarId(), userVotingEvent.getEventId(), GoogleCalendarEventMapper.fromVotingToEvent(voting)).execute();
-            result[1] = service.events().update(userCalendar.getCalendarId(), userVotingEvent.getReminderEventId(), GoogleCalendarEventMapper.fromVotingToReminderEvent(voting)).execute();
+            result[0] = service.events().update(userCalendar.getCalendarId(), userVotingEvent.getEventId(), votingEvent).execute();
+            result[1] = service.events().update(userCalendar.getCalendarId(), userVotingEvent.getReminderEventId(), votingReminderEvent).execute();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -208,54 +205,69 @@ public class GoogleCalendarServiceImpl implements GoogleCalendarService {
     }
 
     @Override
-    public Event[] savePetitionToUserCalendar(Petition petition){
+    public void savePetitionToUserCalendar(Petition petition){
         List<User> users = userService.findAllByPetition(petition);
-        Event[] result = new Event[users.size() * 2];
         Event[] events;
-        for(int i = 0; i < users.size(); i++){
-            events = savePetitionToUserCalendar(petition, users.get(i).getId());
-            result[i++] = events[0];
-            result[i] = events[1];
+        Event petitionEvent = GoogleCalendarEventMapper.fromPetitionToEvent(petition);
+        Event petitionReminderEvent = GoogleCalendarEventMapper.fromPetitionToReminderEvent(petition);
+        for(User user : users){
+            events = savePetitionToUserCalendar(petitionEvent, petitionReminderEvent, user.getId());
+            userPetitionEventService.create(user, petition, events[0].getId(), events[1].getId());
         }
-        return result;
     }
 
+
     @Override
-    public Event[] saveVotingToUserCalendar(Voting voting){
+    public void saveVotingToUserCalendar(Voting voting){
         List<User> users = userService.findAllByVoting(voting);
-        Event[] result = new Event[users.size() * 2];
         Event[] events;
-        for(int i = 0; i < users.size(); i++){
-            events = saveVotingToUserCalendar(voting, users.get(i).getId());
-            result[i++] = events[0];
-            result[i] = events[1];
+        Event votingEvent = GoogleCalendarEventMapper.fromVotingToEvent(voting);
+        Event votingReminderEvent = GoogleCalendarEventMapper.fromVotingToReminderEvent(voting);
+        for(User user : users){
+            events = saveVotingToUserCalendar(votingEvent, votingReminderEvent, user.getId());
+            userVotingEventService.create(user, voting, events[0].getId(), events[1].getId());
         }
-        return result;
     }
 
     @Override
-    public Event[] updatePetitionToUserCalendar(Petition petition){
+    public void updatePetitionToUserCalendar(Petition petition){
         List<User> users = userService.findAllByPetition(petition);
-        Event[] result = new Event[users.size() * 2];
-        Event[] events;
-        for(int i = 0; i < users.size(); i++){
-            events = updatePetitionInUserCalendar(petition, users.get(i).getId());
-            result[i++] = events[0];
-            result[i] = events[1];
+        Event petitionEvent = GoogleCalendarEventMapper.fromPetitionToEvent(petition);
+        Event petitionReminderEvent = GoogleCalendarEventMapper.fromPetitionToReminderEvent(petition);
+        long petitionId = petition.getId();
+        for(User user : users){
+            updatePetitionInUserCalendar(petitionEvent, petitionReminderEvent, petitionId, user.getId());
         }
-        return result;
     }
 
     @Override
-    public Event[] updateVotingToUserCalendar(Voting voting){
+    public void updateVotingToUserCalendar(Voting voting){
         List<User> users = userService.findAllByVoting(voting);
-        Event[] result = new Event[users.size() * 2];
-        Event[] events;
-        for(int i = 0; i < users.size(); i++){
-            events = updateVotingInUserCalendar(voting, users.get(i).getId());
-            result[i++] = events[0];
-            result[i] = events[1];
+        Event votingEvent = GoogleCalendarEventMapper.fromVotingToEvent(voting);
+        Event votingReminderEvent = GoogleCalendarEventMapper.fromVotingToReminderEvent(voting);
+        long votingId = voting.getId();
+        for(User user : users){
+            updateVotingInUserCalendar(votingEvent, votingReminderEvent, votingId, user.getId());
         }
-        return result;
+    }
+
+    @Override
+    public void deletePetitionFromUserCalendar(long petitionId) {
+        Petition petition = petitionService.findById(petitionId);
+        List<User> users = userService.findAllByPetition(petition);
+        for(User user : users){
+            deletePetitionFromUserCalendar(petitionId, user.getId());
+            userPetitionEventService.delete(user.getId(), petitionId);
+        }
+    }
+
+    @Override
+    public void deleteVotingFromUserCalendar(long votingId) {
+        Voting voting = votingService.findById(votingId);
+        List<User> users = userService.findAllByVoting(voting);
+        for(User user : users){
+            deleteVotingFromUserCalendar(votingId, user.getId());
+            userVotingEventService.delete(user.getId(), votingId);
+        }
     }
 }

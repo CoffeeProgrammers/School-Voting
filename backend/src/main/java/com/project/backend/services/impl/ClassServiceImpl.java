@@ -21,6 +21,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.project.backend.utils.SpecificationUtil.isValid;
@@ -41,9 +42,15 @@ public class ClassServiceImpl implements ClassService {
     @Override
     public Class create(Class classRequest, List<Long> userIds, long schoolId) {
         log.info("Service: Creating Class {} with users {} for school {}", classRequest.getName(), userIds, schoolId);
+        Set<User> users = userIds.stream().map(userService::findById).collect(Collectors.toSet());
         classRequest.setSchool(schoolService.findById(schoolId));
-        classRequest.setUsers(userIds.stream().map(userService::findById).collect(Collectors.toSet()));
-        return classRepository.save(classRequest);
+        classRequest.setUsers(users);
+        Class clazz = classRepository.save(classRequest);
+        users.stream().forEach(u -> {
+            u.setMyClass(clazz);
+            userService.save(u);
+        });
+        return clazz;
     }
 
     @Override
@@ -55,7 +62,7 @@ public class ClassServiceImpl implements ClassService {
     }
 
     @Override
-    public void deleteBySchool(long schoolId){
+    public void deleteBySchool(long schoolId) {
         log.info("Service: Deleting Class with by school with id {}", schoolId);
         List<Class> classes = classRepository.findAll(ClassSpecification.bySchool(schoolId));
         for (Class clazz : classes) {
@@ -69,7 +76,7 @@ public class ClassServiceImpl implements ClassService {
         Class aClass = findById(id);
         votingService.deleteBy(LevelType.CLASS, id);
         petitionService.deleteBy(LevelType.CLASS, id);
-        if(deleteUsers) {
+        if (deleteUsers) {
             for (User user : aClass.getUsers()) {
                 userDeletionService.delete(user, false);
             }
@@ -89,12 +96,12 @@ public class ClassServiceImpl implements ClassService {
         log.info("Service: Assigning User with id {} to Class with id {}", userIds, classId);
         Class clazz = findById(classId);
         User user;
-        if (userIds.isEmpty()){
+        if (userIds.isEmpty()) {
             return;
         }
-        for(Long userId : userIds) {
+        for (Long userId : userIds) {
             user = userService.findById(userId);
-            if(user.getRole().equals("STUDENT")) {
+            if (user.getRole().equals("STUDENT")) {
                 clazz.getUsers().add(user);
                 userService.assignClassToUser(clazz, user);
             }
@@ -107,12 +114,12 @@ public class ClassServiceImpl implements ClassService {
         log.info("Service: Unassigning User with id {} from Class with id {}", userIds, classId);
         Class clazz = findById(classId);
         User user;
-        if (userIds.isEmpty()){
+        if (userIds.isEmpty()) {
             return;
         }
-        for(Long userId : userIds) {
+        for (Long userId : userIds) {
             user = userService.findById(userId);
-            if(user.getRole().equals("STUDENT")) {
+            if (user.getRole().equals("STUDENT")) {
                 clazz.getUsers().remove(user);
                 userService.unassignClassFromUser(user);
             }

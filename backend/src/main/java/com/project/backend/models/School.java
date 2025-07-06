@@ -11,7 +11,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @ToString(exclude = {"director", "classes"})
-@EqualsAndHashCode
+@EqualsAndHashCode(exclude = {"director", "classes"})
 public class School {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

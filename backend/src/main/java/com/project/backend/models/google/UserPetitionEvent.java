@@ -12,8 +12,8 @@ import java.io.Serializable;
 @Getter
 @Setter
 @NoArgsConstructor
-@ToString
-@EqualsAndHashCode
+@ToString(exclude = {"user", "petition"})
+@EqualsAndHashCode(exclude = {"user", "petition"})
 public class UserPetitionEvent {
 
     @EmbeddedId

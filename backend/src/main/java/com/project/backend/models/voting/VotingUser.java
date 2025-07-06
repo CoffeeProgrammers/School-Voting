@@ -11,8 +11,8 @@ import java.io.Serializable;
 @Getter
 @Setter
 @NoArgsConstructor
-@ToString
-@EqualsAndHashCode
+@ToString(exclude = {"answer"})
+@EqualsAndHashCode(exclude = {"answer"})
 public class VotingUser {
     public VotingUser(Voting voting, User user) {
         VotingUserId votingUserId = new VotingUserId(voting.getId(), user.getId());

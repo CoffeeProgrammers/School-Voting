@@ -14,6 +14,7 @@ import PetitionPage from "./pages/petitions/PetitionPage";
 import ClassPage from "./pages/classes/ClassPage";
 import VotingListPage from "./pages/voting/VotingListPage";
 import VotingPage from "./pages/voting/VotingPage";
+import IntroductionPage from "./pages/introduction/IntroductionPage";
 
 const InitNavigation = ({children}) => {
     const navigate = useNavigate();
@@ -29,6 +30,8 @@ function App() {
 
     const routes = [
         { path: "/", element: <Navigate to="/petitions" replace /> },
+
+        {path: "/introduction", element: <IntroductionPage/>},
 
         {path: "/petitions", element: <PetitionsListPage/>},
         {path: "/petitions/:id", element: <PetitionPage/>},
@@ -50,6 +53,7 @@ function App() {
                     <ThemeProvider theme={theme}>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <Routes>
+                                <Route path={'/introduction'} element={<IntroductionPage/>}/>
                                 {routes.map((route, index) => (
                                     // <Route element={<PrivateRoute/>} key={index}>
                                         <Route

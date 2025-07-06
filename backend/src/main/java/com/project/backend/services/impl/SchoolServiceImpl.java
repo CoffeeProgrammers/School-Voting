@@ -7,7 +7,6 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -37,7 +36,6 @@ public class SchoolServiceImpl implements SchoolService {
         return schoolRepository.save(schoolToUpdate);
     }
 
-    @Transactional
     @Override
     public void delete(long schoolId){
        log.info("School delete by id {}", schoolId);

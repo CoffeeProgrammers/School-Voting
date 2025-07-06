@@ -38,15 +38,6 @@ public class PetitionSpecification {
         };
     }
 
-    public static Specification<Petition> byUserInSchool(User user) {
-        long schoolId = user.getSchool().getId();
-        log.info("Building specification: byUserInSchool(schoolId = {})", schoolId);
-        return (root, query, cb) -> cb.and(
-                cb.equal(root.get("targetId"), schoolId),
-                cb.equal(root.get("levelType"), LevelType.SCHOOL)
-        );
-    }
-
     public static Specification<Petition> byUserInClass(User user) {
         long classId = user.getMyClass().getId();
         log.info("Building specification: byUserInClass(classId = {})", classId);
@@ -81,7 +72,7 @@ public class PetitionSpecification {
         return (root, query, cb) -> cb.or(
                 cb.and(
                         cb.equal(root.get("levelType"), LevelType.SCHOOL),
-                        cb.equal(root.get("creator").get("school").get("id"), schoolId)
+                        cb.equal(root.get("targetId"), schoolId)
                 ),
                 cb.and(
                         cb.equal(root.get("levelType"), LevelType.CLASS),

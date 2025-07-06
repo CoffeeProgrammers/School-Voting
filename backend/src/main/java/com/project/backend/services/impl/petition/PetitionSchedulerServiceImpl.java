@@ -22,7 +22,7 @@ public class PetitionSchedulerServiceImpl implements PetitionSchedulerService {
     private final PetitionRepository petitionRepository;
     private final PetitionService petitionService;
 
-    @Scheduled(cron = "1 0 0 * * *")
+    @Scheduled(cron = "10 0 0 * * *")
     @Transactional
     public void checkAndUpdateExpiredPetitions() {
         log.info("Scheduler: Checking expired petitions");

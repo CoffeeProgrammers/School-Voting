@@ -55,7 +55,7 @@ public class Petition {
     }
     public void decrementCount() {
         log.info("Model: Decrement count {} of petition {}", count, this.id);
-        ++this.count;
+        --this.count;
     }
     public boolean now(){
         return LocalDateTime.now().isBefore(this.endTime);

@@ -1,7 +1,10 @@
 package com.project.backend.services.impl;
 
+import com.project.backend.models.School;
 import com.project.backend.models.User;
 import com.project.backend.repositories.repos.UserRepository;
+import com.project.backend.repositories.specification.UserSpecification;
+import com.project.backend.services.inter.SchoolService;
 import com.project.backend.services.inter.UserDeletionService;
 import com.project.backend.services.inter.google.GoogleCalendarService;
 import com.project.backend.services.inter.petition.CommentService;
@@ -12,7 +15,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.keycloak.admin.client.resource.RealmResource;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -26,20 +30,28 @@ public class UserDeletionServiceImpl implements UserDeletionService {
     private final PetitionService petitionService;
     private final VotingService votingService;
     private final VotingUserService votingUserService;
+    private final SchoolService schoolService;
 
-    @Transactional
     @Override
     public void delete(User user, boolean isDeleteDirector) {
+        log.info("Service: Deleting Classes with id {}", user.getId());
         long userId = user.getId();
 
         if (!isDeleteDirector && "DIRECTOR".equals(user.getRole())) {
             throw new IllegalArgumentException("Cannot delete director");
+        } else {
+            School school = user.getSchool();
+            school.setDirector(null);
+            schoolService.save(school);
+
         }
         if ("DELETED".equals(user.getRole())) {
             throw new IllegalArgumentException("Cannot delete deleted");
         }
 
-        googleCalendarService.deleteCalendarAndRevoke(user);
+        if (user.getGoogleCalendarCredential() != null) {
+            googleCalendarService.deleteCalendarAndRevoke(user);
+        }
 
         commentService.deleteingUser(userId);
         petitionService.deletingUser(userId);
@@ -48,9 +60,18 @@ public class UserDeletionServiceImpl implements UserDeletionService {
 
         realmResource.users().delete(user.getKeycloakUserId());
 
-        userRepository.delete(user);
+        userRepository.deleteById(user.getId());
 
         log.info("Service: Deleted user with id {}", userId);
     }
+
+    @Override
+    public void deleteAllBySchool(long schoolId) {
+        List<User> list = userRepository.findAll(UserSpecification.bySchool(schoolId));
+        for (User user : list) {
+            delete(user, true);
+        }
+    }
+
 
 }

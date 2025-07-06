@@ -98,7 +98,6 @@ public class VotingServiceImpl implements VotingService {
         return votingRepository.save(oldVoting);
     }
 
-    @Transactional
     @Override
     public void delete(long id) {
         log.info("Service: Deleting voting with id {}", id);

@@ -2,6 +2,7 @@ package com.project.backend.repositories.specification;
 
 import com.project.backend.models.enums.LevelType;
 import com.project.backend.models.voting.Voting;
+import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Predicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -76,18 +77,22 @@ public class VotingSpecification {
         return (root, query, cb) ->
                 cb.lessThanOrEqualTo(root.get("endTime"), now);
     }
-
     public static Specification<Voting> isNotVoted(long userId) {
         log.info("Building specification: isNotVoted(userId = {})", userId);
-        return (root, query, cb) ->
-                cb.isNull(root.join("votingUsers").get("answer"));
+        return (root, query, cb) -> {
+            query.distinct(true);
+            return cb.isNull(root.join("votingUsers", JoinType.LEFT).get("answer"));
+        };
     }
 
     public static Specification<Voting> isVoted(long userId) {
         log.info("Building specification: isVoted(userId = {})", userId);
-        return (root, query, cb) ->
-                cb.isNotNull(root.join("votingUsers").get("answer"));
+        return (root, query, cb) -> {
+            query.distinct(true);
+            return cb.isNotNull(root.join("votingUsers", JoinType.LEFT).get("answer"));
+        };
     }
+
 
     public static Specification<Voting> byClass(long classId) {
         log.info("Building specification: byClass(classId = {}) [TODO]", classId);

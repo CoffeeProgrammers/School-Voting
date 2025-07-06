@@ -56,7 +56,6 @@ public class PetitionServiceImpl implements PetitionService {
         return petitionRepository.save(petition);
     }
 
-    @Transactional
     @Override
     public void delete(long id) {
         log.info("Service: Deleting a petition {}", id);

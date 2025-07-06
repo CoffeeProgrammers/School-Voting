@@ -47,7 +47,8 @@ public interface UserService {
 
     boolean isNotExistByEmail(String email);
 
-    long countAllBySchool(long schoolId);
+    long countAllBySchoolAndRole(long schoolId, String role);
+
     long countAllByClass(long classId);
 
     void assignClassToUser(Class clazz, User user);

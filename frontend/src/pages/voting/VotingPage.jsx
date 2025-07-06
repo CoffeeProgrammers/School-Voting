@@ -14,8 +14,8 @@ import HowToVoteIcon from "@mui/icons-material/HowToVote";
 
 const voting = {
     "id": 1,
-    "name": "Poll on Environmental Policy",
-    "description": "lorem ipsum dolor sit amet, consectetur adipiscing elit lorem ipsum dolor sit amet, consectetur adipiscing elitlorem ipsum dolor sit amet, consectetur adipiscing elit lorem ipsum dolor sit amet, consectetur adipiscing elit lorem ipsum dolor sit amet, consectetur adipiscing elitvlorem ipsum dolor sit amet, consectetur adipiscing elit lorem ipsum dolor sit amet, consectetur adipiscing elitvlorem ipsum dolor sit amet, consectetur adipiscing elitvlorem ipsum dolor sit amet, consectetur adipiscing elitvlorem ipsum dolor sit amet, consectetur adipiscing elitvlorem ipsum dolor sit amet, consectetur adipiscing elitvlorem ipsum dolor sit amet, consectetur adipiscing elitlorem ipsum dolor sit amet, consectetur adipiscing elitvlorem ipsum dolor sit amet, consectetur adipiscing elitv",
+    "name": "Vote: Choosing the Theme for Our Annual School Ball!",
+    "description": "It's time to pick an unforgettable theme for our Annual School Ball! Your choice will set the atmosphere, decorations, and dress code for the celebration. Vote wisely, as your voice will help make this year's ball the most spectacular yet!",
     "levelType": "NATIONAL",
     "startTime": "2025-06-01T08:00:00Z",
     "endTime": "2026-06-05T20:00:00Z",
@@ -27,9 +27,9 @@ const voting = {
     },
     "statistics": {
         "answers": [
-            {"id": 1, "name": "Yes", "count": 900},
-            {"id": 2, "name": "No", "count": 500},
-            {"id": 3, "name": "Abstain", "count": 100},
+            {"id": 1, "name": "Galactic Night", "count": 900},
+            {"id": 2, "name": "Masquerade Ball", "count": 500},
+            {"id": 3, "name": "80s Throwback", "count": 100},
             {"id": 4, "name": "Need more info", "count": 50}
         ],
         "countAll": 1800,

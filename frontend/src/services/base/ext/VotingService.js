@@ -47,11 +47,12 @@ class VotingService extends BaseService {
         return this.get("/createdByMe", {params});
     }
 
-    getVotingForDirector({page, size, name = null}) {
+    getVotingForDirector({page, size, name = null, now = null}) {
         const params = {
             page,
             size,
             ...(name && {name}),
+            ...(now !== null && {now}),
         };
         return this.get("/forDirector", {params});
     }

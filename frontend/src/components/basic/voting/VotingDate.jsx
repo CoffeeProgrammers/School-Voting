@@ -19,8 +19,6 @@ const VotingDate = ({startDate, endDate}) => {
         );
     }
 
-    console.log(now + " " + start + " " + end)
-
     if (now >= start && now <= end) {
         const daysLeft = Utils.getDaysLeft(endDate);
         return (

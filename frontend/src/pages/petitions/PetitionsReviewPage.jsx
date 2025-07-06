@@ -8,6 +8,7 @@ import PetitionService from "../../services/base/ext/PetitionService";
 import Loading from "../../components/layouts/Loading";
 import Search from "../../components/layouts/list/Search";
 import PetitionList from "../../components/basic/petition/PetitionList";
+import PaginationBox from "../../components/layouts/list/PaginationBox";
 
 const PetitionsReviewPage = () => {
     const {showError} = useError()
@@ -15,7 +16,6 @@ const PetitionsReviewPage = () => {
     const [petitions, setPetitions] = useState([])
 
     const [searchName, setSearchName] = useState(null)
-    const [statusFilter, setStatusFilter] = useState(null)
 
     const [page, setPage] = useState(1);
     const [pagesCount, setPagesCount] = useState(1)
@@ -24,11 +24,16 @@ const PetitionsReviewPage = () => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
+        window.scrollTo({top: 0, behavior: 'smooth'});
+    }, [page]);
+
+    useEffect(() => {
         setPage(1);
-    }, [searchName, statusFilter]);
+    }, [searchName]);
 
     useEffect(() => {
         const fetchData = async () => {
+            setLoading(true);
             try {
                 const response = await PetitionService.getPetitionsForDirector({
                     page: page - 1,
@@ -37,8 +42,6 @@ const PetitionsReviewPage = () => {
                     status: 'WAITING_FOR_CONSIDERATION'
                 });
 
-                console.log("petitions:")
-                console.log(response)
 
                 setPetitions(response.content)
                 setPagesCount(response.totalPages)
@@ -50,11 +53,7 @@ const PetitionsReviewPage = () => {
         };
 
         fetchData();
-    }, [searchName, statusFilter, page]);
-
-    if (loading) {
-        return <Loading/>;
-    }
+    }, [searchName, page]);
 
     if (error) {
         return <Typography color={"error"}>Error: {error.message}</Typography>;
@@ -75,8 +74,19 @@ const PetitionsReviewPage = () => {
             </Stack>
             <Divider sx={{mt: 0.75, mb: 0.75}}/>
 
-            <PetitionList petitions={petitions}/>
+            {loading ? <Loading/> : (<>
+                <PetitionList petitions={petitions}/>
 
+                {pagesCount > 1 && (
+                    <Box sx={{marginTop: "auto"}}>
+                        <PaginationBox
+                            page={page}
+                            pagesCount={pagesCount}
+                            setPage={setPage}
+                        />
+                    </Box>
+                )}
+            </>)}
 
         </Box>
     );

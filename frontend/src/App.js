@@ -33,8 +33,10 @@ const InitNavigation = ({children}) => {
 
 function App() {
     const role = Cookies.get('role');
-    const isStudent = role === 'student';
-    const isTeacher = role === 'teacher';
+    const isStudent = role === 'STUDENT';
+    const isTeacher = role === 'TEACHER';
+    const isDirector = role === 'DIRECTOR';
+
 
     const routes = [
         {path: "/", element: <Navigate to="/petitions" replace/>},
@@ -46,7 +48,7 @@ function App() {
         {path: "/voting", element: <VotingListPage/>},
         {path: "/voting/:id", element: <VotingPage/>},
 
-        (!isStudent && !isTeacher) && {path: "/petitions-review", element: <PetitionsReviewPage/>},
+        isDirector && {path: "/petitions-review", element: <PetitionsReviewPage/>},
 
         {path: "/school", element: <SchoolPage/>},
         !isStudent && {path: "/school/class/:id", element: <ClassPage/>},

@@ -5,7 +5,7 @@ const PaginationBox = (
         pagesCount,
         page,
         setPage,
-        size = 'large',
+        size = 'medium',
         siblingCount = 1,
         sx = {}
     }

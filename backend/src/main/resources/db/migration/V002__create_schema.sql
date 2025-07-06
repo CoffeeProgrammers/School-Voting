@@ -49,6 +49,7 @@ CREATE TABLE "votings"
     "end_time"    TIMESTAMP    NOT NULL,
     "creator_id"  BIGINT       NOT NULL,
     "count_all"   BIGINT,
+    "target_id"   BIGINT,
     FOREIGN KEY ("creator_id") REFERENCES "users" ("id") ON DELETE SET NULL
 );
 

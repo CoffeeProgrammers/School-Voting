@@ -8,11 +8,11 @@ UPDATE users SET class_id = 1 WHERE id = 10;
 UPDATE users SET class_id = 2 WHERE id = 11;
 UPDATE users SET class_id = 2 WHERE id = 12;
 
-INSERT INTO votings (name, description, level_type, start_time, end_time, creator_id, count_all)
+INSERT INTO votings (name, description, level_type, start_time, end_time, creator_id, count_all, target_id)
 VALUES ('Some', 'More', 2, '1975-11-10 00:00:00', '2025-11-10 00:00:00',
-        (SELECT id FROM users WHERE email = 'maria@example.com'), 0),
+        (SELECT id FROM users WHERE email = 'maria@example.com'), 0, 1),
        ('New', 'New', 1, '1995-12-10 00:00:00', '2025-11-10 00:00:00',
-        (SELECT id FROM users WHERE email = 'bulakovskijvladislav@gmail.com'), 0);
+        (SELECT id FROM users WHERE email = 'bulakovskijvladislav@gmail.com'), 0,1);
 
 INSERT INTO answers (name, voting_id, count)
 VALUES ('Варіант A', (SELECT id FROM votings WHERE name = 'Some' LIMIT 1), 0),

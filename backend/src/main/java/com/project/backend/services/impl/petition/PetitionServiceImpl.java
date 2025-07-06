@@ -162,8 +162,8 @@ public class PetitionServiceImpl implements PetitionService {
         User user = userService.findById(userId);
         Specification<Petition> petitionSpecification = createSpecification(name, status);
         Specification<Petition> fullSpecification = petitionSpecification == null ?
-                PetitionSpecification.byUserInClass(user).and(PetitionSpecification.byUserInSchool(user)) :
-                petitionSpecification.and(PetitionSpecification.byUserInClass(user)).and(PetitionSpecification.byUserInSchool(user));
+                PetitionSpecification.byUser(user) :
+                petitionSpecification.and(PetitionSpecification.byUser(user));
 
         return petitionRepository.findAll(
                 fullSpecification,

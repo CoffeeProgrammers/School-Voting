@@ -30,10 +30,6 @@ const PetitionListBox = ({petition}) => {
                 borderColor: "#c6c5c5",
                 boxShadow: "0px 0px 5px rgba(0, 0, 0, 0.2)",
             },
-            '&:last-child': {
-                borderBottom: 'none',
-
-            },
             '&:first-of-type': {
                 borderTop: '1px solid #ddd',
             },

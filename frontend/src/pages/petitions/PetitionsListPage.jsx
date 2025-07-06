@@ -135,12 +135,12 @@ const PetitionsListPage = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await PetitionService.getMyPetitions(
-                    page - 1,
-                    15,
-                    searchName,
-                    statusFilter
-                );
+                const response = await PetitionService.getMyPetitions({
+                    page: page - 1,
+                    size: 15,
+                    name: searchName,
+                    status: statusFilter
+                });
 
                 console.log("petitions:")
                 console.log(response)

@@ -19,7 +19,7 @@ class PetitionService extends BaseService {
         return this.get(`/${petitionId}`);
     }
 
-    getMyPetitions(page, size, name = null, status = null) {
+    getMyPetitions({page, size, name = null, status = null}) {
         const params = {page, size, ...(name && {name}), ...(status && {status})};
         return this.get("/my", {params});
     }

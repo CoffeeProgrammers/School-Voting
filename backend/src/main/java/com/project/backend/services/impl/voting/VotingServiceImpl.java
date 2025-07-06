@@ -45,6 +45,9 @@ public class VotingServiceImpl implements VotingService {
         }
         User creator = userService.findById(userId);
         votingRequest.setCreator(creator);
+        votingRequest.setTargetId(
+                votingRequest.getLevelType().equals(LevelType.SCHOOL) ? targetIds.get(0) :
+                        votingRequest.getLevelType().equals(LevelType.CLASS) ? targetIds.get(0) : -1);
         Voting voting = votingRepository.save(votingRequest);
         answerService.create(answer, voting);
         Stream<User> users = null;
@@ -126,6 +129,11 @@ public class VotingServiceImpl implements VotingService {
     @Override
     public List<Voting> findAllByUserAndLevelClass(long userId) {
         return votingRepository.findAll(VotingSpecification.byUserInClass(userId));
+    }
+
+    @Override
+    public List<Voting> findAllByClass(long classId){
+        return votingRepository.findAll(VotingSpecification.byClass(classId));
     }
 
     @Override

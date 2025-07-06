@@ -91,6 +91,8 @@ public class VotingSpecification {
 
     public static Specification<Voting> byClass(long classId) {
         log.info("Building specification: byClass(classId = {}) [TODO]", classId);
-        return (root, query, cb) -> null; // TODO
+        return (root, query, cb) ->
+                cb.and(cb.equal(root.get("levelType"), LevelType.CLASS),
+                        cb.equal(root.get("targetId"), classId));
     }
 }

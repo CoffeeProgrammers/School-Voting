@@ -34,6 +34,16 @@ public class VotingUserServiceImpl implements VotingUserService {
     }
 
     @Override
+    public List<VotingUser> create(List<Voting> voting, User user) {
+        log.info("Service: Creating voting users for users");
+        List<VotingUser> result = new ArrayList<>();
+        voting.forEach(v -> {
+            result.add(new VotingUser(v, user));
+        });
+        return votingUserRepository.saveAll(result);
+    }
+
+    @Override
     public VotingUser update(Voting voting, User user, Answer answer) {
         log.info("Service: Updating voting {} users for user {} with answer {}", voting.getId(), user.getId(), answer.getId());
         VotingUser votingUser = findById(voting.getId(), user.getId());

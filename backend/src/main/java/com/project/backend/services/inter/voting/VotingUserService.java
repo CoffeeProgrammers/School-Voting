@@ -9,6 +9,9 @@ import java.util.List;
 
 public interface VotingUserService {
     List<VotingUser> create(Voting voting, List<User> user);
+
+    List<VotingUser> create(List<Voting> voting, User user);
+
     VotingUser update(Voting voting, User user, Answer answer);
     VotingUser findById(long votingId, long userId);
     boolean existsById(long votingId, long userId);

@@ -13,6 +13,7 @@ import com.project.backend.services.inter.UserService;
 import com.project.backend.services.inter.google.GoogleCalendarCredentialService;
 import com.project.backend.services.inter.google.GoogleCalendarService;
 import com.project.backend.services.inter.petition.PetitionService;
+import com.project.backend.services.inter.voting.VotingService;
 import com.project.backend.services.inter.voting.VotingUserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +36,7 @@ public class ClassController {
     private final ClassMapper classMapper;
     private final VotingUserService votingUserService;
     private final PetitionService petitionService;
+    private final VotingService votingService;
     private final UserService userService;
     private final GoogleCalendarService googleCalendarService;
     private final GoogleCalendarCredentialService googleCalendarCredentialService;
@@ -121,9 +123,9 @@ public class ClassController {
         log.info("Controller: Assigning users");
         for(Long userId : userIds) {
             if(googleCalendarCredentialService.existsByUserId(userId)) {
+                votingUserService.create(votingService.findAllByClass(classId), userService.findById(userId));
                 googleCalendarService.saveAllClassPetitionsAndVotingsToUsers(userId);
             }
-
         }
         classService.assignUserToClass(classId, userIds);
     }

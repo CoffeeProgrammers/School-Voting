@@ -34,6 +34,7 @@ public class Voting {
     private User creator;
     @OneToMany(mappedBy = "voting")
     private Set<VotingUser> votingUsers = new HashSet<>();
+    private long targetId;
 
     public boolean now(){
         return LocalDateTime.now().isAfter(this.startTime) && LocalDateTime.now().isBefore(this.endTime);

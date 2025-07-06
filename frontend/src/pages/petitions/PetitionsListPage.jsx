@@ -5,7 +5,7 @@ import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 import theme from "../../assets/theme";
 import Box from "@mui/material/Box";
-import PetitionListBox from "../../components/basic/petition/PetitionListBox";
+import PetitionList from "../../components/basic/petition/PetitionList";
 
 const SCHOOL_PETITIONS = [
     {
@@ -157,13 +157,7 @@ const PetitionsListPage = () => {
             </Stack>
             <Divider sx={{mb: 0.75}}/>
 
-            <Stack direction="column">
-                {SCHOOL_PETITIONS.map((petition) => (
-                    <Box key={petition.id}>
-                        <PetitionListBox petition={petition}/>
-                    </Box>
-                ))}
-            </Stack>
+            <PetitionList petitions={SCHOOL_PETITIONS}/>
         </Box>
     );
 };

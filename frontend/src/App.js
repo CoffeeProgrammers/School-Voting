@@ -17,6 +17,7 @@ import SchoolPage from "./pages/school/SchoolPage";
 import ControlPanel from "./pages/control_panel/ControlPanel";
 import Profile from "./pages/user/Profile";
 import PetitionsReviewPage from "./pages/petitions/PetitionsReviewPage";
+import PrivateRoute from "./security/PrivateRoute";
 
 const InitNavigation = ({children}) => {
     const navigate = useNavigate();
@@ -31,7 +32,7 @@ const InitNavigation = ({children}) => {
 function App() {
     const isStudent = false
     const routes = [
-        { path: "/", element: <Navigate to="/petitions" replace /> },
+        {path: "/", element: <Navigate to="/petitions" replace/>},
 
         {path: "/petitions", element: <PetitionsListPage/>},
         {path: "/petitions/:id", element: <PetitionPage/>},
@@ -49,7 +50,7 @@ function App() {
 
         {path: "/profile", element: <Profile/>},
 
-        {path: "*", element:<NotFoundPage/>},
+        {path: "*", element: <NotFoundPage/>},
 
     ];
 
@@ -61,12 +62,12 @@ function App() {
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <Routes>
                                 {routes.map((route, index) => (
-                                    // <Route element={<PrivateRoute/>} key={index}>
+                                    <Route element={<PrivateRoute/>} key={index}>
                                         <Route
                                             path={route.path}
                                             element={<PageContainer>{route.element}</PageContainer>}
                                         />
-                                    // </Route>
+                                    </Route>
                                 ))}
                             </Routes>
                         </LocalizationProvider>

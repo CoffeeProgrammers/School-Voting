@@ -152,6 +152,7 @@ public class PetitionServiceImpl implements PetitionService {
 
     @Override
     public List<Petition> findAllMy(long userId) {
+        log.info("Service: Finding all list of petitions by user {}", userId);
         return petitionRepository.findAll(PetitionSpecification.byUser(userService.findById(userId)));
     }
 
@@ -214,6 +215,7 @@ public class PetitionServiceImpl implements PetitionService {
 
     @Override
     public void deleteVoteByUser(long userId) {
+        log.info("Service: Deleting vote by user {}", userId);
         petitionRepository.saveAll(
                 petitionRepository.findAll(
                                 PetitionSpecification.byUserWithVote(userService.findById(userId)))
@@ -228,11 +230,13 @@ public class PetitionServiceImpl implements PetitionService {
 
     @Override
     public List<Petition> findAllByUserAndLevelClass(long userId){
+        log.info("Service: Finding all petitions by user {}", userId);
         return petitionRepository.findAll(PetitionSpecification.byUserInClass(userService.findById(userId)));
     }
 
     @Override
     public List<Petition> findAllByClass(long classId){
+        log.info("Service: Finding all petitions by class {}", classId);
         return petitionRepository.findAll(PetitionSpecification.byClass(classId));
     }
 

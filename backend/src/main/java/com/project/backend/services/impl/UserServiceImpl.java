@@ -124,7 +124,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updateUser(User newUser, long userId) {
-        log.info("Service: Updating user with id {}", userId);
+        log.info("Service: Updating user with keycloak id {}", userId);
 
         User userToUpdate = findById(userId);
         checkForDeletedUser(userToUpdate);

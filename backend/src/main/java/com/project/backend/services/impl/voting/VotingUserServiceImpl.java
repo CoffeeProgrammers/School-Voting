@@ -80,6 +80,7 @@ public class VotingUserServiceImpl implements VotingUserService {
     @Transactional
     @Override
     public void deleteWithUser(long userId) {
+        log.info("Service: Deleting voting user with user id {}", userId);
         List<VotingUser> votingUsers = votingUserRepository.findAllByUser_Id(userId);
         if (votingUsers.isEmpty()) {
             return;

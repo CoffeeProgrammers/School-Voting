@@ -1,7 +1,6 @@
 package com.project.backend.repositories.specification;
 
 import com.project.backend.models.User;
-import com.project.backend.models.petition.Petition;
 import com.project.backend.models.voting.Voting;
 import com.project.backend.models.voting.VotingUser;
 import jakarta.persistence.criteria.Join;
@@ -55,11 +54,11 @@ public class UserSpecification {
         return (root, query, cb) -> cb.notEqual(root.get("id"), userId);
     }
 
-    public static Specification<User> notIncludeDeleted() {
-        String emailOfDeletedUser = "!deleted-user!@deleted.com";
-        log.info("Building specification: notIncludeDeleted(email != '{}')", emailOfDeletedUser);
-        return (root, query, cb) -> cb.notEqual(root.get("email"), emailOfDeletedUser);
-    }
+//    public static Specification<User> notIncludeDeleted() {
+//        String emailOfDeletedUser = "!deleted-user!@deleted.com";
+//        log.info("Building specification: notIncludeDeleted(email != '{}')", emailOfDeletedUser);
+//        return (root, query, cb) -> cb.notEqual(root.get("email"), emailOfDeletedUser);
+//    }
 
     public static Specification<User> usersByVotingSortedByAnswer(Long votingId) {
         log.info("Building specification: usersByVotingSortedByAnswer(votingId = {})", votingId);
@@ -83,10 +82,10 @@ public class UserSpecification {
         return (root, query, cb) -> cb.isNotNull(root.get("googleCalendarCredential"));
     }
 
-    public static Specification<User> byPetition(Petition petition) {
-        log.info("Building specification: byPetition(petitionId = {})", petition.getId());
-        return (root, query, cb) -> cb.isMember(petition, root.get("petitions"));
-    }
+//    public static Specification<User> byPetition(Petition petition) {
+//        log.info("Building specification: byPetition(petitionId = {})", petition.getId());
+//        return (root, query, cb) -> cb.isMember(petition, root.get("petitions"));
+//    }
 
     public static Specification<User> byVoting(Voting voting) {
         log.info("Building specification: byVoting(votingId = {})", voting.getId());

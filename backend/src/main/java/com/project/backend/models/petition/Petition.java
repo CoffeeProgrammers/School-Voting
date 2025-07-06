@@ -20,8 +20,8 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
-@ToString(exclude = {"users"})
-@EqualsAndHashCode(exclude = {"creator"})
+@ToString(exclude = {"users", "userPetitionEvents"})
+@EqualsAndHashCode(exclude = {"creator", "userPetitionEvents"})
 public class Petition {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

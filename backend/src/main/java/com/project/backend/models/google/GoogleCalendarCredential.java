@@ -11,8 +11,8 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
-@ToString
-@EqualsAndHashCode
+@ToString(exclude = {"user"})
+@EqualsAndHashCode(exclude = {"user"})
 public class GoogleCalendarCredential {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

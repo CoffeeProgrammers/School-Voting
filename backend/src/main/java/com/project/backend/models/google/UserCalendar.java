@@ -9,8 +9,8 @@ import lombok.*;
 @Getter
 @Setter
 @NoArgsConstructor
-@ToString
-@EqualsAndHashCode
+@ToString(exclude = {"user"})
+@EqualsAndHashCode(exclude = {"user"})
 public class UserCalendar {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

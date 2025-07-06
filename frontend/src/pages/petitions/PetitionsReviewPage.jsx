@@ -2,12 +2,12 @@ import React, {useEffect, useState} from 'react';
 import Divider from "@mui/material/Divider";
 import {Stack} from "@mui/material";
 import Box from "@mui/material/Box";
-import PetitionListBox from "../../components/basic/petition/PetitionListBox";
 import Typography from "@mui/material/Typography";
 import {useError} from "../../contexts/ErrorContext";
 import PetitionService from "../../services/base/ext/PetitionService";
 import Loading from "../../components/layouts/Loading";
 import Search from "../../components/layouts/list/Search";
+import PetitionList from "../../components/basic/petition/PetitionList";
 
 const PetitionsReviewPage = () => {
     const {showError} = useError()
@@ -64,7 +64,7 @@ const PetitionsReviewPage = () => {
         <Box>
             <Stack direction="row"
                    sx={{alignItems: 'center', display: "flex", justifyContent: "space-between", paddingX: '10px',}}>
-                <Typography variant="h6" fontWeight={'bold'}>Petitions</Typography>
+                <Typography variant="h6" fontWeight={'bold'}>Petitions Review</Typography>
 
                 <Search
                     searchQuery={searchName}
@@ -75,13 +75,8 @@ const PetitionsReviewPage = () => {
             </Stack>
             <Divider sx={{mt: 0.75, mb: 0.75}}/>
 
-            <Stack direction="column">
-                {petitions.map((petition) => (
-                    <Box key={petition.id}>
-                        <PetitionListBox petition={petition}/>
-                    </Box>
-                ))}
-            </Stack>
+            <PetitionList petitions={petitions}/>
+
 
         </Box>
     );

@@ -19,6 +19,7 @@ import Profile from "./pages/user/Profile";
 import PetitionsReviewPage from "./pages/petitions/PetitionsReviewPage";
 import PrivateRoute from "./security/PrivateRoute";
 import Callback from "./security/callback/Callback";
+import Cookies from "js-cookie";
 
 const InitNavigation = ({children}) => {
     const navigate = useNavigate();
@@ -31,18 +32,21 @@ const InitNavigation = ({children}) => {
 };
 
 function App() {
-    const isStudent = false
+    const role = Cookies.get('role');
+    const isStudent = role === 'student';
+    const isTeacher = role === 'teacher';
+
     const routes = [
         {path: "/", element: <Navigate to="/petitions" replace/>},
         {path: "/callback", element: <Callback/>},
 
-        {path: "/petitions", element: <PetitionsListPage/>},
-        {path: "/petitions/:id", element: <PetitionPage/>},
+        !isTeacher && {path: "/petitions", element: <PetitionsListPage/>},
+        !isTeacher && {path: "/petitions/:id", element: <PetitionPage/>},
 
         {path: "/voting", element: <VotingListPage/>},
         {path: "/voting/:id", element: <VotingPage/>},
 
-        {path: "/petitions-review", element: <PetitionsReviewPage/>},
+        (!isStudent && !isTeacher) && {path: "/petitions-review", element: <PetitionsReviewPage/>},
 
         {path: "/school", element: <SchoolPage/>},
         !isStudent && {path: "/school/class/:id", element: <ClassPage/>},

@@ -9,6 +9,8 @@ import PetitionList from "../../components/basic/petition/PetitionList";
 import {useError} from "../../contexts/ErrorContext";
 import PetitionService from "../../services/base/ext/PetitionService";
 import Loading from "../../components/layouts/Loading";
+import Cookies from "js-cookie";
+import PaginationBox from "../../components/layouts/list/PaginationBox";
 
 const SCHOOL_PETITIONS = [
     {
@@ -117,6 +119,8 @@ const SCHOOL_PETITIONS = [
 const PetitionsListPage = () => {
     const {showError} = useError()
 
+    const role = Cookies.get('role')
+
     const [petitions, setPetitions] = useState([])
 
     const [searchName, setSearchName] = useState(null)
@@ -135,13 +139,21 @@ const PetitionsListPage = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                // TODO: getPetitionsForDirector
-                const response = await PetitionService.getMyPetitions({
-                    page: page - 1,
-                    size: 15,
-                    name: searchName,
-                    status: statusFilter
-                });
+                const response = role === 'STUDENT' ? (
+                    await PetitionService.getMyPetitions({
+                        page: page - 1,
+                        size: 15,
+                        name: searchName,
+                        status: statusFilter
+                    })
+                ) : (
+                    await PetitionService.getPetitionsForDirector({
+                        page: page - 1,
+                        size: 10,
+                        name: searchName,
+                        status: statusFilter
+                    })
+                )
 
                 console.log("petitions:")
                 console.log(response)
@@ -180,7 +192,7 @@ const PetitionsListPage = () => {
         <Box>
             <Stack direction="row"
                    sx={{alignItems: 'center', display: "flex", justifyContent: "space-between", paddingX: '10px',}}>
-                <Typography variant="h6" fontWeight={'bold'}>Petitions Review</Typography>
+                <Typography variant="h6" fontWeight={'bold'}>Petitions</Typography>
                 <Box sx={{alignItems: 'center', display: "flex", justifyContent: "space-between"}} gap={0.25}>
                     <Search
                         searchQuery={searchName}
@@ -213,6 +225,16 @@ const PetitionsListPage = () => {
             <Divider sx={{mb: 0.75}}/>
 
             <PetitionList petitions={petitions}/>
+
+            {pagesCount > 1 && (
+                <Box sx={{marginTop: "auto"}}>
+                    <PaginationBox
+                        page={page}
+                        pagesCount={pagesCount}
+                        setPage={setPage}
+                    />
+                </Box>
+            )}
         </Box>
     );
 };

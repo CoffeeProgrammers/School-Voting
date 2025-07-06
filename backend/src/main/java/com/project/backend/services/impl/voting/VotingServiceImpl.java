@@ -129,11 +129,6 @@ public class VotingServiceImpl implements VotingService {
     }
 
     @Override
-    public List<Voting> findAllByClass(long classId) {
-        return votingRepository.findAll(VotingSpecification.byClass(classId));
-    }
-
-    @Override
     public Page<Voting> findAllByUser(
             long userId, String name, Boolean now, Boolean isNotVoted, int page, int size) {
         log.info("Service: Finding all votings by user {}", userId);

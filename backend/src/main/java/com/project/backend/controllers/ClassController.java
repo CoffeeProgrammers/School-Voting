@@ -119,6 +119,12 @@ public class ClassController {
                             @RequestBody List<Long> userIds,
                             Authentication auth) {
         log.info("Controller: Assigning users");
+        for(Long userId : userIds) {
+            if(googleCalendarCredentialService.existsByUserId(userId)) {
+                googleCalendarService.saveAllClassPetitionsAndVotingsToUsers(userId);
+            }
+
+        }
         classService.assignUserToClass(classId, userIds);
     }
 
@@ -131,7 +137,9 @@ public class ClassController {
                               Authentication auth) {
         log.info("Controller: Unassigning users");
         for(Long userId : userIds) {
-            googleCalendarService.deleteAllClassPetitionsAndVotingsFromUsers(userId);
+            if(googleCalendarCredentialService.existsByUserId(userId)) {
+                googleCalendarService.deleteAllClassPetitionsAndVotingsFromUsers(userId);
+            }
             votingUserService.deleteWithUser(userId);
             petitionService.deleteVoteByUser(userId);
         }

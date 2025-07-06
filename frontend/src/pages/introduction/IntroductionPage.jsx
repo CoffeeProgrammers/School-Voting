@@ -14,6 +14,7 @@ import BalanceIcon from '@mui/icons-material/Balance';
 import HomeWorkIcon from '@mui/icons-material/HomeWork';
 import VotingPageImage from '../../images/voting1.png';
 import VotingStatistickImage from '../../images/voting2.png'
+import SchoolPageImage from '../../images/school page.png'
 
 interface
 TabPanelProps
@@ -328,90 +329,49 @@ const IntroductionPage = () => {
                             </Box>
                         </Box>
                         <Box sx={{position: "relative"}}>
-                            <img src={VotingPageImage} alt="" width="700px" style={{position: "absolute", right: '0', top: "0"}}/>
+                            <img src={VotingPageImage} alt="" width="700px"
+                                 style={{position: "absolute", right: '0', top: "0"}}/>
                             <img src={VotingStatistickImage} width='276px'
                                  style={{position: "absolute", right: '490px', top: "200px"}} alt=""/>
                         </Box>
                     </Box>
                 </CustomTabPanel>
                 <CustomTabPanel value={value} index={2}>
-                    <Box sx={{display: 'grid', gridTemplateColumns: "2fr 1fr", padding: "30px", bgcolor: "#F8F8F8"}}>
-                        <Box sx={{position: "relative"}}>
-                            <img src={PetitionPageImage} alt="" width="700px"/>
-                            <img src={PetitionStatisticImage}
-                                 style={{position: "absolute", left: '490px', top: "134px"}} alt=""/>
+                    <Box sx={{display: 'grid', gridTemplateColumns: "2fr 1fr", padding: "30px", bgcolor: "#F8F8F8", alignItems:"center"}}>
+                        <Box>
+                            <img src={SchoolPageImage} alt="" width="750px"/>
                         </Box>
                         <Box>
-                            <Typography sx={{fontSize: "30px", fontWeight: 'bold'}}>Your Voice, Our
-                                Changes!</Typography>
-                            <Typography>This section is the hub for initiatives and proposals from the entire school
-                                community. Here, your ideas transform into real change, and your signature becomes a
-                                driving force for improving our school. <br/>
+                            <Typography sx={{fontSize: "30px", fontWeight: 'bold'}}>Our School Page: Get to Know Us
+                                Better!</Typography>
+                            <Typography>Welcome to our Our School Page! This is your central hub to quickly find key
+                                information about our school's structure and leadership. <br/>
                                 <br/>
-                                How it works:</Typography>
-                            <Box sx={{marginTop: '20px', display: "flex", alignItems: "center", gap: "10px"}}>
-                                <Box sx={{
-                                    display: "block",
-                                    bgcolor: '#388E3C',
-                                    width: '52px',
-                                    height: "24px",
-                                    borderRadius: 100
-                                }}>
-                                    <Box sx={{
-                                        height: "24px",
-                                        display: "flex",
-                                        alignItems: "center",
-                                        justifyContent: "center"
-                                    }}>
-                                        <DoneIcon sx={{color: "white", fontSize: '20px'}}></DoneIcon>
-                                    </Box>
-                                </Box>
-                                <Typography>Browse and Sign: Explore active petitions and support the ones you care
-                                    about. Every signature counts!</Typography>
-                            </Box>
-                            <Box sx={{marginTop: '10px', display: "flex", alignItems: "center", gap: "10px"}}>
-                                <Box sx={{
-                                    display: "block",
-                                    bgcolor: '#388E3C',
-                                    width: '49px',
-                                    height: "24px",
-                                    borderRadius: 100
-                                }}>
-                                    <Box sx={{
-                                        height: "24px",
-                                        display: "flex",
-                                        alignItems: "center",
-                                        justifyContent: "center"
-                                    }}>
-                                        <DoneIcon sx={{color: "white", fontSize: '20px'}}></DoneIcon>
-                                    </Box>
-                                </Box>
-                                <Typography>Create: Have your own idea or see a problem? Formulate your proposal and
-                                    launch your petition.</Typography>
-                            </Box>
-                            <Box sx={{marginTop: '10px', display: "flex", alignItems: "center", gap: "10px"}}>
-                                <Box sx={{
-                                    display: "block",
-                                    bgcolor: '#388E3C',
-                                    width: '65px',
-                                    height: "24px",
-                                    borderRadius: 100
-                                }}>
-                                    <Box sx={{
-                                        height: "24px",
-                                        display: "flex",
-                                        alignItems: "center",
-                                        justifyContent: "center"
-                                    }}>
-                                        <DoneIcon sx={{color: "white", fontSize: '20px'}}></DoneIcon>
-                                    </Box>
-                                </Box>
-                                <Typography>Track Progress: Next to each petition, you'll see the number of signatures
-                                    gathered, showing the level of support for the initiative.</Typography>
-                            </Box>
+                                Here, you'll find a comprehensive list of our classes, detailing the various educational
+                                stages and streams available. You'll also be introduced to our school principal,
+                                understanding the leadership that guides our institution.<br/>
+                                <br/>
+                                This page is designed for quick access to these fundamental aspects of our school
+                                community.</Typography>
                         </Box>
                     </Box>
                 </CustomTabPanel>
+            </Box>
+            <Box sx={{padding:'40px 40px 20px 40px', display:'grid', gritTemplateRows:"1fr 1fr", gap:'10px', bgcolor:'#F8F8F8'}}>
+                <Box sx={{display:"flex", justifyContent:'space-between', alignItems:"center"}}>
+                    <Stack sx={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+                        <PsychologyAltIcon color='primary' sx={{mt: '3px', mr: '6px', fontSize: '35px'}}/>
+                        <Typography variant="h6" fontWeight='bold' noWrap>
+                            School Governance
+                        </Typography>
+                    </Stack>
+                    <Button variant="contained" color="primary" sx={{height: 32, borderRadius: 10}}>
+                        Login
+                    </Button>
+                </Box>
+                <Box sx={{display:"flex", justifyContent:"center"}}>
+                    <Typography sx={{color:'#AFB5C0'}}>©2025 Coffee Programmers</Typography>
+                </Box>
             </Box>
         </Box>
     )

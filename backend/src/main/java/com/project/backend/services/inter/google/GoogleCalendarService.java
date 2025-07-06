@@ -40,4 +40,6 @@ public interface GoogleCalendarService {
     void updatePetitionToUserCalendar(Petition petition);
 
     void updateVotingToUserCalendar(Voting voting);
+
+    void deleteAllClassPetitionsAndVotingsFromUsers(long userId);
 }

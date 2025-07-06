@@ -311,4 +311,34 @@ public class GoogleCalendarServiceImpl implements GoogleCalendarService {
             log.info("Service: Deleted voting calendar events for user {} and voting {}", user.getId(), votingId);
         }
     }
+
+    @Override
+    public void deleteAllClassPetitionsAndVotingsFromUsers(long userId){
+        List<Petition> petitions = petitionService.findAllByUserAndLevelClass(userId);
+        for(Petition petition : petitions){
+            this.deletePetitionFromUserCalendar(petition.getId(), userId);
+            userPetitionEventService.delete(userId, petition.getId());
+        }
+        List<Voting> votings = votingService.findAllByUserAndLevelClass(userId);
+        for(Voting voting : votings){
+            this.deleteVotingFromUserCalendar(voting.getId(), userId);
+            userVotingEventService.delete(userId, voting.getId());
+        }
+    }
+
+    @Override
+    public void saveAllClassPetitionsAndVotingsToUsers(long userId, long classId){
+        User user = userService.findById(userId);
+        List<Petition> petitions = petitionService.findAllByClass(userId);
+        for(Petition petition : petitions){
+            Event[] result = this.savePetitionToUserCalendar(
+                    GoogleCalendarEventMapper.fromPetitionToEvent(petition), GoogleCalendarEventMapper.fromPetitionToReminderEvent(petition), userId);
+            userPetitionEventService.create(user, petition, result[0].getId(), result[1].getId());
+        }
+        List<Voting> votings = votingService.findAllByUserAndLevelClass(userId);
+        for(Voting voting : votings){
+            this.deleteVotingFromUserCalendar(voting.getId(), userId);
+            userVotingEventService.delete(userId, voting.getId());
+        }
+    }
 }

@@ -36,4 +36,8 @@ public interface PetitionService {
     void deletingUser(long userId);
 
     void deleteVoteByUser(long userId);
+
+    List<Petition> findAllByUserAndLevelClass(long userId);
+
+    List<Petition> findAllByClass(long classId);
 }

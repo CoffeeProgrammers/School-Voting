@@ -4,7 +4,6 @@ import com.project.backend.models.User;
 import com.project.backend.models.enums.LevelType;
 import com.project.backend.models.enums.Status;
 import com.project.backend.models.petition.Petition;
-import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -31,20 +30,18 @@ public class PetitionSpecification {
     }
 
 
-    public static Specification<Petition> byUserInSchool(long userId) {
-        return (root, query, cb) -> {
-            Join<Object, Object> classJoin = root.join("school").join("classes");
-            Join<Object, User> userJoin = classJoin.join("users");
-            return cb.equal(userJoin.get("id"), userId);
-        };
+    public static Specification<Petition> byUserInSchool(User user) {
+        return (root, query, cb) -> cb.and(
+                cb.equal(root.get("targetId"), user.getSchool().getId()),
+                cb.equal(root.get("levelType"), LevelType.SCHOOL)
+        );
     }
 
-    public static Specification<Petition> byUserInClass(long userId) {
-        return (root, query, cb) -> {
-            Join<Object, Object> classJoin = root.join("myClass");
-            Join<Object, User> userJoin = classJoin.join("users");
-            return cb.equal(userJoin.get("id"), userId);
-        };
+    public static Specification<Petition> byUserInClass(User user) {
+        return (root, query, cb) -> cb.and(
+                cb.equal(root.get("targetId"), user.getMyClass().getId()),
+                cb.equal(root.get("levelType"), LevelType.CLASS)
+        );
     }
 
     public static Specification<Petition> byCreator(long userId) {

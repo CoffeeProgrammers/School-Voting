@@ -153,10 +153,11 @@ public class PetitionServiceImpl implements PetitionService {
     public Page<Petition> findAllMy(String name, String status, int page, int size, long userId) {
         log.info("Service: Finding all my petitions with name {} and status {}", name, status);
 
+        User user = userService.findById(userId);
         Specification<Petition> petitionSpecification = createSpecification(name, status);
         Specification<Petition> fullSpecification = petitionSpecification == null ?
-                PetitionSpecification.byUserInClass(userId).and(PetitionSpecification.byUserInSchool(userId)) :
-                petitionSpecification.and(PetitionSpecification.byUserInClass(userId)).and(PetitionSpecification.byUserInSchool(userId));
+                PetitionSpecification.byUserInClass(user).and(PetitionSpecification.byUserInSchool(user)) :
+                petitionSpecification.and(PetitionSpecification.byUserInClass(user)).and(PetitionSpecification.byUserInSchool(user));
 
         return petitionRepository.findAll(
                 fullSpecification,
@@ -217,6 +218,16 @@ public class PetitionServiceImpl implements PetitionService {
                                 checkingStatus(petition);
                             }
                         }).toList());
+    }
+
+    @Override
+    public List<Petition> findAllByUserAndLevelClass(long userId){
+        return petitionRepository.findAll(PetitionSpecification.byUserInClass(userService.findById(userId)));
+    }
+
+    @Override
+    public List<Petition> findAllByClass(long classId){
+        return petitionRepository.findAll(PetitionSpecification.byClass(classId));
     }
 
     private Specification<Petition> createSpecification(String name, String status) {

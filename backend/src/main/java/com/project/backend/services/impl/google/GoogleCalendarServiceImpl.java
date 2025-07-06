@@ -74,18 +74,31 @@ public class GoogleCalendarServiceImpl implements GoogleCalendarService {
     @Override
     public void firstUploadPetitionsToUserCalendar(long userId) {
         List<Petition> myPetitions = petitionService.findAllMy(userId);
-        myPetitions.forEach(p ->
-                savePetitionToUserCalendar(
-                        GoogleCalendarEventMapper.fromPetitionToEvent(p),
-                        GoogleCalendarEventMapper.fromPetitionToReminderEvent(p),
-                        userId)
-        );
+        Event[] result;
+        User user = userService.findById(userId);
+        Event petitionEvent;
+        Event reminderPetitionEvent;
+        for(Petition p : myPetitions) {
+            petitionEvent = GoogleCalendarEventMapper.fromPetitionToEvent(p);
+            reminderPetitionEvent = GoogleCalendarEventMapper.fromPetitionToReminderEvent(p);
+            result = savePetitionToUserCalendar(petitionEvent, reminderPetitionEvent, userId);
+            userPetitionEventService.create(user, p, result[0].getId(), result[1].getId());
+        }
     }
 
     @Override
     public void firstUploadVotingToUserCalendar(long userId) {
         List<Voting> myVoting = votingService.findAllByUser(userId);
-        myVoting.forEach(v -> saveVotingToUserCalendar(GoogleCalendarEventMapper.fromVotingToEvent(v), GoogleCalendarEventMapper.fromVotingToReminderEvent(v), userId));
+        Event[] result;
+        User user = userService.findById(userId);
+        Event votingEvent;
+        Event reminderVotingEvent;
+        for(Voting v : myVoting) {
+            votingEvent = GoogleCalendarEventMapper.fromVotingToEvent(v);
+            reminderVotingEvent = GoogleCalendarEventMapper.fromVotingToReminderEvent(v);
+            result = saveVotingToUserCalendar(votingEvent, reminderVotingEvent, userId);
+            userVotingEventService.create(user, v, result[0].getId(), result[1].getId());
+        }
     }
 
     @Override

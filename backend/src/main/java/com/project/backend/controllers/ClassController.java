@@ -121,13 +121,13 @@ public class ClassController {
                             @RequestBody List<Long> userIds,
                             Authentication auth) {
         log.info("Controller: Assigning users");
+        classService.assignUserToClass(classId, userIds);
         for(Long userId : userIds) {
             votingUserService.create(votingService.findAllByClass(classId), userService.findById(userId));
             if(googleCalendarCredentialService.existsByUserId(userId)) {
                 googleCalendarService.saveAllClassPetitionsAndVotingsToUsers(userId);
             }
         }
-        classService.assignUserToClass(classId, userIds);
     }
 
     @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasAnyRole('DIRECTOR', 'TEACHER')")

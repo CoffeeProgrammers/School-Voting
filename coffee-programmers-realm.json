@@ -32,7 +32,7 @@
   "registrationAllowed" : false,
   "registrationEmailAsUsername" : true,
   "rememberMe" : true,
-  "verifyEmail" : false,
+  "verifyEmail" : true,
   "loginWithEmailAllowed" : true,
   "duplicateEmailsAllowed" : false,
   "resetPasswordAllowed" : true,
@@ -451,9 +451,6 @@
     "lastName" : "Vladyslav",
     "email" : "bulakovskijvladislav@gmail.com",
     "emailVerified" : true,
-    "attributes" : {
-      "birthday" : [ "2010-02-02" ]
-    },
     "createdTimestamp" : 1750859126224,
     "enabled" : true,
     "totp" : false,
@@ -471,7 +468,7 @@
     "clientRoles" : {
       "coffee-programmers-client" : [ "DIRECTOR" ]
     },
-    "notBefore" : 1751113378,
+    "notBefore" : 1751829048,
     "groups" : [ ]
   }, {
     "id" : "6505b04a-2922-4bcf-bac6-8eac30b76efb",
@@ -653,7 +650,7 @@
     "clientRoles" : {
       "coffee-programmers-client" : [ "STUDENT" ]
     },
-    "notBefore" : 0,
+    "notBefore" : 1751825119,
     "groups" : [ ]
   }, {
     "id" : "200ef6a8-0355-4882-96f1-e2bf5a9753ac",
@@ -1609,10 +1606,10 @@
     "debug" : "false",
     "replyToDisplayName" : "Coffee Programmers",
     "starttls" : "true",
-    "auth" : "false",
+    "auth" : "true",
     "envelopeFrom" : "",
     "ssl" : "false",
-    "password" : "",
+    "password" : "lfoq cjze ooqv wuns",
     "port" : "587",
     "host" : "smtp.gmail.com",
     "replyTo" : "coffee.programmers04@gmail.com",
@@ -1630,7 +1627,30 @@
   "enabledEventTypes" : [ ],
   "adminEventsEnabled" : false,
   "adminEventsDetailsEnabled" : false,
-  "identityProviders" : [ ],
+  "identityProviders" : [ {
+    "alias" : "google",
+    "displayName" : "Google",
+    "internalId" : "87e5732f-4d52-4ef6-808a-1d1fd9b23f44",
+    "providerId" : "google",
+    "enabled" : true,
+    "updateProfileFirstLoginMode" : "on",
+    "trustEmail" : true,
+    "storeToken" : false,
+    "addReadTokenRoleOnCreate" : false,
+    "authenticateByDefault" : false,
+    "linkOnly" : false,
+    "hideOnLogin" : false,
+    "firstBrokerLoginFlowAlias" : "browser",
+    "config" : {
+      "clientId" : "716028690880-44mpq4lt4rg4t4g6d4sjg1magcareteg.apps.googleusercontent.com",
+      "acceptsPromptNoneForwardFromClient" : "false",
+      "disableUserInfo" : "true",
+      "syncMode" : "LEGACY",
+      "filteredByClaim" : "false",
+      "clientSecret" : "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",
+      "caseSensitiveOriginalUsername" : "false"
+    }
+  } ],
   "identityProviderMappers" : [ ],
   "components" : {
     "org.keycloak.services.clientregistration.policy.ClientRegistrationPolicy" : [ {
@@ -1757,8 +1777,9 @@
       }
     } ]
   },
-  "internationalizationEnabled" : false,
-  "supportedLocales" : [ ],
+  "internationalizationEnabled" : true,
+  "supportedLocales" : [ "uk", "en" ],
+  "defaultLocale" : "en",
   "authenticationFlows" : [ {
     "id" : "70dbeb41-ba0d-4960-b299-1bf5b3f39c1c",
     "alias" : "Account verification options",
@@ -1775,7 +1796,7 @@
       "userSetupAllowed" : false
     }, {
       "authenticatorFlow" : true,
-      "requirement" : "ALTERNATIVE",
+      "requirement" : "REQUIRED",
       "priority" : 20,
       "autheticatorFlow" : true,
       "flowAlias" : "Verify Existing Account by Re-authentication",
@@ -1960,13 +1981,13 @@
       "authenticatorConfig" : "create unique user config",
       "authenticator" : "idp-create-user-if-unique",
       "authenticatorFlow" : false,
-      "requirement" : "ALTERNATIVE",
+      "requirement" : "REQUIRED",
       "priority" : 10,
       "autheticatorFlow" : false,
       "userSetupAllowed" : false
     }, {
       "authenticatorFlow" : true,
-      "requirement" : "ALTERNATIVE",
+      "requirement" : "REQUIRED",
       "priority" : 20,
       "autheticatorFlow" : true,
       "flowAlias" : "Handle Existing Account",

@@ -37,7 +37,7 @@ public class UserController {
         log.info("Controller: Create user with body: {}", request);
         User user = userMapper.fromRequestToUser(request);
         return userMapper.fromUserToFullResponse(userService.createUser(user, request.getPassword(),
-                schoolId, userService.findUserByAuth(auth).getRole()));
+                schoolId, userService.findUserByAuth(auth).getRole(), request.getEmailVerified()));
     }
 
     @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) " +

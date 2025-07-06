@@ -30,9 +30,9 @@ const PetitionListBox = ({petition}) => {
                 borderColor: "#c6c5c5",
                 boxShadow: "0px 0px 5px rgba(0, 0, 0, 0.2)",
             },
-            '&:first-of-type': {
+            ":first-of-type": {
                 borderTop: '1px solid #ddd',
-            },
+            }
         }}
              onClick={() => {
                  navigate(`/petitions/${petition.id}`)

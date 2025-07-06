@@ -128,7 +128,7 @@ public class AuthController {
                 accessTokenString,
                 refreshTokenString,
                 role,
-                Long.parseLong(response.get("expires_id").toString()),
+                Long.parseLong(response.get("expires_in").toString()),
                 Long.parseLong(response.get("refresh_expires_in").toString())
         );
         return ResponseEntity

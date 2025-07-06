@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface UserService {
     User createUserKeycloak(User user, long schoolId);
-    User createUser(User user, String password, long schoolId, String roleOfCreator);
+    User createUser(User user, String password, long schoolId, String roleOfCreator, boolean emailVerified);
 
     User updateUser(User user, long userId);
     User updateUserKeycloak(User user, long userId);
@@ -47,7 +47,8 @@ public interface UserService {
 
     boolean isNotExistByEmail(String email);
 
-    long countAllBySchool(long schoolId);
+    long countAllBySchoolAndRole(long schoolId, String role);
+
     long countAllByClass(long classId);
 
     void assignClassToUser(Class clazz, User user);

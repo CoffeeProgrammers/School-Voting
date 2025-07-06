@@ -30,13 +30,9 @@ const PetitionListBox = ({petition}) => {
                 borderColor: "#c6c5c5",
                 boxShadow: "0px 0px 5px rgba(0, 0, 0, 0.2)",
             },
-            '&:last-child': {
-                borderBottom: 'none',
-
-            },
-            '&:first-child': {
+            ":first-of-type": {
                 borderTop: '1px solid #ddd',
-            },
+            }
         }}
              onClick={() => {
                  navigate(`/petitions/${petition.id}`)
@@ -54,12 +50,12 @@ const PetitionListBox = ({petition}) => {
             <Box>
                 <Box mt={2}>
                     <Typography variant='h5' mb={0.5} fontWeight="bold">
-                        {petition.countSupport}
+                        {petition.countSupported}
                     </Typography>
 
                     <Progress
                         color={Utils.getStatusMUIColor(petition.status)}
-                        count={petition.countSupport}
+                        count={petition.countSupported}
                         maxCount={petition.countNeeded}
                     />
 

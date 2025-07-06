@@ -30,4 +30,7 @@ public class UserCreateRequest {
             message = "Last name must start with a capital letter " +
                     "followed by one or more lowercase letters")
     private String lastName;
+
+    @NotNull
+    private Boolean emailVerified;
 }

@@ -117,7 +117,7 @@ public class PetitionServiceImpl implements PetitionService {
     public long countAll(Petition petition) {
         log.info("Service: Count all petition {}", petition.getId());
         long countAll = petition.getLevelType().equals(LevelType.SCHOOL) ?
-                userService.countAllBySchool(petition.getTargetId()) : userService.countAllByClass(petition.getTargetId());
+                userService.countAllBySchoolAndRole(petition.getTargetId(), "STUDENT") : userService.countAllByClass(petition.getTargetId());
         return (long) (Math.floor(countAll / 2.0) + 1);
     }
 

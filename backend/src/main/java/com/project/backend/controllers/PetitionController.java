@@ -228,7 +228,7 @@ public class PetitionController {
 
     private PetitionListResponse fromPetitionToPetitionListResponseWithAllInfo(Petition petition, User user) {
         PetitionListResponse petitionListResponse = petitionMapper.fromPetitionToListResponse(petition);
-        petitionListResponse.setCountNeeded(petition.getStatus().equals(Status.ACTIVE) ? petitionService.countAll(petition) : petition.getCountNeeded());
+        petitionListResponse.setCountNeeded(petition.getStatus() == Status.ACTIVE ? petitionService.countAll(petition) : petition.getCountNeeded());
         petitionListResponse.setCountSupported(petition.getCount());
         petitionListResponse.setSupportedByCurrentId(petition.getUsers().contains(user));
         return petitionListResponse;
@@ -236,7 +236,7 @@ public class PetitionController {
 
     private PetitionFullResponse fromPetitionToPetitionFullResponseWithAllInfo(Petition petition, User user) {
         PetitionFullResponse petitionFullResponse = petitionMapper.fromPetitionToFullResponse(petition);
-        petitionFullResponse.setCountNeeded(petition.getStatus().equals(Status.ACTIVE) ? petitionService.countAll(petition) : petition.getCountNeeded());
+        petitionFullResponse.setCountNeeded(petition.getStatus() == Status.ACTIVE ? petitionService.countAll(petition) : petition.getCountNeeded());
         petitionFullResponse.setCountSupported(petition.getCount());
         petitionFullResponse.setSupportedByCurrentId(petition.getUsers().contains(user));
         return petitionFullResponse;

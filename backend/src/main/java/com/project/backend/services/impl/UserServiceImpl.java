@@ -68,7 +68,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User createUser(User user, String password, long schoolId, String roleOfCreator) {
+    public User createUser(User user, String password, long schoolId, String roleOfCreator, boolean emailVerified) {
         log.info("Service: Saving new user {}", user.getEmail());
         if (roleOfCreator.equals("TEACHER") &&
                 (user.getRole().equals("TEACHER") || user.getRole().equals("DIRECTOR"))) {
@@ -81,12 +81,12 @@ public class UserServiceImpl implements UserService {
         String email = user.getEmail();
         checkEmail(email);
 
-        addUserToKeycloak(user, password);
+        addUserToKeycloak(user, password, emailVerified);
 
         return createUserKeycloak(user, schoolId);
     }
 
-    private void addUserToKeycloak(User user, String password) {
+    private void addUserToKeycloak(User user, String password, boolean emailVerified) {
 
         UserRepresentation userRepresentation = new UserRepresentation();
 
@@ -99,6 +99,7 @@ public class UserServiceImpl implements UserService {
         userRepresentation.setFirstName(user.getFirstName());
         userRepresentation.setLastName(user.getLastName());
         userRepresentation.setEmail(user.getEmail());
+        userRepresentation.setEmailVerified(emailVerified);
         userRepresentation.setEnabled(true);
 
         Response response = realmResource.users().create(userRepresentation);
@@ -313,8 +314,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public long countAllBySchool(long schoolId) {
-        return userRepository.countAllBySchool_Id(schoolId);
+    public long countAllBySchoolAndRole(long schoolId, String role) {
+        return userRepository.countAllBySchool_IdAndRoleIs(schoolId, role);
     }
 
     @Override
@@ -331,7 +332,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User createDirector(User director, String password) {
 
-        addUserToKeycloak(director, password);
+        addUserToKeycloak(director, password, true);
         User user = userRepository.save(director);
         return user;
     }

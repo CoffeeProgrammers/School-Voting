@@ -4,6 +4,4 @@ import com.project.backend.models.User;
 
 public interface UserDeletionService {
     void delete(User user, boolean isDeleteDirector);
-
-    void deleteBySchool(long schoolId);
 }

@@ -35,6 +35,8 @@ public interface UserService {
 
     List<User> findAllByClass(long classId);
 
+    List<User> findAllBySchool(long schoolId);
+
     User findUserByAuth(Authentication authentication);
 
     void unassignClassFromUser(User user);

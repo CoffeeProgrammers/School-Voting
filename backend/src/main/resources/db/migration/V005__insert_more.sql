@@ -35,7 +35,7 @@ VALUES ((SELECT id FROM users WHERE email = 'ivan.fr@example.com'),
 (SELECT id FROM answers WHERE name = 'Варіант 3' AND voting_id = (SELECT id FROM votings WHERE name = 'New' LIMIT 1)));
 
 INSERT INTO petitions
-(name, description, end_time, level_type, creator_id, status, count, target_id, count_needed, creation_time)
+(name, description, end_time, level_type, creator_id, status, count, target_id, count_needed, creation_time, target_name)
 VALUES ('Some',
         'new',
         '2045-12-10 00:00:00',
@@ -45,7 +45,8 @@ VALUES ('Some',
         0,
         1,
         0,
-        '2000-12-10 00:00:00'),
+        '2000-12-10 00:00:00',
+        'New'),
        ('Some',
         'new',
         '2045-12-10 00:00:00',
@@ -55,7 +56,8 @@ VALUES ('Some',
         0,
         1,
         0,
-        '2000-12-10 00:00:00');
+        '2000-12-10 00:00:00',
+        'Some');
 
 
 

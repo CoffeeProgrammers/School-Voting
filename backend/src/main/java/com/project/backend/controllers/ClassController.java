@@ -9,9 +9,8 @@ import com.project.backend.mappers.ClassMapper;
 import com.project.backend.models.Class;
 import com.project.backend.models.User;
 import com.project.backend.services.inter.ClassService;
-import com.project.backend.services.inter.petition.PetitionService;
 import com.project.backend.services.inter.UserService;
-import com.project.backend.services.inter.voting.VotingUserService;
+import com.project.backend.services.inter.google.GoogleCalendarService;
 import com.project.backend.services.inter.petition.PetitionService;
 import com.project.backend.services.inter.voting.VotingUserService;
 import jakarta.validation.Valid;
@@ -36,6 +35,7 @@ public class ClassController {
     private final VotingUserService votingUserService;
     private final PetitionService petitionService;
     private final UserService userService;
+    private final GoogleCalendarService googleCalendarService;
 
     @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasAnyRole('DIRECTOR', 'TEACHER')")
     @PostMapping("/create")
@@ -129,6 +129,7 @@ public class ClassController {
                               Authentication auth) {
         log.info("Controller: Unassigning users");
         for(Long userId : userIds) {
+            googleCalendarService.deleteAllClassPetitionsAndVotingsFromUsers(userId);
             votingUserService.deleteWithUser(userId);
             petitionService.deleteVoteByUser(userId);
         }

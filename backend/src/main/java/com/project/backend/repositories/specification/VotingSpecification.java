@@ -1,5 +1,6 @@
 package com.project.backend.repositories.specification;
 
+import com.project.backend.models.enums.LevelType;
 import com.project.backend.models.voting.Voting;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
@@ -21,6 +22,13 @@ public class VotingSpecification {
     public static Specification<Voting> byUser(long userId) {
         return ((root, query, criteriaBuilder) ->
                 criteriaBuilder.equal(root.join("votingUsers").get("user").get("id"), userId));
+    }
+
+    public static Specification<Voting> byUserInClass(long userId) {
+        return ((root, query, criteriaBuilder) ->
+                criteriaBuilder.and(
+                        criteriaBuilder.equal(root.join("votingUsers").get("user").get("id"), userId),
+                        criteriaBuilder.equal(root.get("levelType"), LevelType.CLASS)));
     }
 
     public static Specification<Voting> byName(String name) {
@@ -67,4 +75,6 @@ public class VotingSpecification {
         return ((root, query, criteriaBuilder) ->
                 criteriaBuilder.isNotNull(root.join("votingUsers").get("answer")));
     }
+
+    public static Specification<Voting> isClass() {}
 }

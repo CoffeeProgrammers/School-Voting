@@ -3,7 +3,6 @@ package com.project.backend.services.inter.google;
 import com.project.backend.models.User;
 import com.project.backend.models.google.UserPetitionEvent;
 import com.project.backend.models.petition.Petition;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -18,6 +17,5 @@ public interface UserPetitionEventService {
 
     List<UserPetitionEvent> findAllByPetition(long petitionId);
 
-    @Transactional
     void deleteByUser(long userId);
 }

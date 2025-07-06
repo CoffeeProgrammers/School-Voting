@@ -128,7 +128,7 @@ public class SchoolController {
         petitionService.deleteBy(LevelType.SCHOOL, schoolId);
         votingService.deleteBy(LevelType.SCHOOL, schoolId);
         classService.deleteBySchool(schoolId);
-        userDeletionService.deleteBySchool(schoolId);
+        userService.findAllBySchool(schoolId).forEach(user -> {userDeletionService.delete(user, true);});
         schoolService.delete(schoolId);
     }
 }

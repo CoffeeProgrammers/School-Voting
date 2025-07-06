@@ -72,7 +72,7 @@ public class PetitionSpecification {
         return (root, query, cb) -> cb.or(
                 cb.and(
                         cb.equal(root.get("levelType"), LevelType.SCHOOL),
-                        cb.equal(root.get("levelType"), schoolId)
+                        cb.equal(root.get("targetId"), schoolId)
                 ),
                 cb.and(
                         cb.equal(root.get("levelType"), LevelType.CLASS),

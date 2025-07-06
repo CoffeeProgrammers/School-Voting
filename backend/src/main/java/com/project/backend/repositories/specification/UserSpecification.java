@@ -22,17 +22,17 @@ public class UserSpecification {
 
     public static Specification<User> byFirstName(String firstName) {
         log.info("Building specification: byFirstName(firstName = '{}')", firstName);
-        return (root, query, cb) -> cb.like(root.get("firstName"), firstName);
+        return (root, query, cb) -> cb.like(cb.lower(root.get("firstName")), "%" + firstName.toLowerCase() + "%");
     }
 
     public static Specification<User> byLastName(String lastName) {
         log.info("Building specification: byLastName(lastName = '{}')", lastName);
-        return (root, query, cb) -> cb.like(root.get("lastName"), lastName);
+        return (root, query, cb) -> cb.like(cb.lower(root.get("lastName")), "%" + lastName.toLowerCase() + "%");
     }
 
     public static Specification<User> byEmail(String email) {
         log.info("Building specification: byEmail(email = '{}')", email);
-        return (root, query, cb) -> cb.like(root.get("email"), email);
+        return (root, query, cb) -> cb.like(cb.lower(root.get("email")), "%" + email.toLowerCase() + "%");
     }
 
     public static Specification<User> byClass(long classId) {

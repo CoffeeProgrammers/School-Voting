@@ -67,7 +67,7 @@ public class PetitionSpecification {
     public static Specification<Petition> byName(String name) {
         log.info("Building specification: byName(name = '{}')", name);
         return (root, query, cb) ->
-                cb.like(root.get("name"), name);
+                cb.like(cb.lower(root.get("name")), "%" + name.toLowerCase() + "%");
     }
 
     public static Specification<Petition> byUser(User user) {

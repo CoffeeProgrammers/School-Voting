@@ -16,7 +16,7 @@ public class ClassSpecification {
     public static Specification<Class> byName(String name) {
         log.info("Building specification: byName(name = '{}')", name);
         return (root, criteriaQuery, cb) ->
-                cb.like(root.get("name"), name);
+                cb.like(cb.lower(root.get("name")), "%" + name.toLowerCase() + "%");
     }
 
     public static Specification<Class> hasUser(User user) {

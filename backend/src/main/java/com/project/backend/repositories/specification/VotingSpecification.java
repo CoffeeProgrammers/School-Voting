@@ -43,7 +43,7 @@ public class VotingSpecification {
     public static Specification<Voting> byName(String name) {
         log.info("Building specification: byName(name = '{}')", name);
         return (root, query, cb) ->
-                cb.equal(root.get("name"), name);
+                cb.like(cb.lower(root.get("name")), "%" + name.toLowerCase() + "%");
     }
 
     public static Specification<Voting> byStartTimeAndEndTime() {
@@ -91,6 +91,6 @@ public class VotingSpecification {
 
     public static Specification<Voting> byClass(long classId) {
         log.info("Building specification: byClass(classId = {}) [TODO]", classId);
-        return (root, query, cb) -> null; // TODO: реалізуй при потребі
+        return (root, query, cb) -> null; // TODO
     }
 }

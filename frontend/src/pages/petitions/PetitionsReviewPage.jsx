@@ -10,7 +10,6 @@ import Loading from "../../components/layouts/Loading";
 import Search from "../../components/layouts/list/Search";
 
 const PetitionsReviewPage = () => {
-
     const {showError} = useError()
 
     const [petitions, setPetitions] = useState([])
@@ -31,7 +30,7 @@ const PetitionsReviewPage = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await PetitionService.getMyPetitions({
+                const response = await PetitionService.getPetitionsForDirector({
                     page: page - 1,
                     size: 15,
                     name: searchName,
@@ -74,12 +73,12 @@ const PetitionsReviewPage = () => {
                 />
 
             </Stack>
-            <Divider sx={{mb: 0.75}}/>
+            <Divider sx={{mt: 0.75, mb: 0.75}}/>
 
             <Stack direction="column">
                 {petitions.map((petition) => (
                     <Box key={petition.id}>
-                        <PetitionListBox petition={petitions}/>
+                        <PetitionListBox petition={petition}/>
                     </Box>
                 ))}
             </Stack>

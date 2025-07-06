@@ -135,6 +135,7 @@ const PetitionsListPage = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
+                // TODO: getPetitionsForDirector
                 const response = await PetitionService.getMyPetitions({
                     page: page - 1,
                     size: 15,
@@ -179,7 +180,7 @@ const PetitionsListPage = () => {
         <Box>
             <Stack direction="row"
                    sx={{alignItems: 'center', display: "flex", justifyContent: "space-between", paddingX: '10px',}}>
-                <Typography variant="h6" fontWeight={'bold'}>Petitions</Typography>
+                <Typography variant="h6" fontWeight={'bold'}>Petitions Review</Typography>
                 <Box sx={{alignItems: 'center', display: "flex", justifyContent: "space-between"}} gap={0.25}>
                     <Search
                         searchQuery={searchName}
@@ -194,6 +195,7 @@ const PetitionsListPage = () => {
 
             </Stack>
             <Divider sx={{mt: 0.75}}/>
+
             <Stack direction="row" width={'100%'}>
                 {statusFilterList.map((option, index) => (
                     <Button key={index} onClick={() => setStatusFilter(option.value)} fullWidth

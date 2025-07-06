@@ -76,5 +76,8 @@ public class VotingSpecification {
                 criteriaBuilder.isNotNull(root.join("votingUsers").get("answer")));
     }
 
-    public static Specification<Voting> isClass() {}
+    public static Specification<Voting> byClass(long classId) {
+        return ((root, query, criteriaBuilder) ->
+                null); //TODO
+    }
 }

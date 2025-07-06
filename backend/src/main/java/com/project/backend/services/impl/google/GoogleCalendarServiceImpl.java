@@ -314,6 +314,10 @@ public class GoogleCalendarServiceImpl implements GoogleCalendarService {
 
     @Override
     public void deleteAllClassPetitionsAndVotingsFromUsers(long userId){
+        if(!googleCalendarCredentialService.existsByUserId(userId)) {
+            log.info("User with id {} didnt connect google calendar", userId);
+            return;
+        }
         List<Petition> petitions = petitionService.findAllByUserAndLevelClass(userId);
         for(Petition petition : petitions){
             this.deletePetitionFromUserCalendar(petition.getId(), userId);
@@ -327,18 +331,19 @@ public class GoogleCalendarServiceImpl implements GoogleCalendarService {
     }
 
     @Override
-    public void saveAllClassPetitionsAndVotingsToUsers(long userId, long classId){
+    public void saveAllClassPetitionsAndVotingsToUsers(long userId){
         User user = userService.findById(userId);
-        List<Petition> petitions = petitionService.findAllByClass(userId);
+        List<Petition> petitions = petitionService.findAllByClass(user.getMyClass().getId());
+        Event[] result;
         for(Petition petition : petitions){
-            Event[] result = this.savePetitionToUserCalendar(
+            result = this.savePetitionToUserCalendar(
                     GoogleCalendarEventMapper.fromPetitionToEvent(petition), GoogleCalendarEventMapper.fromPetitionToReminderEvent(petition), userId);
             userPetitionEventService.create(user, petition, result[0].getId(), result[1].getId());
         }
-        List<Voting> votings = votingService.findAllByUserAndLevelClass(userId);
+        List<Voting> votings = votingService.findAllByUserAndLevelClass(user.getMyClass().getId());
         for(Voting voting : votings){
-            this.deleteVotingFromUserCalendar(voting.getId(), userId);
-            userVotingEventService.delete(userId, voting.getId());
+            result = this.saveVotingToUserCalendar(GoogleCalendarEventMapper.fromVotingToEvent(voting), GoogleCalendarEventMapper.fromVotingToReminderEvent(voting), userId);
+            userVotingEventService.create(user, voting, result[0].getId(), result[1].getId());
         }
     }
 }

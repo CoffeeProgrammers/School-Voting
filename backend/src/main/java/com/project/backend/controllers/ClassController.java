@@ -10,6 +10,7 @@ import com.project.backend.models.Class;
 import com.project.backend.models.User;
 import com.project.backend.services.inter.ClassService;
 import com.project.backend.services.inter.UserService;
+import com.project.backend.services.inter.google.GoogleCalendarCredentialService;
 import com.project.backend.services.inter.google.GoogleCalendarService;
 import com.project.backend.services.inter.petition.PetitionService;
 import com.project.backend.services.inter.voting.VotingUserService;
@@ -36,6 +37,7 @@ public class ClassController {
     private final PetitionService petitionService;
     private final UserService userService;
     private final GoogleCalendarService googleCalendarService;
+    private final GoogleCalendarCredentialService googleCalendarCredentialService;
 
     @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasAnyRole('DIRECTOR', 'TEACHER')")
     @PostMapping("/create")

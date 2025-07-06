@@ -42,4 +42,6 @@ public interface GoogleCalendarService {
     void updateVotingToUserCalendar(Voting voting);
 
     void deleteAllClassPetitionsAndVotingsFromUsers(long userId);
+
+    void saveAllClassPetitionsAndVotingsToUsers(long userId);
 }

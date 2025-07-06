@@ -130,7 +130,7 @@ public class VotingServiceImpl implements VotingService {
 
     @Override
     public List<Voting> findAllByClass(long classId) {
-        return votingRepository.findAll(VotingSpecification.)
+        return votingRepository.findAll(VotingSpecification.byClass(classId));
     }
 
     @Override

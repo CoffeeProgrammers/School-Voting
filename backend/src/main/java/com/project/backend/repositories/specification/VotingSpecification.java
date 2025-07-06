@@ -63,7 +63,7 @@ public class VotingSpecification {
 
     public static Specification<Voting> ended() {
         return ((root, query, criteriaBuilder) ->
-                criteriaBuilder.greaterThan(root.get("endTime"), LocalDateTime.now()));
+                criteriaBuilder.lessThanOrEqualTo(root.get("endTime"), LocalDateTime.now()));
     }
 
     public static Specification<Voting> isNotVoted(long userId) {

@@ -44,7 +44,16 @@ public class ModelsTests {
 
     @Test
     void testSchool() {
+        School school1 = TestUtil.createSchool("School", TestUtil.createUser("Role", "some"));
+        School school2 = new School();
+        school2.setId(school1.getId());
+        school2.setName(school1.getName());
+        school2.setDirector(school1.getDirector());
+        school2.setClasses(school1.getClasses());
 
+        assertEquals(school1, school2);
+        assertEquals(school1.toString(), school2.toString());
+        assertEquals(school1.hashCode(), school2.hashCode());
     }
 
     @Test

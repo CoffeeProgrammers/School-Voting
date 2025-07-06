@@ -122,8 +122,8 @@ public class ClassController {
                             Authentication auth) {
         log.info("Controller: Assigning users");
         for(Long userId : userIds) {
+            votingUserService.create(votingService.findAllByClass(classId), userService.findById(userId));
             if(googleCalendarCredentialService.existsByUserId(userId)) {
-                votingUserService.create(votingService.findAllByClass(classId), userService.findById(userId));
                 googleCalendarService.saveAllClassPetitionsAndVotingsToUsers(userId);
             }
         }

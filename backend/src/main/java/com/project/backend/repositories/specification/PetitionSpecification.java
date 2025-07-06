@@ -12,6 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PetitionSpecification {
+    public static Specification<Petition> bySchoolForDirector(long schoolId) {
+        return ((root, query, criteriaBuilder) ->
+                criteriaBuilder.equal(root.get("creator").get("school").get("id"), schoolId));
+    }
     public static Specification<Petition> bySchool(long schoolId) {
         return (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();

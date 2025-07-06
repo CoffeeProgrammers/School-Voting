@@ -182,17 +182,17 @@ public class PetitionServiceImpl implements PetitionService {
     }
 
     @Override
-    public Page<Petition> findAllForDirector(String name, String status, int page, int size) {
+    public Page<Petition> findAllForDirector(String name, String status, long schoolId, int page, int size) {
         log.info("Service: Finding all petitions for director, name {} and status {}", name, status);
 
         Specification<Petition> petitionSpecification = createSpecification(name, status);
 
         if (petitionSpecification == null) {
             return petitionRepository.findAll(
-                    PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "endTime")));
+                    PetitionSpecification.bySchoolForDirector(schoolId), PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "endTime")));
         } else {
             return petitionRepository.findAll(
-                    petitionSpecification, PageRequest.of(
+                    petitionSpecification.and(PetitionSpecification.bySchoolForDirector(schoolId)), PageRequest.of(
                             page, size, Sort.by(
                                     Sort.Direction.ASC, "endTime")));
         }

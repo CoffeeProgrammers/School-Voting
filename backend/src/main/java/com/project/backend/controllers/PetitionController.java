@@ -134,7 +134,7 @@ public class PetitionController {
             @RequestParam(required = false) String status,
             Authentication auth) {
         log.info("Controller: Getting all petitions for director");
-        Page<Petition> petitionPage = petitionService.findAllForDirector(name, status, page, size);
+        Page<Petition> petitionPage = petitionService.findAllForDirector(name, status, schoolId, page, size);
         PaginationListResponse<PetitionListResponse> response = new PaginationListResponse<>();
         response.setContent(petitionPage.getContent().stream().map((Petition petition) -> fromPetitionToPetitionListResponseWithAllInfo(petition, userService.findUserByAuth(auth))).toList());
         response.setTotalPages(petitionPage.getTotalPages());

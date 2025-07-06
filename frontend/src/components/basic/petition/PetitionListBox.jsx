@@ -34,7 +34,7 @@ const PetitionListBox = ({petition}) => {
                 borderBottom: 'none',
 
             },
-            '&:first-child': {
+            '&:first-of-type': {
                 borderTop: '1px solid #ddd',
             },
         }}
@@ -54,12 +54,12 @@ const PetitionListBox = ({petition}) => {
             <Box>
                 <Box mt={2}>
                     <Typography variant='h5' mb={0.5} fontWeight="bold">
-                        {petition.countSupport}
+                        {petition.countSupported}
                     </Typography>
 
                     <Progress
                         color={Utils.getStatusMUIColor(petition.status)}
-                        count={petition.countSupport}
+                        count={petition.countSupported}
                         maxCount={petition.countNeeded}
                     />
 

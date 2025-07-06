@@ -32,7 +32,7 @@ client.interceptors.response.use(
                 if (newToken) {
                     config.headers["Authorization"] = `Bearer ${newToken}`;
                 }
-                return client(config); // 🔁 Повторити запит
+                return client(config);
             }
         }
 

@@ -18,6 +18,7 @@ import ControlPanel from "./pages/control_panel/ControlPanel";
 import Profile from "./pages/user/Profile";
 import PetitionsReviewPage from "./pages/petitions/PetitionsReviewPage";
 import PrivateRoute from "./security/PrivateRoute";
+import Callback from "./security/callback/Callback";
 
 const InitNavigation = ({children}) => {
     const navigate = useNavigate();
@@ -33,6 +34,7 @@ function App() {
     const isStudent = false
     const routes = [
         {path: "/", element: <Navigate to="/petitions" replace/>},
+        {path: "/callback", element: <Callback/>},
 
         {path: "/petitions", element: <PetitionsListPage/>},
         {path: "/petitions/:id", element: <PetitionPage/>},
@@ -41,7 +43,6 @@ function App() {
         {path: "/voting/:id", element: <VotingPage/>},
 
         {path: "/petitions-review", element: <PetitionsReviewPage/>},
-
 
         {path: "/school", element: <SchoolPage/>},
         !isStudent && {path: "/school/class/:id", element: <ClassPage/>},

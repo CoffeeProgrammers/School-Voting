@@ -7,8 +7,8 @@ import MenuItem from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import {IconButton} from "@mui/material";
-import {Link, useLocation, useNavigate} from "react-router-dom";
-// import AuthService from "../../../services/auth/AuthService";
+import {Link, useLocation} from "react-router-dom";
+import AuthService from "../../../services/auth/AuthService";
 
 const AccountMenu = () => {
     const location = useLocation();
@@ -31,12 +31,12 @@ const AccountMenu = () => {
 
     const handleLogout = async () => {
         console.log("Logout")
-        // try {
-        //     await AuthService.logout();
-        // } catch (error) {
-        //     console.error("Error during logout:", error);
-        //     throw error;
-        // }
+        try {
+            await AuthService.logout();
+        } catch (error) {
+            console.error("Error during logout:", error);
+            throw error;
+        }
     };
 
 

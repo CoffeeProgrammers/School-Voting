@@ -30,6 +30,7 @@ public class UserDeletionServiceImpl implements UserDeletionService {
     @Transactional
     @Override
     public void delete(User user, boolean isDeleteDirector) {
+        log.info("Service: Deleting Classes with id {}", user.getId());
         long userId = user.getId();
 
         if (!isDeleteDirector && "DIRECTOR".equals(user.getRole())) {

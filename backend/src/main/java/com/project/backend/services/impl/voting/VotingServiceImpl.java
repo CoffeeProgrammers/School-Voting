@@ -126,16 +126,19 @@ public class VotingServiceImpl implements VotingService {
 
     @Override
     public List<Voting> findAllByUser(long userId) {
+        log.info("Service: get list of votings where user id = {}", userId);
         return votingRepository.findAll(VotingSpecification.byUser(userId));
     }
 
     @Override
     public List<Voting> findAllByUserAndLevelClass(long userId) {
+        log.info("Service: get list of votings where user id = {} and class typy", userId);
         return votingRepository.findAll(VotingSpecification.byUserInClass(userId));
     }
 
     @Override
     public List<Voting> findAllByClass(long classId){
+        log.info("Service: get list of votings where class id = {}", classId);
         return votingRepository.findAll(VotingSpecification.byClass(classId));
     }
 

@@ -10,7 +10,10 @@ import com.project.backend.mappers.UserMapper;
 import com.project.backend.models.School;
 import com.project.backend.models.User;
 import com.project.backend.models.enums.LevelType;
-import com.project.backend.services.inter.*;
+import com.project.backend.services.inter.ClassService;
+import com.project.backend.services.inter.SchoolService;
+import com.project.backend.services.inter.SchoolWithDirectorService;
+import com.project.backend.services.inter.UserDeletionService;
 import com.project.backend.services.inter.petition.PetitionService;
 import com.project.backend.services.inter.voting.VotingService;
 import jakarta.validation.Valid;
@@ -23,7 +26,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
@@ -47,8 +49,8 @@ public class SchoolController {
     private final SchoolMapper schoolMapper;
     private final UserMapper userMapper;
     private final JwtDecoder jwtDecoder;
-    private final UserService userService;
     private final UserDeletionService userDeletionService;
+
 
     @Value("${client-id}")
     private String clientId;
@@ -120,7 +122,6 @@ public class SchoolController {
         return schoolMapper.fromSchoolToResponse(schoolService.update(schoolMapper.fromRequestToSchool(schoolUpdateRequest), schoolId));
     }
 
-    @Transactional
     @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasRole('DIRECTOR')")
     @DeleteMapping("/delete/{school_id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -128,7 +129,7 @@ public class SchoolController {
         petitionService.deleteBy(LevelType.SCHOOL, schoolId);
         votingService.deleteBy(LevelType.SCHOOL, schoolId);
         classService.deleteBySchool(schoolId);
-        userService.findAllBySchool(schoolId).forEach(user -> {userDeletionService.delete(user, true);});
+        userDeletionService.deleteAllBySchool(schoolId);
         schoolService.delete(schoolId);
     }
 }

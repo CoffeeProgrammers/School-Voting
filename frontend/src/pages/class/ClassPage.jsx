@@ -40,7 +40,7 @@ const ClassPage = () => {
                     </Box>
 
                     <Divider/>
-                    <UserList users={users}/>
+                    <UserList users={users} actions={true}/>
                 </Box>
             </Box>
         </SchoolPageWrapper>

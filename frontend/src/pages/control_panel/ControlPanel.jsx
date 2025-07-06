@@ -39,9 +39,9 @@ const ControlPanel = () => {
     const renderTab = () => {
         switch (tab) {
             case 'Students':
-                return <UserList users={users}/>
+                return <UserList users={users} actions={true}/>
             case 'Teachers':
-                return <UserList users={users}/>
+                return <UserList users={users} actions={true}/>
         }
     }
 

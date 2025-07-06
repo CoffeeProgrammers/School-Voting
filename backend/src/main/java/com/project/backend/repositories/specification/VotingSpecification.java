@@ -3,81 +3,94 @@ package com.project.backend.repositories.specification;
 import com.project.backend.models.enums.LevelType;
 import com.project.backend.models.voting.Voting;
 import jakarta.persistence.criteria.Predicate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class VotingSpecification {
+
+    private static final Logger log = LoggerFactory.getLogger(VotingSpecification.class);
+
     public static Specification<Voting> byCreator(long creatorId) {
-        return (root, criteriaQuery, criteriaBuilder) ->
-                criteriaBuilder.equal(root.get("creator").get("id"), creatorId);
+        log.info("Building specification: byCreator(creatorId = {})", creatorId);
+        return (root, query, cb) ->
+                cb.equal(root.get("creator").get("id"), creatorId);
     }
 
     public static Specification<Voting> byDirector(long directorId) {
-        return (root, criteriaQuery, criteriaBuilder) ->
-                criteriaBuilder.equal(root.get("creator").get("school").get("director").get("id"), directorId);
+        log.info("Building specification: byDirector(directorId = {})", directorId);
+        return (root, query, cb) ->
+                cb.equal(root.get("creator").get("school").get("director").get("id"), directorId);
     }
 
     public static Specification<Voting> byUser(long userId) {
-        return ((root, query, criteriaBuilder) ->
-                criteriaBuilder.equal(root.join("votingUsers").get("user").get("id"), userId));
+        log.info("Building specification: byUser(userId = {})", userId);
+        return (root, query, cb) ->
+                cb.equal(root.join("votingUsers").get("user").get("id"), userId);
     }
 
     public static Specification<Voting> byUserInClass(long userId) {
-        return ((root, query, criteriaBuilder) ->
-                criteriaBuilder.and(
-                        criteriaBuilder.equal(root.join("votingUsers").get("user").get("id"), userId),
-                        criteriaBuilder.equal(root.get("levelType"), LevelType.CLASS)));
+        log.info("Building specification: byUserInClass(userId = {})", userId);
+        return (root, query, cb) -> cb.and(
+                cb.equal(root.join("votingUsers").get("user").get("id"), userId),
+                cb.equal(root.get("levelType"), LevelType.CLASS)
+        );
     }
 
     public static Specification<Voting> byName(String name) {
-        return ((root, query, criteriaBuilder) ->
-                criteriaBuilder.equal(root.get("name"), name));
+        log.info("Building specification: byName(name = '{}')", name);
+        return (root, query, cb) ->
+                cb.equal(root.get("name"), name);
     }
 
     public static Specification<Voting> byStartTimeAndEndTime() {
-        return (root, query, criteriaBuilder) -> {
-            LocalDate today = LocalDate.now();
-            Predicate startDatePredicate = criteriaBuilder.lessThanOrEqualTo(root.get("startTime"), today);
-            Predicate endDatePredicate = criteriaBuilder.greaterThanOrEqualTo(root.get("endTime"), today);
-            return criteriaBuilder.and(startDatePredicate, endDatePredicate);
+        LocalDate today = LocalDate.now();
+        log.info("Building specification: byStartTimeAndEndTime(today = {})", today);
+        return (root, query, cb) -> {
+            Predicate start = cb.lessThanOrEqualTo(root.get("startTime"), today);
+            Predicate end = cb.greaterThanOrEqualTo(root.get("endTime"), today);
+            return cb.and(start, end);
         };
     }
 
     public static Specification<Voting> byStartTime() {
-        return (root, query, criteriaBuilder) -> {
-            LocalDateTime now = LocalDateTime.now();
-            Predicate startTimePredicate = criteriaBuilder.lessThanOrEqualTo(root.get("startTime"), now);
-            return criteriaBuilder.and(startTimePredicate);
-        };
+        LocalDateTime now = LocalDateTime.now();
+        log.info("Building specification: byStartTime(now = {})", now);
+        return (root, query, cb) ->
+                cb.lessThanOrEqualTo(root.get("startTime"), now);
     }
 
     public static Specification<Voting> byStartTimeNot() {
-        return (root, query, criteriaBuilder) -> {
-            LocalDateTime now = LocalDateTime.now();
-            Predicate startTimePredicate = criteriaBuilder.greaterThanOrEqualTo(root.get("startTime"), now);
-            return criteriaBuilder.and(startTimePredicate);
-        };
+        LocalDateTime now = LocalDateTime.now();
+        log.info("Building specification: byStartTimeNot(now = {})", now);
+        return (root, query, cb) ->
+                cb.greaterThanOrEqualTo(root.get("startTime"), now);
     }
 
     public static Specification<Voting> ended() {
-        return ((root, query, criteriaBuilder) ->
-                criteriaBuilder.greaterThan(root.get("endTime"), LocalDateTime.now()));
+        LocalDateTime now = LocalDateTime.now();
+        log.info("Building specification: ended(after = {})", now);
+        return (root, query, cb) ->
+                cb.greaterThan(root.get("endTime"), now);
     }
 
     public static Specification<Voting> isNotVoted(long userId) {
-        return ((root, query, criteriaBuilder) ->
-                criteriaBuilder.isNull(root.join("votingUsers").get("answer")));
+        log.info("Building specification: isNotVoted(userId = {})", userId);
+        return (root, query, cb) ->
+                cb.isNull(root.join("votingUsers").get("answer"));
     }
 
     public static Specification<Voting> isVoted(long userId) {
-        return ((root, query, criteriaBuilder) ->
-                criteriaBuilder.isNotNull(root.join("votingUsers").get("answer")));
+        log.info("Building specification: isVoted(userId = {})", userId);
+        return (root, query, cb) ->
+                cb.isNotNull(root.join("votingUsers").get("answer"));
     }
 
     public static Specification<Voting> byClass(long classId) {
-        return ((root, query, criteriaBuilder) ->
-                null); //TODO
+        log.info("Building specification: byClass(classId = {}) [TODO]", classId);
+        return (root, query, cb) -> null; // TODO: реалізуй при потребі
     }
 }

@@ -19,7 +19,6 @@ public interface VotingService {
     List<Voting> findAllByUser(long userId);
 
     List<Voting> findAllByUserAndLevelClass(long userId);
-    List<Voting> findAllByClass(long classId);
 
     Page<Voting> findAllByUser(long userId, String name, Boolean now, Boolean isNotVoted, int page, int size);
     Page<Voting> findAllByCreator(long userId, String name, Boolean now, Boolean notStarted, int page, int size);

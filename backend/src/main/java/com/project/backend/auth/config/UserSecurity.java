@@ -8,14 +8,6 @@ import com.project.backend.services.inter.petition.CommentService;
 import com.project.backend.services.inter.petition.PetitionService;
 import com.project.backend.services.inter.voting.VotingService;
 import com.project.backend.services.inter.voting.VotingUserService;
-import com.project.backend.models.petition.Petition;
-import com.project.backend.services.inter.ClassService;
-import com.project.backend.services.inter.SchoolService;
-import com.project.backend.services.inter.UserService;
-import com.project.backend.services.inter.petition.CommentService;
-import com.project.backend.services.inter.petition.PetitionService;
-import com.project.backend.services.inter.voting.VotingService;
-import com.project.backend.services.inter.voting.VotingUserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -31,12 +23,6 @@ public class UserSecurity {
     private final CommentService commentService;
     private final VotingService votingService;
     private final VotingUserService votingUserService;
-
-    private boolean checkUser(Authentication authentication, String username) {
-        log.info("preAuth: Checking user {}", username);
-        String authenticatedUserEmail = userService.findUserByAuth(authentication).getEmail();
-        return authenticatedUserEmail.equals(username);
-    }
 
     public boolean checkUser(Authentication authentication, long userId) {
         log.info("preAuth: Checking user {}", userId);

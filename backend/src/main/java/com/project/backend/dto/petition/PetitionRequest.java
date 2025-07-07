@@ -13,5 +13,4 @@ public class PetitionRequest {
     private String description;
     @NotBlank(message = "Level Type must be provided")
     private String levelType;
-    private Long levelId;
 }

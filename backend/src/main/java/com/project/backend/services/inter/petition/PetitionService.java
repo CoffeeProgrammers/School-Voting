@@ -8,7 +8,7 @@ import org.springframework.data.domain.Page;
 import java.util.List;
 
 public interface PetitionService {
-    Petition create(Petition petition, long levelId, User creator, String targetName);
+    Petition create(Petition petition, User creator, String targetName);
 
     void delete(long id);
 

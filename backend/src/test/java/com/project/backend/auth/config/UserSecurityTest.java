@@ -128,6 +128,7 @@ class UserSecurityTest {
         school.setId(1L);
         creator.setSchool(school);
         petition.setCreator(creator);
+        petition.setTargetId(1L);
 
         User user = new User();
         user.setSchool(school);

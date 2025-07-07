@@ -15,14 +15,11 @@ public class PetitionDtoTest {
         dto1.setName("Name");
         dto1.setLevelType("LevelType");
         dto1.setDescription("Description");
-        dto1.setLevelId(1L);
 
         PetitionRequest dto2 = new PetitionRequest();
         dto2.setName(dto1.getName());
         dto2.setLevelType(dto1.getLevelType());
         dto2.setDescription(dto1.getDescription());
-        dto2.setLevelId(dto1.getLevelId());
-
 
         assertEquals(dto1, dto2);
         assertEquals(dto1.hashCode(), dto2.hashCode());

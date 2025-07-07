@@ -34,24 +34,25 @@ public class PetitionServiceImpl implements PetitionService {
     private final CommentService commentService;
 
     @Override
-    public Petition create(Petition petition, long levelId, User creator, String targetName) {
+    public Petition create(Petition petition, User creator, String targetName) {
         log.info("Service: Creating a new petition {}", petition);
         if (petition.getLevelType().equals(LevelType.GROUP_OF_PARENTS_AND_STUDENTS)
                 || petition.getLevelType().equals(LevelType.GROUP_OF_TEACHERS)) {
             throw new IllegalArgumentException("Cannot create a petition with such level type.");
-        }
-        if (petition.getLevelType() == LevelType.CLASS && creator.getMyClass().getId() != levelId) {
-            throw new IllegalArgumentException("Cannot create a petition in class where u are not.");
-        }
-        if (petition.getLevelType() == LevelType.SCHOOL && creator.getSchool().getId() != levelId) {
-            throw new IllegalArgumentException("Cannot create a petition in school where u are not.");
         }
         LocalDateTime now = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0);
         petition.setCreationTime(now);
         petition.setEndTime(now.plusDays(45));
         petition.setCreator(creator);
         petition.setStatus(Status.ACTIVE);
-        petition.setTargetId(levelId);
+        if(petition.getLevelType() == LevelType.CLASS) {
+            if(creator.getMyClass() == null) {
+                throw new IllegalArgumentException("Can not create petition for class, while not in class");
+            }
+            petition.setTargetId(creator.getMyClass().getId());
+        } else {
+            petition.setTargetId(creator.getSchool().getId());
+        }
         petition.setTargetName(targetName);
         return petitionRepository.save(petition);
     }

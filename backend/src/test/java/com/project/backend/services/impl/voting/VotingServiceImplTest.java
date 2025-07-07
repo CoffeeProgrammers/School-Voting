@@ -544,4 +544,43 @@ class VotingServiceImplTest {
 
         assertEquals(1, result.size());
     }
+
+    @Test
+    void findAllByUserAndLevelClass_shouldReturnList() {
+        long userId = 1L;
+        List<Voting> expectedVotings = List.of(TestUtil.createVoting("S"), TestUtil.createVoting("E"));
+
+        when(votingRepository.findAll((Specification<Voting>)any())).thenReturn(expectedVotings);
+
+        List<Voting> result = votingService.findAllByUserAndLevelClass(userId);
+
+        assertEquals(expectedVotings, result);
+        verify(votingRepository).findAll((Specification<Voting>) any());
+    }
+
+    @Test
+    void deleteBy_shouldCallDeleteAllByCreatorSchoolId_whenLevelTypeSchool() {
+        LevelType levelType = LevelType.SCHOOL;
+        long targetId = 5L;
+
+        doNothing().when(votingRepository).deleteAllByCreator_School_Id(targetId);
+
+        votingService.deleteBy(levelType, targetId);
+
+        verify(votingRepository).deleteAllByCreator_School_Id(targetId);
+        verify(votingRepository, never()).deleteAllByCreator_MyClass_Id(anyLong());
+    }
+
+    @Test
+    void deleteBy_shouldCallDeleteAllByCreatorMyClassId_whenLevelTypeNotSchool() {
+        LevelType levelType = LevelType.CLASS; // або інший, відмінний від SCHOOL
+        long targetId = 7L;
+
+        doNothing().when(votingRepository).deleteAllByCreator_MyClass_Id(targetId);
+
+        votingService.deleteBy(levelType, targetId);
+
+        verify(votingRepository).deleteAllByCreator_MyClass_Id(targetId);
+        verify(votingRepository, never()).deleteAllByCreator_School_Id(anyLong());
+    }
 }

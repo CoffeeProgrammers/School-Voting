@@ -88,7 +88,7 @@ public class ClassController {
     @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasAnyRole('STUDENT')")
     @GetMapping("/my")
     @ResponseStatus(HttpStatus.OK)
-    public ClassFullResponse getClassById(@PathVariable(value = "school_id") long schoolId,
+    public ClassFullResponse getMyClass(@PathVariable(value = "school_id") long schoolId,
                                           Authentication auth) {
         log.info("Controller: Getting my class user");
         User user = userService.findUserByAuth(auth);
@@ -147,5 +147,4 @@ public class ClassController {
         }
         classService.unassignUserFromClass(classId, userIds);
     }
-
 }

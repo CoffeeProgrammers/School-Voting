@@ -1,4 +1,5 @@
 import * as React from 'react';
+import {useState} from 'react';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 import Grow from '@mui/material/Grow';
 import Paper from '@mui/material/Paper';
@@ -17,6 +18,8 @@ const AccountMenu = () => {
     const [open, setOpen] = React.useState(false);
     const anchorRef = React.useRef(null);
 
+    const [loading, setLoading] = useState(false);
+
     const handleToggle = () => {
         setOpen((prevOpen) => !prevOpen);
     };
@@ -32,10 +35,14 @@ const AccountMenu = () => {
     const handleLogout = async () => {
         console.log("Logout")
         try {
+            setLoading(true);
             await AuthService.logout();
         } catch (error) {
             console.error("Error during logout:", error);
             throw error;
+        } finally {
+            setLoading(false);
+            setOpen(false);
         }
     };
 
@@ -81,7 +88,7 @@ const AccountMenu = () => {
                                     <MenuItem component={Link} to={"/profile"} onClick={handleClose}>
                                         Profile
                                     </MenuItem>
-                                    <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                                    <MenuItem disabled={loading} onClick={handleLogout}>Logout</MenuItem>
                                 </MenuList>
                             </ClickAwayListener>
                         </Paper>

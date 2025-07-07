@@ -1,204 +1,87 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Button, Stack} from "@mui/material";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Search from "../../components/layouts/list/Search";
 import Divider from "@mui/material/Divider";
 import theme from "../../assets/theme";
-import VotingListBox from "../../components/basic/voting/VotingListBox";
-
-const voting = [
-    {
-        "id": 1,
-        "name": "Poll on Environmental Policy",
-        "levelType": "NATIONAL",
-        "startTime": "2024-09-30T23:59:59",
-        "endTime": "2026-09-30T23:59:59",
-        "statistics": {
-            "answers": [
-                {"id": 1, "name": "Yes", "count": 900},
-                {"id": 2, "name": "No", "count": 500},
-                {"id": 3, "name": "Abstain", "count": 100},
-                {"id": 4, "name": "Need more info", "count": 50}
-            ],
-            "countAll": 1800,
-            "countAllAnswered": 1550
-        },
-        "isAnswered": false
-    },
-    {
-        "id": 2,
-        "name": "Budget Allocation Vote",
-        "levelType": "REGIONAL",
-        "startTime": "2025-07-01T09:00:00Z",
-        "endTime": "2026-07-03T17:00:00Z",
-        "statistics": {
-            "answers": [
-                {"id": 5, "name": "Yes", "count": 430},
-                {"id": 6, "name": "No", "count": 290},
-                {"id": 7, "name": "Abstain", "count": 60},
-                {"id": 8, "name": "Partially support", "count": 70}
-            ],
-            "countAll": 950,
-            "countAllAnswered": 850
-        },
-        "isAnswered": false
-    },
-    {
-        "id": 3,
-        "name": "New Public Transport Lines",
-        "levelType": "CITY",
-        "startTime": "2025-06-15T10:00:00Z",
-        "endTime": "2025-06-20T18:00:00Z",
-        "statistics": {
-            "answers": [
-                {"id": 9, "name": "Yes", "count": 800},
-                {"id": 10, "name": "No", "count": 250},
-                {"id": 11, "name": "Abstain", "count": 100}
-            ],
-            "countAll": 1250,
-            "countAllAnswered": 1150
-        },
-        "isAnswered": false
-    },
-    {
-        "id": 4,
-        "name": "Local Festival Theme",
-        "levelType": "COMMUNITY",
-        "startTime": "2025-06-10T12:00:00Z",
-        "endTime": "2026-06-11T12:00:00Z",
-        "statistics": {
-            "answers": [
-                {"id": 12, "name": "Yes", "count": 60},
-                {"id": 13, "name": "No", "count": 90},
-                {"id": 14, "name": "Abstain", "count": 10},
-                {"id": 15, "name": "Prefer other theme", "count": 30}
-            ],
-            "countAll": 250,
-            "countAllAnswered": 190
-        },
-        "isAnswered": true
-    },
-    {
-        "id": 5,
-        "name": "Change School Schedule",
-        "levelType": "REGIONAL",
-        "startTime": "2025-05-20T08:00:00Z",
-        "endTime": "2025-05-25T20:00:00Z",
-        "statistics": {
-            "answers": [
-                {"id": 16, "name": "Yes", "count": 600},
-                {"id": 17, "name": "No", "count": 400},
-                {"id": 18, "name": "Abstain", "count": 120}
-            ],
-            "countAll": 1200,
-            "countAllAnswered": 1120
-        },
-        "isAnswered": false
-    },
-    {
-        "id": 6,
-        "name": "City Clean-up Initiative",
-        "levelType": "CITY",
-        "startTime": "2025-07-01T10:00:00Z",
-        "endTime": "2025-07-10T22:00:00Z",
-        "statistics": {
-            "answers": [
-                {"id": 19, "name": "Yes", "count": 400},
-                {"id": 20, "name": "No", "count": 250},
-                {"id": 21, "name": "Abstain", "count": 80},
-                {"id": 22, "name": "Volunteer only", "count": 70},
-                {"id": 23, "name": "Donate only", "count": 40}
-            ],
-            "countAll": 950,
-            "countAllAnswered": 840
-        },
-        "isAnswered": false
-    },
-    {
-        "id": 7,
-        "name": "Renaming Public Spaces",
-        "levelType": "NATIONAL",
-        "startTime": "2025-05-01T09:00:00Z",
-        "endTime": "2025-05-07T21:00:00Z",
-        "statistics": {
-            "answers": [
-                {"id": 24, "name": "Yes", "count": 1000},
-                {"id": 25, "name": "No", "count": 800},
-                {"id": 26, "name": "Abstain", "count": 200}
-            ],
-            "countAll": 2200,
-            "countAllAnswered": 2000
-        },
-        "isAnswered": true
-    },
-    {
-        "id": 8,
-        "name": "Smoking Ban in Public Parks",
-        "levelType": "CITY",
-        "startTime": "2025-07-01T07:00:00Z",
-        "endTime": "2025-07-08T18:00:00Z",
-        "statistics": {
-            "answers": [
-                {"id": 27, "name": "Yes", "count": 520},
-                {"id": 28, "name": "No", "count": 310},
-                {"id": 29, "name": "Abstain", "count": 100}
-            ],
-            "countAll": 1100,
-            "countAllAnswered": 930
-        },
-        "isAnswered": false
-    },
-    {
-        "id": 9,
-        "name": "Electric Vehicle Subsidies",
-        "levelType": "NATIONAL",
-        "startTime": "2025-06-01T00:00:00Z",
-        "endTime": "2025-06-10T00:00:00Z",
-        "statistics": {
-            "answers": [
-                {"id": 30, "name": "Yes", "count": 1300},
-                {"id": 31, "name": "No", "count": 700},
-                {"id": 32, "name": "Abstain", "count": 200},
-                {"id": 33, "name": "Only for low-income", "count": 150}
-            ],
-            "countAll": 2500,
-            "countAllAnswered": 2350
-        },
-        "isAnswered": true
-    },
-    {
-        "id": 10,
-        "name": "Mandatory Recycling",
-        "levelType": "CITY",
-        "startTime": "2026-07-01T06:00:00Z",
-        "endTime": "2028-07-04T20:00:00Z",
-        "statistics": {
-            "answers": [
-                {"id": 34, "name": "Yes", "count": 870},
-                {"id": 35, "name": "No", "count": 410},
-                {"id": 36, "name": "Abstain", "count": 100},
-                {"id": 37, "name": "Only for businesses", "count": 70}
-            ],
-            "countAll": 1600,
-            "countAllAnswered": 1450
-        },
-        "isAnswered": false
-    }
-]
+import VotingList from "../../components/basic/voting/VotingList";
+import VotingService from "../../services/base/ext/VotingService";
+import Cookies from "js-cookie";
+import Loading from "../../components/layouts/Loading";
+import PaginationBox from "../../components/layouts/list/PaginationBox";
 
 
 const VotingListPage = () => {
+    const role = Cookies.get('role')
+    const isDirector = role === 'DIRECTOR'
+
+    const [votingList, setVotingList] = useState([])
+
     const [searchName, setSearchName] = useState(null)
-    const [filter, setFilter] = useState(null)
+    const [activeFilter, setActiveFilter] = useState(null)
+    const [isNotVoted, setIsNotVoted] = useState(null)
 
-    const filters = [
-        {value: null, label: 'All'},
-        {value: 'ACTIVE', label: 'Active'},
-        {value: 'VOTED', label: 'Voted'},
+    const [page, setPage] = useState(1);
+    const [pagesCount, setPagesCount] = useState(1)
 
-        {value: 'FINISHED', label: 'Finished'},
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        setPage(1);
+    }, [searchName, activeFilter, isNotVoted]);
+
+    useEffect(() => {
+        window.scrollTo({top: 0, behavior: 'smooth'});
+    }, [page]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            setLoading(true);
+            try {
+                const response = role === 'DIRECTOR' ? (
+                    await VotingService.getVotingForDirector({
+                        page: page - 1,
+                        size: 10,
+                        name: searchName,
+                        now: activeFilter
+                    })
+                ) : (
+                    await VotingService.getMyVoting({
+                        page: page - 1,
+                        size: 10,
+                        name: searchName,
+                        now: activeFilter,
+                        isNotVote: isNotVoted,
+                    })
+                )
+
+                setVotingList(response.content)
+                setPagesCount(response.totalPages)
+            } catch (error) {
+                setError(error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+    }, [searchName, activeFilter, isNotVoted, page]);
+
+    const activeFilters = [
+        {value: true, label: 'Active'},
+        {value: false, label: 'Finished'},
     ];
+
+    const isNotVotedFilters = [
+        {value: true, label: 'Not voted'},
+        {value: false, label: 'Voted'},
+    ];
+
+    if (error) {
+        return <Typography color={"error"}>Error: {error.message}</Typography>;
+    }
 
     return (
         <Box>
@@ -207,6 +90,7 @@ const VotingListPage = () => {
                 <Typography variant="h6" fontWeight={'bold'}>Voting</Typography>
                 <Box sx={{alignItems: 'center', display: "flex", justifyContent: "space-between"}} gap={0.25}>
                     <Search
+                        label={"Name"}
                         searchQuery={searchName}
                         setSearchQuery={setSearchName}
                         sx={{mr: 1.5}}
@@ -221,28 +105,68 @@ const VotingListPage = () => {
 
             <Divider sx={{mt: 0.75}}/>
             <Stack direction="row" width={'100%'}>
-                {filters.map((option, index) => (
-                    <Button key={index} onClick={() => setFilter(option.value)} fullWidth
-                            sx={{height: 40, borderRadius: 0, width: index !== 0 ? '100%' : 100}}>
-                        <Typography noWrap color={filter === option.value ? 'primary' : 'text.secondary'}
+                <Button
+                    onClick={() => {
+                        setActiveFilter(null)
+                        setIsNotVoted(null)
+                    }}
+                    fullWidth sx={{height: 40, borderRadius: 0, width: 100}}
+                >
+                    <Typography
+                        noWrap
+                        color={(activeFilter === null && isNotVoted === null) ? 'primary' : 'text.secondary'}
+                        sx={{
+                            borderBottom: "2.5px solid",
+                            borderBottomColor: (activeFilter === null && isNotVoted) === null ? theme.palette.primary.main : "transparent",
+                        }}
+                    >
+                        All
+                    </Typography>
+                </Button>
+
+                {activeFilters.map((option, index) => (
+                    <Button key={index} onClick={() => setActiveFilter(option.value)} fullWidth
+                            sx={{height: 40, borderRadius: 0, width: '100%'}}>
+                        <Typography noWrap color={activeFilter === option.value ? 'primary' : 'text.secondary'}
                                     sx={{
                                         borderBottom: "2.5px solid",
-                                        borderBottomColor: filter === option.value ? theme.palette.primary.main : "transparent",
+                                        borderBottomColor: activeFilter === option.value ? theme.palette.primary.main : "transparent",
                                     }}>
                             {option.label}
                         </Typography>
                     </Button>
                 ))}
+
+                {!isDirector && (
+                    isNotVotedFilters.map((option, index) => (
+                        <Button key={index} onClick={() => setIsNotVoted(option.value)} fullWidth
+                                sx={{height: 40, borderRadius: 0, width: '100%'}}>
+                            <Typography noWrap color={isNotVoted === option.value ? 'primary' : 'text.secondary'}
+                                        sx={{
+                                            borderBottom: "2.5px solid",
+                                            borderBottomColor: isNotVoted === option.value ? theme.palette.primary.main : "transparent",
+                                        }}>
+                                {option.label}
+                            </Typography>
+                        </Button>
+                    )))}
             </Stack>
             <Divider sx={{mb: 0.75}}/>
 
-            <Stack direction="column">
-                {voting.map((voting) => (
-                    <Box key={voting.id}>
-                        <VotingListBox voting={voting}/>
-                    </Box>
-                ))}
-            </Stack>
+            {loading ? <Loading/> : (<>
+                    <VotingList votingList={votingList}/>
+
+                    {pagesCount > 1 && (
+                        <Box sx={{marginTop: "auto"}}>
+                            <PaginationBox
+                                page={page}
+                                pagesCount={pagesCount}
+                                setPage={setPage}
+                            />
+                        </Box>
+                    )}
+                </>
+            )}
         </Box>
     );
 };

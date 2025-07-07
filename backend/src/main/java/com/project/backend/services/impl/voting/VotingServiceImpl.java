@@ -168,10 +168,10 @@ public class VotingServiceImpl implements VotingService {
 
     @Override
     public Page<Voting> findAllForDirector(
-            long userId, String name, int page, int size) {
+            long userId, String name, Boolean now, int page, int size) {
         log.info("Service: Finding all votings for director {}", userId);
 
-        Specification<Voting> voitingSpecification = createSpecification(name, false, null, null, null, null);
+        Specification<Voting> voitingSpecification = createSpecification(name, false, now, null, null, null);
         Specification<Voting> fullSpecification = voitingSpecification == null ? VotingSpecification.byDirector(userId) : voitingSpecification.and(VotingSpecification.byDirector(userId));
 
         return votingRepository.findAll(

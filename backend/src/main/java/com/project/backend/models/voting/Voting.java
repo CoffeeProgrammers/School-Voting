@@ -39,6 +39,7 @@ public class Voting {
     public boolean now(){
         return LocalDateTime.now().isAfter(this.startTime) && LocalDateTime.now().isBefore(this.endTime);
     }
+
     @OneToMany(mappedBy = "voting")
     private List<UserVotingEvent> userVotingEvents = new ArrayList<>();
 }

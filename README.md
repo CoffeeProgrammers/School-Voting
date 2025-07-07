@@ -79,7 +79,7 @@ docker-compose up --build
 
 
 6. Base user
-    - email - bulakovskijvladislav@gmail.com (DIRECTOR)
+    - email - bulakovskijvladislav@gmail.com (DIRECTOR of Greenwood High School)
     - password(For all base users) - passWord1
 ---
 

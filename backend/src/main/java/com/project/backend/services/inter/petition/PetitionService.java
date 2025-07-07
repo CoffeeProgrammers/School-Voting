@@ -40,4 +40,6 @@ public interface PetitionService {
     List<Petition> findAllByUserAndLevelClass(long userId);
 
     List<Petition> findAllByClass(long classId);
+
+    void save(Petition petition);
 }

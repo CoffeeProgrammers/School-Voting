@@ -45,8 +45,8 @@ public class PetitionServiceImpl implements PetitionService {
         petition.setEndTime(now.plusDays(45));
         petition.setCreator(creator);
         petition.setStatus(Status.ACTIVE);
-        if(petition.getLevelType() == LevelType.CLASS) {
-            if(creator.getMyClass() == null) {
+        if (petition.getLevelType() == LevelType.CLASS) {
+            if (creator.getMyClass() == null) {
                 throw new IllegalArgumentException("Can not create petition for class, while not in class");
             }
             petition.setTargetId(creator.getMyClass().getId());
@@ -86,7 +86,7 @@ public class PetitionServiceImpl implements PetitionService {
         if (!(petition.getStatus().equals(Status.ACTIVE))) {
             throw new IllegalStateException("Petition is not active.");
         }
-        if(!(petition.now())){
+        if (!(petition.now())) {
             petition.setStatus(Status.UNSUCCESSFUL);
             petitionRepository.save(petition);
             throw new IllegalStateException("Petition is ended.");
@@ -103,15 +103,20 @@ public class PetitionServiceImpl implements PetitionService {
     @Override
     public void checkingStatus(Petition petition) {
         log.info("Service: Checking status for petition {}", petition.getId());
-        long needed = countAll(petition);
-        if (petition.getCount() >= needed) {
-            petition.setCountNeeded(needed);
-            petition.setStatus(Status.WAITING_FOR_CONSIDERATION);
-        } else {
-            if (!petition.now()){
+        if (petition.getStatus() == Status.ACTIVE) {
+            long needed = countAll(petition);
+            log.info("Service: count {}, needed {}, petition {}", petition.getCount(), needed, petition.getId());
+            if (petition.getCount() >= needed) {
+                petition.setCountNeeded(needed);
+                petition.setStatus(Status.WAITING_FOR_CONSIDERATION);
+                log.info("Service: Changed status for petition {}, status WAITING_FOR_CONSIDERATION", petition.getId());
+            } else if (!petition.now()) {
+                petition.setCountNeeded(needed);
                 petition.setStatus(Status.UNSUCCESSFUL);
+                log.info("Service: Changed status for petition {}, status UNSUCCESSFUL", petition.getId());
             }
         }
+
     }
 
     @Override
@@ -222,22 +227,25 @@ public class PetitionServiceImpl implements PetitionService {
                         {
                             if (petition.now() && petition.getStatus() == Status.ACTIVE) {
                                 petition.decrementCount();
-                                checkingStatus(petition);
                             }
                         }).toList());
-        petitionRepository.saveAll(petitionRepository.findAll(PetitionSpecification.byUser(userService.findById(userId))).stream().peek(this::checkingStatus).toList());
     }
 
     @Override
-    public List<Petition> findAllByUserAndLevelClass(long userId){
+    public List<Petition> findAllByUserAndLevelClass(long userId) {
         log.info("Service: Finding all petitions by user {}", userId);
         return petitionRepository.findAll(PetitionSpecification.byUserInClass(userService.findById(userId)));
     }
 
     @Override
-    public List<Petition> findAllByClass(long classId){
+    public List<Petition> findAllByClass(long classId) {
         log.info("Service: Finding all petitions by class {}", classId);
         return petitionRepository.findAll(PetitionSpecification.byClass(classId));
+    }
+
+    @Override
+    public void save(Petition petition) {
+        petitionRepository.save(petition);
     }
 
     private Specification<Petition> createSpecification(String name, String status) {

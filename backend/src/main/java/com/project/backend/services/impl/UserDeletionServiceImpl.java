@@ -2,6 +2,7 @@ package com.project.backend.services.impl;
 
 import com.project.backend.models.School;
 import com.project.backend.models.User;
+import com.project.backend.models.petition.Petition;
 import com.project.backend.repositories.repos.UserRepository;
 import com.project.backend.repositories.specification.UserSpecification;
 import com.project.backend.services.inter.SchoolService;
@@ -59,8 +60,13 @@ public class UserDeletionServiceImpl implements UserDeletionService {
         votingUserService.deleteWithUser(userId);
 
         realmResource.users().delete(user.getKeycloakUserId());
-
+        List<Petition> petitions = petitionService.findAllMy(userId);
         userRepository.deleteById(user.getId());
+
+        for(Petition petition : petitions) {
+            petitionService.checkingStatus(petition);
+            petitionService.save(petition);
+        }
 
         log.info("Service: Deleted user with id {}", userId);
     }

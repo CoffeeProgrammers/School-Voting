@@ -1,10 +1,8 @@
 package com.project.backend.mappers;
 
 import com.project.backend.dto.clazz.ClassCreateRequest;
-import com.project.backend.dto.clazz.ClassFullResponse;
-import com.project.backend.dto.clazz.ClassListResponse;
+import com.project.backend.dto.clazz.ClassResponse;
 import com.project.backend.dto.clazz.ClassUpdateRequest;
-import com.project.backend.dto.user.UserListResponse;
 import com.project.backend.models.Class;
 import com.project.backend.models.User;
 import org.instancio.Instancio;
@@ -13,7 +11,6 @@ import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 import static com.project.backend.TestUtil.createUser;
@@ -65,14 +62,14 @@ public class ClassMapperTest {
     }
 
     @Test
-    void fromClassToListResponse_null() {
-        ClassListResponse dto = classMapper.fromClassToListResponse(null);
+    void fromClassToResponse_null() {
+        ClassResponse dto = classMapper.fromClassToResponse(null);
         assertNull(dto);
     }
 
     @Test
-    void fromClassToListResponse_success() {
-        ClassListResponse dto = classMapper.fromClassToListResponse(classEntity);
+    void fromClassToResponse_success() {
+        ClassResponse dto = classMapper.fromClassToResponse(classEntity);
 
         assertNotNull(dto);
         assertEquals(classEntity.getId(), dto.getId());
@@ -80,22 +77,7 @@ public class ClassMapperTest {
     }
 
     @Test
-    void fromClassToFullResponse_null() {
-        ClassFullResponse dto = classMapper.fromClassToFullResponse(null);
-        assertNull(dto);
-    }
-
-    @Test
-    void fromClassToFullResponse_success() {
-        ClassFullResponse dto = classMapper.fromClassToFullResponse(classEntity);
-
-        assertNotNull(dto);
-        assertEquals(classEntity.getId(), dto.getId());
-        assertEquals(classEntity.getName(), dto.getName());
-    }
-
-    @Test
-    void fromClassToFullResponse_withUsers_success() {
+    void fromClassToResponse_withUsers_success() {
         User user1 = createUser("STUDENT", "student@gmail.com");
 
         User user2 = createUser("TEACHER", "teacher@gmail.com");
@@ -109,24 +91,11 @@ public class ClassMapperTest {
 
         classEntity.setUsers(users);
 
-        ClassFullResponse dto = classMapper.fromClassToFullResponse(classEntity);
+        ClassResponse dto = classMapper.fromClassToResponse(classEntity);
 
         assertNotNull(dto);
         assertEquals(classEntity.getId(), dto.getId());
         assertEquals(classEntity.getName(), dto.getName());
-        assertNotNull(dto.getUsers());
-        assertEquals(3, dto.getUsers().size());
-
-        UserListResponse mappedUser = dto.getUsers().stream()
-                .filter(Objects::nonNull)
-                .filter(u -> u.getId().equals(1L))
-                .findFirst()
-                .orElse(null);
-
-        assertNotNull(mappedUser);
-        assertEquals(user1.getEmail(), mappedUser.getEmail());
-        assertEquals(user1.getFirstName(), mappedUser.getFirstName());
-        assertEquals(user1.getLastName(), mappedUser.getLastName());
     }
 
 }

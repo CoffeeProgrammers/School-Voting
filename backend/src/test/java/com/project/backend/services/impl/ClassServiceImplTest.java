@@ -1,5 +1,6 @@
 package com.project.backend.services.impl;
 
+import com.project.backend.TestUtil;
 import com.project.backend.models.Class;
 import com.project.backend.models.School;
 import com.project.backend.models.User;
@@ -175,6 +176,16 @@ class ClassServiceImplTest {
 
         Page<Class> page = classService.findAllBySchool(1L, "10-А", 0, 10);
         assertNotNull(page);
+    }
+
+    @Test
+    void testFindAllBySchool() {
+        when(classRepository.findAll(any(Specification.class))).thenReturn(List.of(TestUtil.createClass("9V")));
+
+        List<Class> classes = classService.findAllBySchool(1L);
+        assertNotNull(classes);
+        assertEquals(1, classes.size());
+        assertEquals("9V", classes.get(0).getName());
     }
 
     @Test

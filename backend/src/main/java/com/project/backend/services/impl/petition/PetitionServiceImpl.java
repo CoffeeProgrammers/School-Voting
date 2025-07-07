@@ -188,17 +188,16 @@ public class PetitionServiceImpl implements PetitionService {
     }
 
     @Override
-    public Page<Petition> findAllForDirector(String name, String status, long schoolId, int page, int size) {
+    public Page<Petition> findAllForDirector(String name, String status, long schoolId, int page, int size, List<Long> classIds) {
         log.info("Service: Finding all petitions for director, name {} and status {}", name, status);
 
         Specification<Petition> petitionSpecification = createSpecification(name, status);
-
         if (petitionSpecification == null) {
             return petitionRepository.findAll(
-                    PetitionSpecification.bySchoolForDirector(schoolId), PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "endTime")));
+                    PetitionSpecification.bySchoolForDirector(schoolId, classIds), PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "endTime")));
         } else {
             return petitionRepository.findAll(
-                    petitionSpecification.and(PetitionSpecification.bySchoolForDirector(schoolId)), PageRequest.of(
+                    petitionSpecification.and(PetitionSpecification.bySchoolForDirector(schoolId, classIds)), PageRequest.of(
                             page, size, Sort.by(
                                     Sort.Direction.ASC, "endTime")));
         }
@@ -220,7 +219,7 @@ public class PetitionServiceImpl implements PetitionService {
                                 PetitionSpecification.byUserWithVote(userService.findById(userId)))
                         .stream().peek(petition ->
                         {
-                            if (petition.now()) {
+                            if (petition.now() && petition.getStatus() == Status.ACTIVE) {
                                 petition.decrementCount();
                                 checkingStatus(petition);
                             }

@@ -137,6 +137,11 @@ public class ClassServiceImpl implements ClassService {
     }
 
     @Override
+    public List<Class> findAllBySchool(long schoolId) {
+        return classRepository.findAll(ClassSpecification.bySchool(schoolId));
+    }
+
+    @Override
     public Class findByUser(User user) {
         log.info("Service: Finding Classes with id {}", user.getId());
         List<Class> clazz = classRepository.findAll(ClassSpecification.hasUser(user));

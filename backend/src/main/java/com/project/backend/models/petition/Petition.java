@@ -51,10 +51,18 @@ public class Petition {
 
     public void incrementCount() {
         log.info("Model: Increment count {} of petition {}", count, this.id);
+        if(status != Status.ACTIVE) {
+            log.warn("Model: did not increment count {} of petition {}, because status is {}", count, this.id, status);
+            return;
+        }
         ++this.count;
     }
     public void decrementCount() {
         log.info("Model: Decrement count {} of petition {}", count, this.id);
+        if(status != Status.ACTIVE) {
+            log.warn("Model: did not decrement count {} of petition {}, because status is {}", count, this.id, status);
+            return;
+        }
         --this.count;
     }
     public boolean now(){

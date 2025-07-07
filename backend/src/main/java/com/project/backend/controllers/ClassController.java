@@ -1,8 +1,7 @@
 package com.project.backend.controllers;
 
 import com.project.backend.dto.clazz.ClassCreateRequest;
-import com.project.backend.dto.clazz.ClassFullResponse;
-import com.project.backend.dto.clazz.ClassListResponse;
+import com.project.backend.dto.clazz.ClassResponse;
 import com.project.backend.dto.clazz.ClassUpdateRequest;
 import com.project.backend.dto.wrapper.PaginationListResponse;
 import com.project.backend.mappers.ClassMapper;
@@ -44,23 +43,23 @@ public class ClassController {
     @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasAnyRole('DIRECTOR', 'TEACHER')")
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    public ClassFullResponse createClass(@PathVariable(value = "school_id") long schoolId,
+    public ClassResponse createClass(@PathVariable(value = "school_id") long schoolId,
                                          @Valid @RequestBody ClassCreateRequest classCreateRequest,
                                          Authentication auth) {
         log.info("Controller: Creating a new class");
-        return classMapper.fromClassToFullResponse(
+        return classMapper.fromClassToResponse(
                 classService.create(classMapper.fromRequestToClass(classCreateRequest), classCreateRequest.getUserIds(), schoolId));
     }
 
     @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasAnyRole('DIRECTOR', 'TEACHER')")
     @PutMapping("/update/{class_id}")
     @ResponseStatus(HttpStatus.OK)
-    public ClassFullResponse updateClass(@PathVariable(value = "school_id") long schoolId,
+    public ClassResponse updateClass(@PathVariable(value = "school_id") long schoolId,
                                          @PathVariable(value = "class_id") long classId,
                                          @Valid @RequestBody ClassUpdateRequest classUpdateRequest,
                                          Authentication auth) {
         log.info("Controller: Updating class with id {}", classId);
-        return classMapper.fromClassToFullResponse(
+        return classMapper.fromClassToResponse(
                 classService.update(classMapper.fromRequestToClass(classUpdateRequest), classId));
     }
 
@@ -78,37 +77,37 @@ public class ClassController {
     @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasAnyRole('DIRECTOR', 'TEACHER')")
     @GetMapping("/{class_id}")
     @ResponseStatus(HttpStatus.OK)
-    public ClassFullResponse getClassById(@PathVariable(value = "school_id") long schoolId,
+    public ClassResponse getClassById(@PathVariable(value = "school_id") long schoolId,
                                           @PathVariable(value = "class_id") long classId,
                                           Authentication auth) {
         log.info("Controller: Getting class with id {}", classId);
-        return classMapper.fromClassToFullResponse(classService.findById(classId));
+        return classMapper.fromClassToResponse(classService.findById(classId));
     }
 
     @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasAnyRole('STUDENT')")
     @GetMapping("/my")
     @ResponseStatus(HttpStatus.OK)
-    public ClassFullResponse getMyClass(@PathVariable(value = "school_id") long schoolId,
+    public ClassResponse getMyClass(@PathVariable(value = "school_id") long schoolId,
                                           Authentication auth) {
         log.info("Controller: Getting my class user");
         User user = userService.findUserByAuth(auth);
         Class clazz = classService.findByUser(user);
-        return clazz != null ? classMapper.fromClassToFullResponse(clazz) : null;
+        return clazz != null ? classMapper.fromClassToResponse(clazz) : null;
     }
 
     @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasAnyRole('DIRECTOR', 'TEACHER')")
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public PaginationListResponse<ClassListResponse> getClasses(
+    public PaginationListResponse<ClassResponse> getClasses(
             @PathVariable(value = "school_id") long schoolId,
             @RequestParam(required = false) String name,
             @RequestParam int page,
             @RequestParam int size,
             Authentication auth) {
         log.info("Controller: Getting all the classes in school with id {}", schoolId);
-        PaginationListResponse<ClassListResponse> paginationListResponse = new PaginationListResponse<>();
+        PaginationListResponse<ClassResponse> paginationListResponse = new PaginationListResponse<>();
         Page<Class> classes = classService.findAllBySchool(schoolId, name, page, size);
-        paginationListResponse.setContent(classes.stream().map(classMapper::fromClassToListResponse).toList());
+        paginationListResponse.setContent(classes.stream().map(classMapper::fromClassToResponse).toList());
         paginationListResponse.setTotalPages(classes.getTotalPages());
         return paginationListResponse;
     }

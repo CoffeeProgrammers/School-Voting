@@ -132,6 +132,28 @@ public class UserController {
         return userListResponse;
     }
 
+    @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasAnyRole('STUDENT')")
+    @GetMapping("/class/my")
+    @ResponseStatus(HttpStatus.OK)
+    public PaginationListResponse<UserListResponse> getUsersByClass(
+            @PathVariable(value = "school_id") long schoolId,
+            @RequestParam(required = false) String email,
+            @RequestParam(required = false) String firstName,
+            @RequestParam(required = false) String lastName,
+            @RequestParam int page,
+            @RequestParam int size,
+            Authentication auth) {
+        long classId = userService.findUserByAuth(auth).getMyClass().getId();
+        log.info("Controller: Get users by class with id: {}", classId);
+        Page<User> userPage = userService.findAllByClass(classId, email, firstName, lastName, page, size);
+        PaginationListResponse<UserListResponse> userListResponse = new PaginationListResponse<>();
+        userListResponse.setContent(userPage.getContent().stream().map(userMapper::fromUserToListResponse).toList());
+        userListResponse.setTotalPages(userPage.getTotalPages());
+        return userListResponse;
+    }
+
+
+
     @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasAnyRole('DIRECTOR', 'TEACHER')")
     @GetMapping("/withoutClass")
     @ResponseStatus(HttpStatus.OK)

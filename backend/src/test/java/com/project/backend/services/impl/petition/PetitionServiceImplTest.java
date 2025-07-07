@@ -6,6 +6,7 @@ import com.project.backend.models.enums.LevelType;
 import com.project.backend.models.enums.Status;
 import com.project.backend.models.petition.Petition;
 import com.project.backend.repositories.repos.petition.PetitionRepository;
+import com.project.backend.services.inter.ClassService;
 import com.project.backend.services.inter.UserService;
 import com.project.backend.services.inter.petition.CommentService;
 import jakarta.persistence.EntityNotFoundException;
@@ -24,6 +25,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import static com.project.backend.TestUtil.createClass;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -31,6 +33,7 @@ class PetitionServiceImplTest {
 
     @Mock private PetitionRepository petitionRepository;
     @Mock private UserService userService;
+    @Mock private ClassService classService;
     @Mock private CommentService commentService;
 
     @InjectMocks private PetitionServiceImpl petitionService;
@@ -45,7 +48,7 @@ class PetitionServiceImplTest {
         creator = new User();
         creator.setId(1L);
         creator.setSchool(TestUtil.createSchool("User"));
-        creator.setMyClass(TestUtil.createClass("User"));
+        creator.setMyClass(createClass("User"));
 
         petition = new Petition();
         petition.setId(10L);
@@ -275,8 +278,9 @@ class PetitionServiceImplTest {
     @Test
     void findAllForDirector_shouldCallRepository() {
         when(petitionRepository.findAll((Specification<Petition>)any(), any(PageRequest.class))).thenReturn(Page.empty());
+        when(classService.findAllBySchool(100L)).thenReturn(List.of(createClass("9V")));
 
-        petitionService.findAllForDirector("name", "ACTIVE", 100L, 0, 10);
+        petitionService.findAllForDirector("name", "ACTIVE", 100L, 0, 10, List.of(2025L));
 
         verify(petitionRepository).findAll((Specification<Petition>)any(), any(PageRequest.class));
     }

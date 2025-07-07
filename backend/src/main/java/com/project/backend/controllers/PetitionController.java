@@ -8,6 +8,7 @@ import com.project.backend.dto.petition.PetitionRequest;
 import com.project.backend.dto.wrapper.PaginationListResponse;
 import com.project.backend.mappers.petition.CommentMapper;
 import com.project.backend.mappers.petition.PetitionMapper;
+import com.project.backend.models.Class;
 import com.project.backend.models.User;
 import com.project.backend.models.enums.LevelType;
 import com.project.backend.models.enums.Status;
@@ -135,7 +136,7 @@ public class PetitionController {
             @RequestParam(required = false) String status,
             Authentication auth) {
         log.info("Controller: Getting all petitions for director");
-        Page<Petition> petitionPage = petitionService.findAllForDirector(name, status, schoolId, page, size);
+        Page<Petition> petitionPage = petitionService.findAllForDirector(name, status, schoolId, page, size, classService.findAllBySchool(schoolId).stream().map(Class::getId).toList());
         PaginationListResponse<PetitionListResponse> response = new PaginationListResponse<>();
         response.setContent(petitionPage.getContent().stream().map((Petition petition) -> fromPetitionToPetitionListResponseWithAllInfo(petition, userService.findUserByAuth(auth))).toList());
         response.setTotalPages(petitionPage.getTotalPages());

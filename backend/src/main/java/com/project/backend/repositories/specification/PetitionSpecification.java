@@ -14,10 +14,19 @@ import java.util.List;
 
 @Slf4j
 public class PetitionSpecification {
-    public static Specification<Petition> bySchoolForDirector(long schoolId) {
-        return ((root, query, criteriaBuilder) ->
-                criteriaBuilder.equal(root.get("creator").get("school").get("id"), schoolId));
+    public static Specification<Petition> bySchoolForDirector(Long schoolId, List<Long> classIds) {
+        return (root, query, cb) -> cb.or(
+                cb.and(
+                        cb.equal(root.get("levelType"), LevelType.SCHOOL),
+                        cb.equal(root.get("targetId"), schoolId)
+                ),
+                cb.and(
+                        cb.equal(root.get("levelType"), LevelType.CLASS),
+                        root.get("targetId").in(classIds)
+                )
+        );
     }
+
     public static Specification<Petition> bySchool(long schoolId) {
         log.info("Building specification: bySchool(schoolId = {})", schoolId);
         return (root, query, cb) -> {

@@ -13,6 +13,7 @@ import PetitionPage from "./pages/petitions/PetitionPage";
 import ClassPage from "./pages/class/ClassPage";
 import VotingListPage from "./pages/voting/VotingListPage";
 import VotingPage from "./pages/voting/VotingPage";
+import IntroductionPage from "./pages/introduction/IntroductionPage";
 import SchoolPage from "./pages/school/SchoolPage";
 import ControlPanel from "./pages/control_panel/ControlPanel";
 import Profile from "./pages/user/Profile";
@@ -39,9 +40,10 @@ function App() {
 
 
     const routes = [
-        {path: "/", element: <Navigate to="/petitions" replace/>},
         {path: "/callback", element: <Callback setRole={setRole}/>},
 
+        {path: "/", element: <IntroductionPage/>
+         
         !isTeacher && {path: "/petitions", element: <PetitionsListPage/>},
         !isTeacher && {path: "/petitions/:id", element: <PetitionPage/>},
 
@@ -68,6 +70,7 @@ function App() {
                     <ThemeProvider theme={theme}>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <Routes>
+                                <Route path={'/introduction'} element={<IntroductionPage/>}/>
                                 {routes.map((route, index) => (
                                     <Route element={<PrivateRoute/>} key={index}>
                                         <Route

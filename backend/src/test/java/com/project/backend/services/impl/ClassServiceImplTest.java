@@ -140,6 +140,7 @@ class ClassServiceImplTest {
         User user = new User();
         user.setId(2L);
         user.setRole("STUDENT");
+        user.setMyClass(clazz);
 
         clazz.setUsers(new HashSet<>(Set.of(user)));
 

@@ -43,6 +43,7 @@ public class ModelsTests {
         user2.setUserPetitionEvents(user1.getUserPetitionEvents());
         user2.setUserVotingEvents(user1.getUserVotingEvents());
 
+        assertNotEquals(user1, TestUtil.createComment("New comment"));
         assertNotEquals(user1, null);
         assertEquals(user1, user2);
         assertEquals(user1.toString(), user2.toString());

@@ -10,6 +10,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class VotingSpecification {
 
@@ -29,16 +30,22 @@ public class VotingSpecification {
 
     public static Specification<Voting> byUser(long userId) {
         log.info("Building specification: byUser(userId = {})", userId);
-        return (root, query, cb) ->
-                cb.equal(root.join("votingUsers").get("user").get("id"), userId);
+        return (root, query, cb) -> {
+            Predicate predicate = cb.equal(root.join("votingUsers").get("user").get("id"), userId);
+            Objects.requireNonNull(query).distinct(true);
+            return predicate;
+        };
     }
 
     public static Specification<Voting> byUserInClass(long userId) {
         log.info("Building specification: byUserInClass(userId = {})", userId);
-        return (root, query, cb) -> cb.and(
-                cb.equal(root.join("votingUsers").get("user").get("id"), userId),
-                cb.equal(root.get("levelType"), LevelType.CLASS)
-        );
+        return (root, query, cb) -> {
+            Predicate predicate = cb.and(
+                    cb.equal(root.join("votingUsers").get("user").get("id"), userId),
+                    cb.equal(root.get("levelType"), LevelType.CLASS));
+            Objects.requireNonNull(query).distinct(true);
+            return predicate;
+        };
     }
 
     public static Specification<Voting> byName(String name) {
@@ -77,22 +84,30 @@ public class VotingSpecification {
         return (root, query, cb) ->
                 cb.lessThanOrEqualTo(root.get("endTime"), now);
     }
+
     public static Specification<Voting> isNotVoted(long userId) {
         log.info("Building specification: isNotVoted(userId = {})", userId);
         return (root, query, cb) -> {
-            query.distinct(true);
-            return cb.isNull(root.join("votingUsers", JoinType.LEFT).get("answer"));
+            Objects.requireNonNull(query).distinct(true);
+            var join = root.join("votingUsers", JoinType.LEFT);
+            return cb.and(
+                    cb.equal(join.get("user").get("id"), userId),
+                    cb.isNull(join.get("answer"))
+            );
         };
     }
 
     public static Specification<Voting> isVoted(long userId) {
         log.info("Building specification: isVoted(userId = {})", userId);
         return (root, query, cb) -> {
-            query.distinct(true);
-            return cb.isNotNull(root.join("votingUsers", JoinType.LEFT).get("answer"));
+            Objects.requireNonNull(query).distinct(true);
+            var join = root.join("votingUsers", JoinType.LEFT);
+            return cb.and(
+                    cb.equal(join.get("user").get("id"), userId),
+                    cb.isNotNull(join.get("answer"))
+            );
         };
     }
-
 
     public static Specification<Voting> byClass(long classId) {
         log.info("Building specification: byClass(classId = {}) [TODO]", classId);

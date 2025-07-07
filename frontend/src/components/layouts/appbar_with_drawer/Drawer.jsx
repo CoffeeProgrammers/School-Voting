@@ -12,7 +12,10 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import theme from "../../../assets/theme";
 import BalanceRoundedIcon from '@mui/icons-material/BalanceRounded';
 import HistoryEduRoundedIcon from '@mui/icons-material/HistoryEduRounded';
-import Groups2Icon from '@mui/icons-material/Groups2';
+import HomeWorkIcon from '@mui/icons-material/HomeWork';
+import BuildCircleOutlinedIcon from '@mui/icons-material/BuildCircleOutlined';
+import FlakyRoundedIcon from '@mui/icons-material/FlakyRounded';
+import Cookies from "js-cookie";
 
 const drawerWidth = 240;
 
@@ -71,14 +74,42 @@ const MUIStyledDrawer = styled(MuiDrawer, {shouldForwardProp: (prop) => prop !==
 );
 
 
-
 const Drawer = ({open, handleDrawerClose}) => {
+    const role = Cookies.get('role');
+    const isStudent = role === 'STUDENT';
+    const isTeacher = role === 'TEACHER';
+    const isDirector = role === 'DIRECTOR';
+
+
 
     const navigation = [
-        {type: "navigation", icon: <HistoryEduRoundedIcon sx={{fontSize: 28, ml: -0.25}}/>, title: "Petitions", path: "/petitions"},
+        !isTeacher && {
+            type: "navigation",
+            icon: <HistoryEduRoundedIcon sx={{fontSize: 28, ml: -0.25}}/>,
+            title: "Petitions",
+            path: "/petitions"
+        },
         {type: "navigation", icon: <BalanceRoundedIcon sx={{fontSize: 25}}/>, title: "Voting", path: "/voting"},
+
+
+        isDirector && {type: "divider"},
+
+        isDirector && {
+            type: "navigation",
+            icon: <FlakyRoundedIcon sx={{fontSize: 25}}/>,
+            title: "Petitions Review",
+            path: "/petitions-review"
+        },
+
         {type: "divider"},
-        {type: "navigation", icon: <Groups2Icon sx={{fontSize: 25}}/>, title: "Classes", path: "/classes"},
+        {type: "navigation", icon: <HomeWorkIcon sx={{fontSize: 25}}/>, title: "School", path: "/school"},
+        !isStudent && {
+            type: "navigation",
+            icon: <BuildCircleOutlinedIcon sx={{fontSize: 25}}/>,
+            title: "Control Panel",
+            path: "/control-panel"
+        },
+
         {type: "divider"},
         {type: "navigation", icon: <AccountCircleIcon/>, title: "Profile", path: "/profile"},
     ]
@@ -96,9 +127,9 @@ const Drawer = ({open, handleDrawerClose}) => {
                 {navigation.map((obj, index) => (
                     obj.type === "navigation" ? (
                         <ListItem key={index} disablePadding sx={{display: 'block'}}>
-                           <DrawerNavigationButton open={open} obj={obj}/>
+                            <DrawerNavigationButton open={open} obj={obj}/>
                         </ListItem>
-                    ) : ( obj.type === "divider" && (
+                    ) : (obj.type === "divider" && (
                             <Divider key={index}/>
                         )
                     )

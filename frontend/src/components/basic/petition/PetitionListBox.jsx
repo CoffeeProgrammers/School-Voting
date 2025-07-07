@@ -39,7 +39,7 @@ const PetitionListBox = ({petition}) => {
             },
         }}
              onClick={() => {
-                 navigate(`${petition.id}`)
+                 navigate(`/petitions/${petition.id}`)
              }}
         >
             <Box mt={0.5}>
@@ -54,12 +54,12 @@ const PetitionListBox = ({petition}) => {
             <Box>
                 <Box mt={2}>
                     <Typography variant='h5' mb={0.5} fontWeight="bold">
-                        {petition.countSupport}
+                        {petition.countSupported}
                     </Typography>
 
                     <Progress
                         color={Utils.getStatusMUIColor(petition.status)}
-                        count={petition.countSupport}
+                        count={petition.countSupported}
                         maxCount={petition.countNeeded}
                     />
 

@@ -81,6 +81,7 @@ const PetitionPage = () => {
                 return <Box mt={2.5}>Comments</Box>
         }
     }
+
     return (
         <Box sx={{
             display: 'grid',

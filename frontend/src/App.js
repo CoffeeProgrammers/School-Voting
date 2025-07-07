@@ -4,17 +4,23 @@ import {LocalizationProvider} from '@mui/x-date-pickers';
 import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs';
 import theme from './assets/theme';
 import {history} from "./utils/history";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import {ErrorProvider} from "./contexts/ErrorContext";
 import PageContainer from "./components/layouts/appbar_with_drawer/PageContainer";
 import NotFoundPage from "./pages/not_found_page/NotFoundPage";
-import Classes from "./pages/classes/Classes";
 import PetitionsListPage from "./pages/petitions/PetitionsListPage";
 import PetitionPage from "./pages/petitions/PetitionPage";
-import ClassPage from "./pages/classes/ClassPage";
+import ClassPage from "./pages/class/ClassPage";
 import VotingListPage from "./pages/voting/VotingListPage";
 import VotingPage from "./pages/voting/VotingPage";
 import IntroductionPage from "./pages/introduction/IntroductionPage";
+import SchoolPage from "./pages/school/SchoolPage";
+import ControlPanel from "./pages/control_panel/ControlPanel";
+import Profile from "./pages/user/Profile";
+import PetitionsReviewPage from "./pages/petitions/PetitionsReviewPage";
+import PrivateRoute from "./security/PrivateRoute";
+import Callback from "./security/callback/Callback";
+import Cookies from "js-cookie";
 
 const InitNavigation = ({children}) => {
     const navigate = useNavigate();
@@ -27,22 +33,33 @@ const InitNavigation = ({children}) => {
 };
 
 function App() {
+    const [role, setRole] = useState(Cookies.get('role'))
+    const isStudent = role === 'STUDENT';
+    const isTeacher = role === 'TEACHER';
+    const isDirector = role === 'DIRECTOR';
+
 
     const routes = [
-        { path: "/", element: <Navigate to="/petitions" replace /> },
+        {path: "/callback", element: <Callback setRole={setRole}/>},
 
-        {path: "/introduction", element: <IntroductionPage/>},
-
-        {path: "/petitions", element: <PetitionsListPage/>},
-        {path: "/petitions/:id", element: <PetitionPage/>},
+        {path: "/", element: <IntroductionPage/>
+         
+        !isTeacher && {path: "/petitions", element: <PetitionsListPage/>},
+        !isTeacher && {path: "/petitions/:id", element: <PetitionPage/>},
 
         {path: "/voting", element: <VotingListPage/>},
         {path: "/voting/:id", element: <VotingPage/>},
 
-        {path: "/classes", element: <Classes/>},
-        {path: "/classes/:id", element: <ClassPage/>},
+        isDirector && {path: "/petitions-review", element: <PetitionsReviewPage/>},
 
-        {path: "*", element:<NotFoundPage/>},
+        {path: "/school", element: <SchoolPage/>},
+        !isStudent && {path: "/school/class/:id", element: <ClassPage/>},
+
+        !isStudent && {path: "/control-panel", element: <ControlPanel/>},
+
+        {path: "/profile", element: <Profile/>},
+
+        {path: "*", element: <NotFoundPage/>},
 
     ];
 
@@ -55,12 +72,12 @@ function App() {
                             <Routes>
                                 <Route path={'/introduction'} element={<IntroductionPage/>}/>
                                 {routes.map((route, index) => (
-                                    // <Route element={<PrivateRoute/>} key={index}>
+                                    <Route element={<PrivateRoute/>} key={index}>
                                         <Route
                                             path={route.path}
                                             element={<PageContainer>{route.element}</PageContainer>}
                                         />
-                                    // </Route>
+                                    </Route>
                                 ))}
                             </Routes>
                         </LocalizationProvider>

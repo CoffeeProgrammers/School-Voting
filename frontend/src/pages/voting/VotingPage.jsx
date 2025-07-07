@@ -8,9 +8,9 @@ import Groups2Icon from "@mui/icons-material/Groups2";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import VotingAnswerBox from "../../components/basic/voting/VotingAnswerBox";
 import VotingDate from "../../components/basic/voting/VotingDate";
-import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
 import {blueGrey} from "@mui/material/colors";
 import HowToVoteIcon from "@mui/icons-material/HowToVote";
+import UserList from "../../components/basic/user/UserList";
 
 const voting = {
     "id": 1,
@@ -38,6 +38,18 @@ const voting = {
     "isAnswered": true
 }
 
+const users = [
+    {id: 1, firstName: "Alice", lastName: "Johnson", email: "alice.johnson@example.com"},
+    {id: 2, firstName: "Bob", lastName: "Smith", email: "bob.smith@example.com"},
+    {id: 3, firstName: "Charlie", lastName: "Brown", email: "charlie.brown@example.com"},
+    {id: 4, firstName: "Diana", lastName: "Williams", email: "diana.williams@example.com"},
+    {id: 5, firstName: "Ethan", lastName: "Davis", email: "ethan.davis@example.com"},
+    {id: 6, firstName: "Fiona", lastName: "Clark", email: "fiona.clark@example.com"},
+    {id: 7, firstName: "George", lastName: "Miller", email: "george.miller@example.com"},
+    {id: 8, firstName: "Hannah", lastName: "Taylor", email: "hannah.taylor@example.com"},
+    {id: 9, firstName: "Ian", lastName: "Anderson", email: "ian.anderson@example.com"},
+    {id: 10, firstName: "Julia", lastName: "Thomas", email: "julia.thomas@example.com"}
+];
 
 const VotingPage = () => {
     const [tab, setTab] = useState("Description")
@@ -66,7 +78,7 @@ const VotingPage = () => {
                         {voting.description}
                     </Typography>)
             case 'Participants':
-                return <Box mt={2.5}>Participants</Box>
+                return <UserList users={users}/>
         }
     }
 
@@ -125,8 +137,8 @@ const VotingPage = () => {
                 </Stack>
 
                 <Stack direction="row" width={'100%'}>
-                    {renderTabButton('Description', 105)}
-                    {renderTabButton('Participants', 100)}
+                    {renderTabButton('Description', 110)}
+                    {renderTabButton('Participants', 105)}
                 </Stack>
 
                 <Divider/>
@@ -150,15 +162,14 @@ const VotingPage = () => {
                     <Divider sx={{marginY: 0.5}}/>
 
                     <Box sx={{alignItems: 'center', display: 'flex', justifyContent: 'center',}}>
-                        <Stack direction={'column'} width={'85%'}>
+                        <Stack direction={'column'} width={'100%'} maxWidth={270}>
                             {voting.statistics.answers.map((answer) => (
                                 <Box key={answer.id}>
                                     <VotingAnswerBox
                                         answer={answer}
                                         maxAnswerCount={voting.statistics.countAllAnswered}
                                         selectedAnswer={1}
-                                        setSelectedValue={() => {
-                                        }}/>
+                                        setSelectedValue={() => {}}/>
                                 </Box>
                             ))}
                         </Stack>

@@ -1,11 +1,12 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import Box from "@mui/material/Box";
-import ClassList from "../class/ClassList";
+import ClassListView from "../class/ClassListView";
 import SchoolPageWrapper from "../../components/basic/school/SchoolPageWrapper";
-import Divider from "@mui/material/Divider";
-import UserList from "../../components/basic/user/UserList";
 import Typography from "@mui/material/Typography";
 import Cookies from "js-cookie";
+import UserService from "../../services/base/ext/UserService";
+import Loading from "../../components/layouts/Loading";
+import ClassBox from "../../components/basic/class/ClassBox";
 
 const users = [
     {id: 1, firstName: "Alice", lastName: "Johnson", email: "alice.johnson@example.com"},
@@ -23,21 +24,44 @@ const users = [
 const SchoolPage = () => {
     const role = Cookies.get('role');
     const isStudent = role === 'STUDENT';
+
+    const [user, setUser] = useState()
+
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            setLoading(true);
+            try {
+                const response = await UserService.getMyUser()
+
+                setUser(response)
+            } catch (error) {
+                setError(error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    if (loading) {
+        return <Loading/>;
+    }
+
+    if (error) {
+        return <Typography color={"error"}>Error: {error.message}</Typography>;
+    }
+
     return (
         <SchoolPageWrapper>
             <Box sx={{border: '1px solid #ddd', borderRadius: '5px', marginY: '5px', paddingTop: '15px'}}>
                 {isStudent ? (
-                    <>
-                        <Box sx={{paddingX: '15px', mb: 0.55}}>
-                            <Typography variant={"h6"} fontWeight={'bold'}>My class: 11-A</Typography>
-                        </Box>
-
-                        <Divider/>
-
-                        <UserList users={users}/>
-                    </>
+                    <ClassBox isMy={true}/>
                 ) : (
-                    <ClassList/>
+                    <ClassListView/>
                 )}
 
             </Box>

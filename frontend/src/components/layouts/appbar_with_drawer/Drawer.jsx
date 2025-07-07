@@ -78,7 +78,7 @@ const Drawer = ({open, handleDrawerClose}) => {
     const role = Cookies.get('role');
     const isStudent = role === 'STUDENT';
     const isDirector = role === 'DIRECTOR';
-
+    const isTeacher = role === 'TEACHER';
 
     const navigation = [
         (isStudent || isDirector) && {
@@ -101,7 +101,7 @@ const Drawer = ({open, handleDrawerClose}) => {
 
         {type: "divider"},
         {type: "navigation", icon: <HomeWorkIcon sx={{fontSize: 25}}/>, title: "School", path: "/school"},
-        (isStudent || isDirector) && {
+        (isTeacher || isDirector) && {
             type: "navigation",
             icon: <BuildCircleOutlinedIcon sx={{fontSize: 25}}/>,
             title: "Control Panel",

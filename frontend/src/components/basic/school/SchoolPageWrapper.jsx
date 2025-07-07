@@ -1,18 +1,39 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import Box from "@mui/material/Box";
 import SchoolBox from "./SchoolBox";
+import Loading from "../../layouts/Loading";
+import Typography from "@mui/material/Typography";
+import SchoolService from "../../../services/base/ext/SchoolService";
 
 const SchoolPageWrapper = ({children}) => {
 
-    const school = {
-        "id": 1,
-        "name": "Lyceum N6 named after Ivan Revchyk",
-        "director": {
-            "id": 1,
-            "firstName": "John",
-            "lastName": "Doe",
-            "email": "john.doe@gmail.com"
-        }
+    const [school, setSchool] = useState()
+
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            setLoading(true);
+            try {
+                const response = await SchoolService.getMySchool()
+                setSchool(response)
+            } catch (error) {
+                setError(error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    if (loading) {
+        return <Loading/>;
+    }
+
+    if (error) {
+        return <Typography color={"error"}>Error: {error.message}</Typography>;
     }
 
     return (

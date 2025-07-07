@@ -1,4 +1,5 @@
 import BaseService from "../BaseService";
+import Cookies from "js-cookie";
 
 class SchoolService extends BaseService {
     constructor() {
@@ -11,7 +12,8 @@ class SchoolService extends BaseService {
         });
     }
 
-    getSchoolById(schoolId) {
+    getMySchool() {
+        const schoolId = Cookies.get("schoolId");
         return this.get(`/${schoolId}`);
     }
 

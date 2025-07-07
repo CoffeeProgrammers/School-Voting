@@ -53,7 +53,7 @@ function App() {
         {path: "/school", element: <SchoolPage/>},
         (isTeacher || isDirector) && {path: "/school/class/:id", element: <ClassPage/>},
 
-        (isStudent || isDirector) && {path: "/control-panel", element: <ControlPanel/>},
+        (isTeacher || isDirector) && {path: "/control-panel", element: <ControlPanel/>},
 
         {path: "/profile", element: <Profile/>},
 

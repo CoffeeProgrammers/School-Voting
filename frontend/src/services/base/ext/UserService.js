@@ -54,6 +54,18 @@ class UserService extends BaseService {
         return this.get(`/class/${classId}`, {params});
     }
 
+    getUsersOfMyClass({email, firstName, lastName, page, size}) {
+        const params = {
+            ...(email && {email}),
+            ...(firstName && {firstName}),
+            ...(lastName && {lastName}),
+            page,
+            size
+        };
+        return this.get(`/class/my`, {params});
+    }
+
+
     getUsersWithoutClass({email, firstName, lastName, page, size}) {
         const params = {
             ...(email && {email}),

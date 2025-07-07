@@ -6,17 +6,33 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import Box from "@mui/material/Box";
 import Search from "../../layouts/list/Search";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+import Divider from "@mui/material/Divider";
+import PaginationBox from "../../layouts/list/PaginationBox";
+import Typography from "@mui/material/Typography";
 
-const UserList = ({users, actions = false}) => {
-        const [page, setPage] = React.useState(1);
-
+const UserList = (
+    {
+        users,
+        actions = false,
+        search = true,
+        searchFirstName,
+        setSearchFirstName,
+        searchLastName,
+        setSearchLastName,
+        searchEmail,
+        setSearchEmail,
+        loading,
+        page,
+        pagesCount,
+        setPage
+    }) => {
         const columns = [
             {
                 id: 'firstName',
                 label: <Search
                     label={"First Name"}
-                    // searchQuery={searchFirstName}
-                    // setSearchQuery={setSearchFirstName}
+                    searchQuery={searchFirstName}
+                    setSearchQuery={setSearchFirstName}
                     sx={{width: '100%'}}
 
                 />,
@@ -31,8 +47,8 @@ const UserList = ({users, actions = false}) => {
                 id: 'lastName',
                 label: <Search
                     label={"Last Name"}
-                    // searchQuery={searchLastName}
-                    // setSearchQuery={setSearchLastName}
+                    searchQuery={searchLastName}
+                    setSearchQuery={setSearchLastName}
                     sx={{width: '100%'}}
 
 
@@ -43,8 +59,8 @@ const UserList = ({users, actions = false}) => {
                 id: 'email',
                 label: <Search
                     label={"Email"}
-                    // searchQuery={searchEmail}
-                    // setSearchQuery={setSearchEmail}
+                    searchQuery={searchEmail}
+                    setSearchQuery={setSearchEmail}
                     sx={{width: '100%'}}
 
                 />,
@@ -80,37 +96,57 @@ const UserList = ({users, actions = false}) => {
                 <Box>
                     <TableContainer>
                         <Table>
-                            <TableHead>
-                                <TableRow>
-                                    {columns.map(col => (
-                                        <TableCell key={col.id} align={col.align || "left"}
-                                                   sx={{paddingY: '10px', paddingX: "7.5px"}}>
-                                            {col.label}
-                                        </TableCell>
-                                    ))}
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {users.map((user, index) => (
-                                    <TableRow
-                                        key={user.id}
-                                        hover
-                                        sx={{height: "36px"}}
-                                    >
+                            {search &&
+                                <TableHead>
+                                    <TableRow>
                                         {columns.map(col => (
                                             <TableCell key={col.id} align={col.align || "left"}
-                                                       sx={{
-                                                           borderBottom: index === users.length - 1 ? 'none' : '1px solid #ddd',
-                                                           paddingY: "7px", paddingLeft: "20px"
-                                                       }}>
-                                                {col.render(user, index)}
+                                                       sx={{paddingY: '10px', paddingX: "7.5px"}}>
+                                                {col.label}
                                             </TableCell>
                                         ))}
                                     </TableRow>
-                                ))}
+                                </TableHead>
+                            }
+
+                            <TableBody>
+                                {loading ? (
+                                    <Typography p={2}>
+                                        Loading...
+                                    </Typography>
+                                ) : (
+                                    users.map((user, index) => (
+                                        <TableRow
+                                            key={user.id}
+                                            hover
+                                            sx={{height: "36px"}}
+                                        >
+                                            {columns.map(col => (
+                                                <TableCell key={col.id} align={col.align || "left"}
+                                                           sx={{
+                                                               borderBottom: index === users.length - 1 ? 'none' : '1px solid #ddd',
+                                                               paddingY: "7px", paddingLeft: "20px"
+                                                           }}>
+                                                    {col.render(user, index)}
+                                                </TableCell>
+                                            ))}
+                                        </TableRow>
+                                    )))}
                             </TableBody>
                         </Table>
                     </TableContainer>
+                    <Divider/>
+
+                    {loading &&
+                        (pagesCount > 1 && (
+                            <Box sx={{marginTop: "auto"}}>
+                                <PaginationBox
+                                    page={page}
+                                    pagesCount={pagesCount}
+                                    setPage={setPage}
+                                />
+                            </Box>
+                        ))}
                 </Box>
             </>
         );

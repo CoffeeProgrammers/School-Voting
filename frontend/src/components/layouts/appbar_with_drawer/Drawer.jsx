@@ -15,6 +15,7 @@ import HistoryEduRoundedIcon from '@mui/icons-material/HistoryEduRounded';
 import HomeWorkIcon from '@mui/icons-material/HomeWork';
 import BuildCircleOutlinedIcon from '@mui/icons-material/BuildCircleOutlined';
 import FlakyRoundedIcon from '@mui/icons-material/FlakyRounded';
+import Cookies from "js-cookie";
 
 const drawerWidth = 240;
 
@@ -73,16 +74,27 @@ const MUIStyledDrawer = styled(MuiDrawer, {shouldForwardProp: (prop) => prop !==
 );
 
 
-
 const Drawer = ({open, handleDrawerClose}) => {
-    const isStudent = false;
+    const role = Cookies.get('role');
+    const isStudent = role === 'STUDENT';
+    const isTeacher = role === 'TEACHER';
+    const isDirector = role === 'DIRECTOR';
+
+
 
     const navigation = [
-        {type: "navigation", icon: <HistoryEduRoundedIcon sx={{fontSize: 28, ml: -0.25}}/>, title: "Petitions", path: "/petitions"},
+        !isTeacher && {
+            type: "navigation",
+            icon: <HistoryEduRoundedIcon sx={{fontSize: 28, ml: -0.25}}/>,
+            title: "Petitions",
+            path: "/petitions"
+        },
         {type: "navigation", icon: <BalanceRoundedIcon sx={{fontSize: 25}}/>, title: "Voting", path: "/voting"},
-        {type: "divider"},
 
-        {
+
+        isDirector && {type: "divider"},
+
+        isDirector && {
             type: "navigation",
             icon: <FlakyRoundedIcon sx={{fontSize: 25}}/>,
             title: "Petitions Review",
@@ -97,6 +109,7 @@ const Drawer = ({open, handleDrawerClose}) => {
             title: "Control Panel",
             path: "/control-panel"
         },
+
         {type: "divider"},
         {type: "navigation", icon: <AccountCircleIcon/>, title: "Profile", path: "/profile"},
     ]
@@ -114,9 +127,9 @@ const Drawer = ({open, handleDrawerClose}) => {
                 {navigation.map((obj, index) => (
                     obj.type === "navigation" ? (
                         <ListItem key={index} disablePadding sx={{display: 'block'}}>
-                           <DrawerNavigationButton open={open} obj={obj}/>
+                            <DrawerNavigationButton open={open} obj={obj}/>
                         </ListItem>
-                    ) : ( obj.type === "divider" && (
+                    ) : (obj.type === "divider" && (
                             <Divider key={index}/>
                         )
                     )

@@ -2,12 +2,13 @@ import React, {useEffect, useState} from 'react';
 import Divider from "@mui/material/Divider";
 import {Stack} from "@mui/material";
 import Box from "@mui/material/Box";
-import PetitionListBox from "../../components/basic/petition/PetitionListBox";
 import Typography from "@mui/material/Typography";
 import {useError} from "../../contexts/ErrorContext";
 import PetitionService from "../../services/base/ext/PetitionService";
 import Loading from "../../components/layouts/Loading";
 import Search from "../../components/layouts/list/Search";
+import PetitionList from "../../components/basic/petition/PetitionList";
+import PaginationBox from "../../components/layouts/list/PaginationBox";
 
 const PetitionsReviewPage = () => {
     const {showError} = useError()
@@ -15,7 +16,6 @@ const PetitionsReviewPage = () => {
     const [petitions, setPetitions] = useState([])
 
     const [searchName, setSearchName] = useState(null)
-    const [statusFilter, setStatusFilter] = useState(null)
 
     const [page, setPage] = useState(1);
     const [pagesCount, setPagesCount] = useState(1)
@@ -24,11 +24,16 @@ const PetitionsReviewPage = () => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
+        window.scrollTo({top: 0, behavior: 'smooth'});
+    }, [page]);
+
+    useEffect(() => {
         setPage(1);
-    }, [searchName, statusFilter]);
+    }, [searchName]);
 
     useEffect(() => {
         const fetchData = async () => {
+            setLoading(true);
             try {
                 const response = await PetitionService.getPetitionsForDirector({
                     page: page - 1,
@@ -37,8 +42,6 @@ const PetitionsReviewPage = () => {
                     status: 'WAITING_FOR_CONSIDERATION'
                 });
 
-                console.log("petitions:")
-                console.log(response)
 
                 setPetitions(response.content)
                 setPagesCount(response.totalPages)
@@ -50,11 +53,7 @@ const PetitionsReviewPage = () => {
         };
 
         fetchData();
-    }, [searchName, statusFilter, page]);
-
-    if (loading) {
-        return <Loading/>;
-    }
+    }, [searchName, page]);
 
     if (error) {
         return <Typography color={"error"}>Error: {error.message}</Typography>;
@@ -64,7 +63,7 @@ const PetitionsReviewPage = () => {
         <Box>
             <Stack direction="row"
                    sx={{alignItems: 'center', display: "flex", justifyContent: "space-between", paddingX: '10px',}}>
-                <Typography variant="h6" fontWeight={'bold'}>Petitions</Typography>
+                <Typography variant="h6" fontWeight={'bold'}>Petitions Review</Typography>
 
                 <Search
                     searchQuery={searchName}
@@ -75,13 +74,19 @@ const PetitionsReviewPage = () => {
             </Stack>
             <Divider sx={{mt: 0.75, mb: 0.75}}/>
 
-            <Stack direction="column">
-                {petitions.map((petition) => (
-                    <Box key={petition.id}>
-                        <PetitionListBox petition={petition}/>
+            {loading ? <Loading/> : (<>
+                <PetitionList petitions={petitions}/>
+
+                {pagesCount > 1 && (
+                    <Box sx={{marginTop: "auto"}}>
+                        <PaginationBox
+                            page={page}
+                            pagesCount={pagesCount}
+                            setPage={setPage}
+                        />
                     </Box>
-                ))}
-            </Stack>
+                )}
+            </>)}
 
         </Box>
     );

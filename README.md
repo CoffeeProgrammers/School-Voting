@@ -10,23 +10,23 @@ School Governance is a Java-based application designed to simplify and streamlin
 
 - Students:
   - Initiate petitions either for their class or the whole school.
-  - Vote on any petition or poll relevant to their scope (class, school, or group).
-  - Monitor how many votes their petition has received and whether it has become active, approved, or refused.
+  - Vote on any petition or voting relevant to their scope (class, school, or group).
+  - Monitor how many votes their petition has received and whether it has become active, approved, or rejected.
 - Teachers
-  - Create polls for the entire school, specific classes, or custom user groups.
+  - Create voting for the entire school, specific classes, or custom user groups.
   - Manage classes, monitor student activity, and assist with governance operations.
 - Parents
-  - Initiate polls on relevant school issues.
-  - Participate in decision-making by voting on open polls and petitions.
+  - Initiate voting on relevant school issues.
+  - Participate in decision-making by vote on open voting.
 - Directors (Head Administrator)
-  - Hold the highest authority in the system, with full control over all features and users.
+  - Has full administrative control over their school, including all features and users.
   - Make the final decision on active petitions (those with ≥ 50% votes).
 
 ## Functionalities of the Project:
 
 - Voting System
   - Voting Creation: 
-    - Any user (student, teacher, or parent) can create a voting poll.
+    - Any user (student, teacher, or parent) can create a voting.
     - Scope Options: Voting can be created for:
       - The entire school
       - A specific class
@@ -37,7 +37,7 @@ School Governance is a Java-based application designed to simplify and streamlin
       - Class-wide petition
       - School-wide petition
   - Support Threshold: When a petition reaches 50% or more of required votes, it becomes active.
-  - Only the principal can approve or refuse an active petition.
+  - Only the principal can support an active petition.
 
 ---
 ## Technologies Used
@@ -48,7 +48,7 @@ School Governance is a Java-based application designed to simplify and streamlin
 - MUI: library of React components
 - H2: database for our project tests
 - PostgreSQL: database for our project
-- KeyCloak: microservers for security
+- Keycloak: microservice for security
 - Docker: for start servers and creating containers in one system
 
 ---

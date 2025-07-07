@@ -2,11 +2,11 @@ import React from 'react';
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import {Chip} from "@mui/material";
-import Progress from "../../layouts/statistics/Progress";
 import Utils from "../../../utils/Utils";
 import {useNavigate} from "react-router-dom";
 import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
 import {blueGrey} from "@mui/material/colors";
+import PetitionStatisticsInListPage from "./PetitionStatisticsInListPage";
 
 const PetitionListBox = ({petition}) => {
     const navigate = useNavigate();
@@ -53,14 +53,10 @@ const PetitionListBox = ({petition}) => {
             </Box>
             <Box>
                 <Box mt={2}>
-                    <Typography variant='h5' mb={0.5} fontWeight="bold">
-                        {petition.countSupported}
-                    </Typography>
-
-                    <Progress
-                        color={Utils.getStatusMUIColor(petition.status)}
-                        count={petition.countSupported}
-                        maxCount={petition.countNeeded}
+                    <PetitionStatisticsInListPage
+                        countSupported={petition.countSupported}
+                        countNeeded={petition.countNeeded}
+                        status={petition.status}
                     />
 
                 </Box>

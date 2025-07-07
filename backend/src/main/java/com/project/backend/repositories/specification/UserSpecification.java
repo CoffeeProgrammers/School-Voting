@@ -62,16 +62,12 @@ public class UserSpecification {
 //        return (root, query, cb) -> cb.notEqual(root.get("email"), emailOfDeletedUser);
 //    }
 
-    public static Specification<User> usersByVotingSortedByAnswer(Long votingId) {
-        log.info("Building specification: usersByVotingSortedByAnswer(votingId = {})", votingId);
+    public static Specification<User> usersByVoting(Long votingId) {
         return (root, query, cb) -> {
             Join<User, VotingUser> votingUserJoin = root.join("votingUsers", JoinType.LEFT);
 
             Predicate votingFilter = cb.equal(votingUserJoin.get("voting").get("id"), votingId);
-
-            Objects.requireNonNull(query).distinct(true);
             query.orderBy(
-                    cb.asc(cb.isNull(votingUserJoin.get("answer"))),
                     cb.asc(root.get("lastName")),
                     cb.asc(root.get("firstName"))
             );
@@ -79,6 +75,7 @@ public class UserSpecification {
             return votingFilter;
         };
     }
+
 
     public static Specification<User> connectedToGoogle() {
         log.info("Building specification: connectedToGoogle()");

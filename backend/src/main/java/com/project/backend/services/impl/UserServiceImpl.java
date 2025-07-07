@@ -222,9 +222,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public Page<User> findAllByVoting(long votingId, String email, String firstName, String lastName, int page, int size) {
         log.info("Service: Finding all users by voting with id {} and filters", votingId);
+        Specification<User> userSpecification = createSpecification(email, firstName, lastName, null);
+        Specification<User> fullSpecification = userSpecification == null ? UserSpecification.usersByVoting(votingId) : userSpecification.and(UserSpecification.usersByVoting(votingId));
         return userRepository.findAll(
-                createSpecification(email, firstName, lastName, null)
-                        .and(UserSpecification.usersByVotingSortedByAnswer(votingId)),
+                fullSpecification,
                 PageRequest.of(
                         page, size
                 )

@@ -27,9 +27,6 @@ INSERT INTO voting_user (user_id, voting_id, answer_id)
 VALUES ((SELECT id FROM users WHERE email = 'ivan.fr@example.com'),
         (SELECT id FROM votings WHERE name = 'New' LIMIT 1),
        (SELECT id FROM answers WHERE name = 'Варіант 2' AND voting_id = (SELECT id FROM votings WHERE name = 'New' LIMIT 1)) ),
-((SELECT id FROM users WHERE email = 'kateryna.b@example.com'),
-(SELECT id FROM votings WHERE name = 'New' LIMIT 1),
-(SELECT id FROM answers WHERE name = 'Варіант 1' AND voting_id = (SELECT id FROM votings WHERE name = 'New' LIMIT 1))),
 ((SELECT id FROM users WHERE email = 'taras.sh@example.com'),
 (SELECT id FROM votings WHERE name = 'New' LIMIT 1),
 (SELECT id FROM answers WHERE name = 'Варіант 3' AND voting_id = (SELECT id FROM votings WHERE name = 'New' LIMIT 1)));

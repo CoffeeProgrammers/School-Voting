@@ -35,7 +35,7 @@ public class UserDeletionServiceImpl implements UserDeletionService {
 
     @Override
     public void delete(User user, boolean isDeleteDirector) {
-        log.info("Service: Deleting Classes with id {}", user.getId());
+        log.info("Service: Deleting User with id {}", user.getId());
         long userId = user.getId();
 
         if (!isDeleteDirector && "DIRECTOR".equals(user.getRole())) {
@@ -73,11 +73,10 @@ public class UserDeletionServiceImpl implements UserDeletionService {
 
     @Override
     public void deleteAllBySchool(long schoolId) {
+        log.info("Service: Deleting all users fromm school with id {}", schoolId);
         List<User> list = userRepository.findAll(UserSpecification.bySchool(schoolId));
         for (User user : list) {
             delete(user, true);
         }
     }
-
-
 }

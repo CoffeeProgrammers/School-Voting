@@ -34,6 +34,7 @@ public class GoogleCalendarCredentialServiceImpl implements GoogleCalendarCreden
             .build();
 
     private static ExchangeFilterFunction logRequest() {
+        log.info("Service: Log in request to google");
         return ExchangeFilterFunction.ofRequestProcessor(request -> {
             System.out.println(">>> REQUEST: " + request.method() + " " + request.url());
             request.headers().forEach((name, values) -> values.forEach(value ->
@@ -43,6 +44,7 @@ public class GoogleCalendarCredentialServiceImpl implements GoogleCalendarCreden
     }
 
     private static ExchangeFilterFunction logResponse() {
+        log.info("Service: Log in response from google");
         return ExchangeFilterFunction.ofResponseProcessor(response -> {
             System.out.println("<<< RESPONSE: " + response.statusCode());
             return Mono.just(response);
@@ -51,6 +53,7 @@ public class GoogleCalendarCredentialServiceImpl implements GoogleCalendarCreden
 
     @Override
     public Mono<Void> revokeAccess(long userId) {
+        log.info("Service: Revoking access for user {}", userId);
         String token = findByUserId(userId).getRefreshToken();
         return webClient.post()
                 .uri("/revoke")

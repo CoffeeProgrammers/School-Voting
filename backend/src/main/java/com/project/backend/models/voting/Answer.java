@@ -27,8 +27,8 @@ public class Answer {
         this.count = 0;
     }
 
-    public long incrementCount() {
+    public void incrementCount() {
         log.info("Model: Increment count {} for answer {}", count, this.id);
-        return ++this.count;
+        ++this.count;
     }
 }

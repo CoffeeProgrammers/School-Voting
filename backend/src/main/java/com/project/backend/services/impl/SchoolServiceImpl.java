@@ -38,7 +38,7 @@ public class SchoolServiceImpl implements SchoolService {
 
     @Override
     public void delete(long schoolId){
-       log.info("School delete by id {}", schoolId);
+       log.info("Service: School delete by id {}", schoolId);
        findById(schoolId);
        schoolRepository.deleteById(schoolId);
     }

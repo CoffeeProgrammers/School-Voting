@@ -15,6 +15,7 @@ import java.util.List;
 @Slf4j
 public class PetitionSpecification {
     public static Specification<Petition> bySchoolForDirector(Long schoolId, List<Long> classIds) {
+        log.info("Building specification: bySchoolForDirector(schoolId = {}) ", schoolId);
         return (root, query, cb) -> cb.or(
                 cb.and(
                         cb.equal(root.get("levelType"), LevelType.SCHOOL),

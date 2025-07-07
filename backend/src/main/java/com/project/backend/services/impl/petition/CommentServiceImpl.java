@@ -4,11 +4,7 @@ import com.project.backend.models.User;
 import com.project.backend.models.petition.Comment;
 import com.project.backend.models.petition.Petition;
 import com.project.backend.repositories.repos.petition.CommentRepository;
-import com.project.backend.models.petition.Comment;
-import com.project.backend.repositories.repos.petition.CommentRepository;
 import com.project.backend.services.inter.UserService;
-import com.project.backend.services.inter.petition.CommentService;
-import com.project.backend.services.inter.petition.PetitionService;
 import com.project.backend.services.inter.petition.CommentService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -83,5 +79,6 @@ public class CommentServiceImpl implements CommentService {
         log.info("Service: Deleting user {}", userId);
         commentRepository.saveAll(commentRepository.findAllByCreator_Id(userId).stream()
                 .peek(comment -> comment.setCreator(userService.findUserByEmail("!deleted-user!@deleted.com"))).toList());
+        log.info("Service: Deleted user {}", userId);
     }
 }

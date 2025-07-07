@@ -23,7 +23,7 @@ public class UserVotingEventServiceImpl implements UserVotingEventService {
 
     @Override
     public UserVotingEvent create(User user, Voting voting, String eventId, String reminderEventId) {
-        log.info("Service: create user voting event");
+        log.info("Service: Create user voting event");
         UserVotingEventId id = new UserVotingEventId(user.getId(), voting.getId());
         return userVotingEventRepository.findById(id).orElseGet(() -> {
             UserVotingEvent event = new UserVotingEvent();
@@ -38,7 +38,7 @@ public class UserVotingEventServiceImpl implements UserVotingEventService {
 
     @Override
     public UserVotingEvent findByUserAndVoting(long userId, long votingId) {
-        log.info("Service: find user voting event with user {} and vouting {}",  userId, votingId);
+        log.info("Service: Find user voting event with user {} and vouting {}",  userId, votingId);
         return userVotingEventRepository.findById_UserIdAndId_VotingId(userId, votingId)
                 .orElseThrow(() -> new EntityNotFoundException(
                         "UserVotingEvent with id " + userId + " : " + votingId + " not found"));
@@ -46,26 +46,26 @@ public class UserVotingEventServiceImpl implements UserVotingEventService {
 
     @Override
     public void delete(long userId, long votingId) {
-        log.info("Service: delete user voting event");
+        log.info("Service: Delete user voting event");
         userVotingEventRepository.deleteById(new UserVotingEventId(userId, votingId));
     }
 
     @Override
     public List<UserVotingEvent> findAllByUser(long userId) {
-        log.info("Service: find all user`s voting events with user id {}", userId);
+        log.info("Service: Find all user`s voting events with user id {}", userId);
         return userVotingEventRepository.findAllById_UserId(userId);
     }
 
     @Override
     public List<UserVotingEvent> findAllByVoting(long votingId) {
-        log.info("Service: find all user`s voting events with voting id {}", votingId);
+        log.info("Service: Find all user`s voting events with voting id {}", votingId);
         return userVotingEventRepository.findAllById_VotingId(votingId);
     }
 
     @Transactional
     @Override
     public void deleteByUser(long userId){
-        log.info("Service: delete user voting events with user id {}", userId);
+        log.info("Service: Delete user voting events with user id {}", userId);
         userVotingEventRepository.deleteAllByUser_Id(userId);
     }
 }

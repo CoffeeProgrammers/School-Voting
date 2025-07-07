@@ -7,6 +7,7 @@ import com.google.api.services.calendar.model.EventReminder;
 import com.project.backend.models.enums.LevelType;
 import com.project.backend.models.petition.Petition;
 import com.project.backend.models.voting.Voting;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -16,8 +17,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+@Slf4j
 public class GoogleCalendarEventMapper {
     public static Event fromPetitionToEvent(Petition petition) {
+        log.info("Mapper: transferring from petition to event");
         Event event = new Event()
                 .setSummary("PETITION: " + petition.getName())
                 .setDescription(petition.getDescription());
@@ -55,6 +58,7 @@ public class GoogleCalendarEventMapper {
     }
 
     public static Event fromVotingToEvent(Voting voting) {
+        log.info("Mapper: transferring from voting to event");
         Event event = new Event()
                 .setSummary("VOTING: " + voting.getName())
                 .setDescription(voting.getDescription());

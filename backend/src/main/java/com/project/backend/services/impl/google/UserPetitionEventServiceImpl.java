@@ -23,7 +23,7 @@ public class UserPetitionEventServiceImpl implements UserPetitionEventService {
 
     @Override
     public UserPetitionEvent create(User user, Petition petition, String eventId, String reminderEventId) {
-        log.info("Service: create user petition event");
+        log.info("Service: Create user petition event");
         UserPetitionEventId id = new UserPetitionEventId(user.getId(), petition.getId());
         return userPetitionEventRepository.findById(id).orElseGet(() -> {
             UserPetitionEvent event = new UserPetitionEvent();
@@ -38,32 +38,32 @@ public class UserPetitionEventServiceImpl implements UserPetitionEventService {
 
     @Override
     public UserPetitionEvent findByUserAndPetition(long userId, long petitionId) {
-        log.info("Service: find user petition event by user {} and petition {}",  userId, petitionId);
+        log.info("Service: Find user petition event by user {} and petition {}",  userId, petitionId);
         return userPetitionEventRepository.findById_UserIdAndId_PetitionId(userId, petitionId).orElseThrow(() -> new EntityNotFoundException("UserPetitionEvent with id " + userId + " : " + petitionId + " not found"));
     }
 
     @Override
     public void delete(long userId, long petitionId) {
-        log.info("Service: delete user petition event by user {} and petition {}",  userId, petitionId);
+        log.info("Service: Delete user petition event by user {} and petition {}",  userId, petitionId);
         userPetitionEventRepository.deleteById(new UserPetitionEventId(userId, petitionId));
     }
 
     @Override
     public List<UserPetitionEvent> findAllByUser(long userId) {
-        log.info("Service: find all user`s petition events with user {}",  userId);
+        log.info("Service: Find all user`s petition events with user {}",  userId);
         return userPetitionEventRepository.findAllById_UserId(userId);
     }
 
     @Override
     public List<UserPetitionEvent> findAllByPetition(long petitionId) {
-        log.info("Service: find all petition events by petition id {}",  petitionId);
+        log.info("Service: Find all petition events by petition id {}",  petitionId);
         return userPetitionEventRepository.findAllById_PetitionId(petitionId);
     }
 
     @Transactional
     @Override
     public void deleteByUser(long userId) {
-        log.info("Service: delete user petition event by user {}",  userId);
+        log.info("Service: Delete user petition event by user {}",  userId);
         userPetitionEventRepository.deleteAllByUser_Id(userId);
     }
 }

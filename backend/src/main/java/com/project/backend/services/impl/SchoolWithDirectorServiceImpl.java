@@ -21,7 +21,7 @@ public class SchoolWithDirectorServiceImpl implements SchoolWithDirectorService 
     @Transactional
     @Override
     public School createSchoolWithDirector(School school, User director, String password) {
-        log.info("Creating school with director {}", director.getEmail());
+        log.info("Service: Creating school with director {}", director.getEmail());
         userService.checkEmail(director.getEmail());
         School savedSchool = schoolService.save(school);
 
@@ -31,7 +31,7 @@ public class SchoolWithDirectorServiceImpl implements SchoolWithDirectorService 
 
         savedSchool.setDirector(savedDirector);
         School finalSchool = schoolService.save(savedSchool);
-
+        log.info("Service: Created school with name {}", school.getName());
         return finalSchool;
     }
 }

@@ -36,15 +36,19 @@ public class PetitionServiceImpl implements PetitionService {
     @Override
     public Petition create(Petition petition, User creator, String targetName) {
         log.info("Service: Creating a new petition {}", petition);
+
         if (petition.getLevelType().equals(LevelType.GROUP_OF_PARENTS_AND_STUDENTS)
                 || petition.getLevelType().equals(LevelType.GROUP_OF_TEACHERS)) {
             throw new IllegalArgumentException("Cannot create a petition with such level type.");
         }
+
         LocalDateTime now = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0);
         petition.setCreationTime(now);
         petition.setEndTime(now.plusDays(45));
+
         petition.setCreator(creator);
         petition.setStatus(Status.ACTIVE);
+
         if (petition.getLevelType() == LevelType.CLASS) {
             if (creator.getMyClass() == null) {
                 throw new IllegalArgumentException("Can not create petition for class, while not in class");
@@ -53,6 +57,7 @@ public class PetitionServiceImpl implements PetitionService {
         } else {
             petition.setTargetId(creator.getSchool().getId());
         }
+
         petition.setTargetName(targetName);
         return petitionRepository.save(petition);
     }
@@ -63,6 +68,7 @@ public class PetitionServiceImpl implements PetitionService {
         findById(id);
         commentService.deleteWithPetition(id);
         petitionRepository.deleteById(id);
+        log.info("Service: Deleted a petition {}", id);
     }
 
     @Transactional
@@ -77,26 +83,32 @@ public class PetitionServiceImpl implements PetitionService {
             commentService.deleteWithPetition(id);
         }
         petitionRepository.deleteAllByLevelTypeAndTargetId(levelType, targetId);
+        log.info("Service: Deleted a petitions");
     }
 
     @Override
     public long support(long petitionId, User user) {
         log.info("Service: Support for petition {} by user {}", petitionId, user.getId());
         Petition petition = findById(petitionId);
+
         if (!(petition.getStatus().equals(Status.ACTIVE))) {
             throw new IllegalStateException("Petition is not active.");
         }
+
         if (!(petition.now())) {
             petition.setStatus(Status.UNSUCCESSFUL);
             petitionRepository.save(petition);
             throw new IllegalStateException("Petition is ended.");
         }
+
         boolean ifCanSupport = petition.getUsers().add(user);
         if (!ifCanSupport) {
             throw new IllegalArgumentException("Cannot support petition because user has already supported it");
         }
+
         petition.incrementCount();
         checkingStatus(petition);
+
         return petitionRepository.save(petition).getCount();
     }
 
@@ -136,6 +148,7 @@ public class PetitionServiceImpl implements PetitionService {
         }
         petition.setStatus(Status.APPROVED);
         petitionRepository.save(petition);
+        log.info("Service: Approved a petition {}", petitionId);
     }
 
     @Override
@@ -147,6 +160,7 @@ public class PetitionServiceImpl implements PetitionService {
         }
         petition.setStatus(Status.REJECTED);
         petitionRepository.save(petition);
+        log.info("Service: Rejected a petition {}", petitionId);
     }
 
     @Override
@@ -245,6 +259,7 @@ public class PetitionServiceImpl implements PetitionService {
 
     @Override
     public void save(Petition petition) {
+        log.info("Service: Saving petition {}", petition);
         petitionRepository.save(petition);
     }
 

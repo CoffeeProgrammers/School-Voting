@@ -7,6 +7,7 @@ import com.project.backend.dto.wrapper.PaginationListResponse;
 import com.project.backend.mappers.ClassMapper;
 import com.project.backend.models.Class;
 import com.project.backend.models.User;
+import com.project.backend.models.petition.Petition;
 import com.project.backend.services.inter.ClassService;
 import com.project.backend.services.inter.UserService;
 import com.project.backend.services.inter.google.GoogleCalendarCredentialService;
@@ -145,5 +146,10 @@ public class ClassController {
             petitionService.deleteVoteByUser(userId);
         }
         classService.unassignUserFromClass(classId, userIds);
+        List<Petition> petitions = petitionService.findAllByClass(classId);
+        for(Petition petition : petitions) {
+            petitionService.checkingStatus(petition);
+            petitionService.save(petition);
+        }
     }
 }

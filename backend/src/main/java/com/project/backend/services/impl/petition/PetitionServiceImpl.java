@@ -93,7 +93,7 @@ public class PetitionServiceImpl implements PetitionService {
         }
         boolean ifCanSupport = petition.getUsers().add(user);
         if (!ifCanSupport) {
-            throw new IllegalArgumentException("Cannot support petition because user is already petition");
+            throw new IllegalArgumentException("Cannot support petition because user has already supported it");
         }
         petition.incrementCount();
         checkingStatus(petition);

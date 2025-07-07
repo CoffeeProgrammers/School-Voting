@@ -1,9 +1,13 @@
 import React, {useEffect} from 'react';
 import {useNavigate} from 'react-router-dom';
 import Cookies from "js-cookie";
+import Loading from "../../components/layouts/Loading";
 
 const Callback = ({setRole}) => {
     const navigate = useNavigate();
+
+    const role = Cookies.get('role')
+
 
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
@@ -20,15 +24,15 @@ const Callback = ({setRole}) => {
             }).then(res => {
                 if (res.ok) {
                     setRole(Cookies.get('role'))
-                    navigate('/');
+                    (role === 'STUDENT' || role === 'DIRECTOR') ? navigate('/petitions') : navigate('/voting');
                 } else {
                     alert('Помилка авторизації');
                 }
             });
         }
-    }, [navigate]);
+    }, [navigate, role]);
 
-    return <p>Авторизація…</p>;
+    return <Loading/>;
 };
 
 export default Callback;

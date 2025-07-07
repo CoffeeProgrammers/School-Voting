@@ -30,12 +30,9 @@ public class PetitionSpecification {
 
     public static Specification<Petition> byClass(long classId) {
         log.info("Building specification: byClass(classId = {})", classId);
-        return (root, query, cb) -> {
-            List<Predicate> predicates = new ArrayList<>();
-            predicates.add(cb.equal(root.get("targetId"), classId));
-            predicates.add(cb.equal(root.get("levelType"), LevelType.CLASS));
-            return cb.and(predicates.toArray(new Predicate[0]));
-        };
+        return (root, query, cb) ->
+            cb.and(cb.equal(root.get("targetId"), classId),
+                    cb.equal(root.get("levelType"), LevelType.CLASS));
     }
 
     public static Specification<Petition> byUserInClass(User user) {

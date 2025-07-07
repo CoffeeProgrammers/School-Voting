@@ -46,13 +46,4 @@ public class User {
     private List<UserVotingEvent> userVotingEvents = new ArrayList<>();
     @OneToMany(mappedBy = "user")
     private List<UserPetitionEvent> userPetitionEvents = new ArrayList<>();
-
-    public User(String keycloakUserId, String email, String firstName,
-                String lastName, String role) {
-        this.keycloakUserId = keycloakUserId;
-        this.email = email;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.role = role;
-    }
 }

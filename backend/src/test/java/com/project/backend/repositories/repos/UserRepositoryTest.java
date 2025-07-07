@@ -24,8 +24,8 @@
 //    @Autowired
 //    private UserRepository userRepository;
 //
-////    @Autowired
-////    private SchoolRepository schoolRepository;
+//    @Autowired
+//    private SchoolRepository schoolRepository;
 //
 //    private User user1;
 //    private User user2;
@@ -37,11 +37,11 @@
 //        user1 = userRepository.save(createUser("TEACHER", "teacher@gmail.com", "keycloak1"));
 //        user2 = userRepository.save(createUser("PARENT", "parent@gmail.com", "keycloak2"));
 //
-////        school = schoolRepository.save(createSchool("New School", user1));
-////
-////        assignUsersToSchool(school, user1, user2);
-////
-////        userRepository.saveAll(List.of(user1, user2));
+//        school = schoolRepository.save(createSchool("New School", user1));
+//
+//        assignUsersToSchool(school, user1, user2);
+//
+//        userRepository.saveAll(List.of(user1, user2));
 //    }
 //
 //    @Test

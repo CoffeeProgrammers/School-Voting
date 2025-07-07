@@ -1,15 +1,14 @@
-package com.project.backend.repositories;
+package com.project.backend.repositories.repos.google;
 
-import com.project.backend.repositories.repos.SchoolRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 @DataJpaTest
-public class SchoolRepositoryTest {
+public class UserCalendarRepositoryTest {
 
     @Autowired
-    private SchoolRepository schoolRepository;
+    private UserCalendarRepository userCalendarRepository;
 
     @BeforeEach
     void setUp() {

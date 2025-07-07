@@ -61,6 +61,7 @@ public class PetitionDtoTest {
         assertEquals(dto1.toString(), dto2.toString());
     }
 
+    @Test
     void testPetitionListResponse(){
         PetitionListResponse dto1 = new PetitionListResponse();
         dto1.setName("Name");

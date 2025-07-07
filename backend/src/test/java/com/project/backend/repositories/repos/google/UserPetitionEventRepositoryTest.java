@@ -1,15 +1,14 @@
-package com.project.backend.repositories.voting;
+package com.project.backend.repositories.repos.google;
 
-import com.project.backend.repositories.repos.voting.AnswerRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 @DataJpaTest
-public class AnswerRepositoryTest {
+public class UserPetitionEventRepositoryTest {
 
     @Autowired
-    private AnswerRepository answerRepository;
+    private UserPetitionEventRepository userPetitionEventRepository;
 
     @BeforeEach
     void setUp() {

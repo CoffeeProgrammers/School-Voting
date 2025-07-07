@@ -1,15 +1,14 @@
-package com.project.backend.repositories.petition;
+package com.project.backend.repositories.repos.petition;
 
-import com.project.backend.repositories.repos.petition.CommentRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 @DataJpaTest
-public class CommentRepositoryTest {
+public class PetitionRepositoryTest {
 
     @Autowired
-    private CommentRepository commentRepository;
+    private PetitionRepository petitionRepository;
 
     @BeforeEach
     void setUp() {

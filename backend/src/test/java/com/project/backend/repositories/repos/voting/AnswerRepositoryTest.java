@@ -1,15 +1,14 @@
-package com.project.backend.repositories.google;
+package com.project.backend.repositories.repos.voting;
 
-import com.project.backend.repositories.repos.google.UserCalendarRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 @DataJpaTest
-public class UserCalendarRepositoryTest {
+public class AnswerRepositoryTest {
 
     @Autowired
-    private UserCalendarRepository userCalendarRepository;
+    private AnswerRepository answerRepository;
 
     @BeforeEach
     void setUp() {

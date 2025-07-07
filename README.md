@@ -121,3 +121,4 @@ administrators to engage in school governance processes, enhancing transparency,
 
 ---
 
+Our db(but it can be not up to date): [database](https://drawsql.app/teams/coffeeprogrammers-1/diagrams/voting-system)

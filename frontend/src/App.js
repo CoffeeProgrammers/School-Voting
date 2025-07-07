@@ -1,4 +1,4 @@
-import {BrowserRouter, Navigate, Route, Routes, useNavigate} from 'react-router-dom';
+import {BrowserRouter, Route, Routes, useNavigate} from 'react-router-dom';
 import {ThemeProvider} from '@mui/material';
 import {LocalizationProvider} from '@mui/x-date-pickers';
 import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs';
@@ -42,10 +42,8 @@ function App() {
     const routes = [
         {path: "/callback", element: <Callback setRole={setRole}/>},
 
-        {path: "/", element: <IntroductionPage/>
-         
-        !isTeacher && {path: "/petitions", element: <PetitionsListPage/>},
-        !isTeacher && {path: "/petitions/:id", element: <PetitionPage/>},
+        (isStudent || isDirector) && {path: "/petitions", element: <PetitionsListPage/>},
+        (isStudent || isDirector) && {path: "/petitions/:id", element: <PetitionPage/>},
 
         {path: "/voting", element: <VotingListPage/>},
         {path: "/voting/:id", element: <VotingPage/>},
@@ -53,9 +51,9 @@ function App() {
         isDirector && {path: "/petitions-review", element: <PetitionsReviewPage/>},
 
         {path: "/school", element: <SchoolPage/>},
-        !isStudent && {path: "/school/class/:id", element: <ClassPage/>},
+        (isTeacher || isDirector) && {path: "/school/class/:id", element: <ClassPage/>},
 
-        !isStudent && {path: "/control-panel", element: <ControlPanel/>},
+        (isStudent || isDirector) && {path: "/control-panel", element: <ControlPanel/>},
 
         {path: "/profile", element: <Profile/>},
 
@@ -70,7 +68,7 @@ function App() {
                     <ThemeProvider theme={theme}>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <Routes>
-                                <Route path={'/introduction'} element={<IntroductionPage/>}/>
+                                <Route path={''} element={<IntroductionPage/>}/>
                                 {routes.map((route, index) => (
                                     <Route element={<PrivateRoute/>} key={index}>
                                         <Route

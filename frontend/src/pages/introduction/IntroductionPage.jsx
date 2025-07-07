@@ -15,16 +15,9 @@ import HomeWorkIcon from '@mui/icons-material/HomeWork';
 import VotingPageImage from '../../images/voting1.png';
 import VotingStatistickImage from '../../images/voting2.png'
 import SchoolPageImage from '../../images/school page.png'
+import AuthService from "../../services/auth/AuthService";
 
-interface
-TabPanelProps
-{
-    children ? : React.ReactNode;
-    index: number;
-    value: number;
-}
-
-function CustomTabPanel(props: TabPanelProps) {
+function CustomTabPanel(props) {
     const {children, value, index, ...other} = props;
 
     return (
@@ -40,7 +33,7 @@ function CustomTabPanel(props: TabPanelProps) {
     );
 }
 
-function a11yProps(index: number) {
+function a11yProps(index) {
     return {
         id: `simple-tab-${index}`,
         'aria-controls': `simple-tabpanel-${index}`,
@@ -50,7 +43,7 @@ function a11yProps(index: number) {
 const IntroductionPage = () => {
     const [value, setValue] = React.useState(0);
 
-    const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    const handleChange = (event, newValue) => {
         setValue(newValue);
     };
 
@@ -64,7 +57,9 @@ const IntroductionPage = () => {
                             School Governance
                         </Typography>
                     </Stack>
-                    <Button variant="contained" color="primary" sx={{height: 32, borderRadius: 10}}>
+                    <Button onClick={() => {
+                        AuthService.redirectToKeycloak()
+                    }} variant="contained" color="primary" sx={{height: 32, borderRadius: 10}}>
                         Login
                     </Button>
                 </Box>

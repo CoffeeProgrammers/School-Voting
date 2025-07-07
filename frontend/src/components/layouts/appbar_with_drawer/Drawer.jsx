@@ -77,13 +77,11 @@ const MUIStyledDrawer = styled(MuiDrawer, {shouldForwardProp: (prop) => prop !==
 const Drawer = ({open, handleDrawerClose}) => {
     const role = Cookies.get('role');
     const isStudent = role === 'STUDENT';
-    const isTeacher = role === 'TEACHER';
     const isDirector = role === 'DIRECTOR';
 
 
-
     const navigation = [
-        !isTeacher && {
+        (isStudent || isDirector) && {
             type: "navigation",
             icon: <HistoryEduRoundedIcon sx={{fontSize: 28, ml: -0.25}}/>,
             title: "Petitions",
@@ -103,7 +101,7 @@ const Drawer = ({open, handleDrawerClose}) => {
 
         {type: "divider"},
         {type: "navigation", icon: <HomeWorkIcon sx={{fontSize: 25}}/>, title: "School", path: "/school"},
-        !isStudent && {
+        (isStudent || isDirector) && {
             type: "navigation",
             icon: <BuildCircleOutlinedIcon sx={{fontSize: 25}}/>,
             title: "Control Panel",

@@ -1,5 +1,6 @@
 import axios from "axios";
 import Cookies from 'js-cookie';
+import {history} from "../../utils/history";
 
 class AuthService {
 
@@ -23,7 +24,9 @@ class AuthService {
                 },
                 withCredentials: true,
             }).then(() => {
-                AuthService.redirectToKeycloak();
+                if (history.navigate) {
+                    history.navigate("");
+                }
             }).catch(error => {
                 console.error('Logout failed:', error);
             });

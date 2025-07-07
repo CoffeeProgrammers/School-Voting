@@ -1,7 +1,8 @@
 import React, {useEffect} from 'react';
 import {useNavigate} from 'react-router-dom';
+import Cookies from "js-cookie";
 
-const Callback = () => {
+const Callback = ({setRole}) => {
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -18,6 +19,7 @@ const Callback = () => {
                 credentials: 'include'
             }).then(res => {
                 if (res.ok) {
+                    setRole(Cookies.get('role'))
                     navigate('/');
                 } else {
                     alert('Помилка авторизації');

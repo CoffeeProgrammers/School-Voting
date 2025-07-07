@@ -4,7 +4,7 @@ import {LocalizationProvider} from '@mui/x-date-pickers';
 import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs';
 import theme from './assets/theme';
 import {history} from "./utils/history";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import {ErrorProvider} from "./contexts/ErrorContext";
 import PageContainer from "./components/layouts/appbar_with_drawer/PageContainer";
 import NotFoundPage from "./pages/not_found_page/NotFoundPage";
@@ -32,7 +32,7 @@ const InitNavigation = ({children}) => {
 };
 
 function App() {
-    const role = Cookies.get('role');
+    const [role, setRole] = useState(Cookies.get('role'))
     const isStudent = role === 'STUDENT';
     const isTeacher = role === 'TEACHER';
     const isDirector = role === 'DIRECTOR';
@@ -40,7 +40,7 @@ function App() {
 
     const routes = [
         {path: "/", element: <Navigate to="/petitions" replace/>},
-        {path: "/callback", element: <Callback/>},
+        {path: "/callback", element: <Callback setRole={setRole}/>},
 
         !isTeacher && {path: "/petitions", element: <PetitionsListPage/>},
         !isTeacher && {path: "/petitions/:id", element: <PetitionPage/>},

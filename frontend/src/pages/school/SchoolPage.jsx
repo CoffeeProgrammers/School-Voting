@@ -5,6 +5,7 @@ import SchoolPageWrapper from "../../components/basic/school/SchoolPageWrapper";
 import Divider from "@mui/material/Divider";
 import UserList from "../../components/basic/user/UserList";
 import Typography from "@mui/material/Typography";
+import Cookies from "js-cookie";
 
 const users = [
     {id: 1, firstName: "Alice", lastName: "Johnson", email: "alice.johnson@example.com"},
@@ -20,7 +21,8 @@ const users = [
 ];
 
 const SchoolPage = () => {
-    const isStudent = false;
+    const role = Cookies.get('role');
+    const isStudent = role === 'STUDENT';
     return (
         <SchoolPageWrapper>
             <Box sx={{border: '1px solid #ddd', borderRadius: '5px', marginY: '5px', paddingTop: '15px'}}>

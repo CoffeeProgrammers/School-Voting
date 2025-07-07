@@ -181,6 +181,7 @@ public class ModelsTests {
         petition2.setCreationTime(petition1.getCreationTime());
         petition2.setTargetName(petition1.getTargetName());
         petition2.setName(petition1.getName());
+        petition2.setUserPetitionEvents(petition1.getUserPetitionEvents());
 
         petition2.incrementCount();
         petition2.decrementCount();

@@ -362,4 +362,64 @@ class PetitionServiceImplTest {
         verify(commentService).deleteWithPetition(201L);
         verify(petitionRepository).deleteAllByLevelTypeAndTargetId(LevelType.CLASS, classId);
     }
+
+    @Test
+    void testSave() {
+        Petition petition = new Petition();
+        petitionService.save(petition);
+        verify(petitionRepository).save(petition);
+    }
+
+    @Test
+    void testCheckingStatus_StatusNotActive_NoAction() {
+        Petition petition = new Petition();
+        petition.setStatus(Status.UNSUCCESSFUL); // будь-який статус, крім ACTIVE
+        petitionService.checkingStatus(petition);
+        assertEquals(Status.UNSUCCESSFUL, petition.getStatus());
+        verifyNoInteractions(petitionRepository); // just checking: no save
+    }
+
+    @Test
+    void testCheckingStatus_Active_EnoughCount() {
+        Petition petition = TestUtil.createPetition("S");
+        petition.setStatus(Status.ACTIVE);
+        petition.setId(1L);
+        petition.setCount(100L);
+
+        when(petitionService.countAll(petition)).thenReturn(80L);
+
+        petitionService.checkingStatus(petition);
+
+        assertEquals(Status.WAITING_FOR_CONSIDERATION, petition.getStatus());
+    }
+
+    @Test
+    void testCheckingStatus_Active_NotEnoughCount_Expired() {
+        Petition petition = TestUtil.createPetition("S");
+        petition.setStatus(Status.ACTIVE);
+        petition.setId(1L);
+        petition.setCount(100L);
+        petition.setEndTime(LocalDateTime.now().minusHours(1));
+
+        when(petitionService.countAll(petition)).thenReturn(400L);
+
+        petitionService.checkingStatus(petition);
+
+        assertEquals(Status.UNSUCCESSFUL, petition.getStatus());
+    }
+
+    @Test
+    void testCheckingStatus_Active_NotEnoughCount_StillValid() {
+        Petition petition = TestUtil.createPetition("S");
+        petition.setStatus(Status.ACTIVE);
+        petition.setId(1L);
+        petition.setCount(100L);
+        petition.setEndTime(LocalDateTime.now().plusDays(1));
+
+        when(petitionService.countAll(petition)).thenReturn(400L);
+
+        petitionService.checkingStatus(petition);
+
+        assertEquals(Status.ACTIVE, petition.getStatus());
+    }
 }

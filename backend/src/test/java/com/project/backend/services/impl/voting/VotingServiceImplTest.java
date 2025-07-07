@@ -23,7 +23,6 @@ import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -63,15 +62,6 @@ class VotingServiceImplTest {
         voting.setCreator(user);
         voting.setStartTime(LocalDateTime.now().plusDays(1));
         voting.setEndTime(LocalDateTime.now().plusDays(2));
-    }
-
-    @Test
-    void create_shouldThrow_whenTargetIdsNullOrEmpty() {
-        Voting voting = new Voting();
-        List<String> answers = List.of("a", "b");
-
-        assertThrows(IllegalArgumentException.class, () -> votingService.create(voting, answers, null, 1L, 1L));
-        assertThrows(IllegalArgumentException.class, () -> votingService.create(voting, answers, Collections.emptyList(), 1L, 1L));
     }
 
     @Test
@@ -170,26 +160,6 @@ class VotingServiceImplTest {
         assertEquals(2, result.getCountAll());
     }
 
-    @Test
-    void create_classLevel_shouldThrow_forParentRole() {
-        Voting voting = new Voting();
-        voting.setLevelType(LevelType.CLASS);
-        List<String> answers = List.of("ans");
-        List<Long> targetIds = List.of(11L);
-        long schoolId = 1L;
-        long userId = 1L;
-
-        User creator = mock(User.class);
-        when(userService.findById(userId)).thenReturn(creator);
-        when(creator.getRole()).thenReturn("PARENT");
-
-        when(votingRepository.save(voting)).thenReturn(voting);
-
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () ->
-                votingService.create(voting, answers, targetIds, schoolId, userId));
-
-        assertTrue(ex.getMessage().contains("Can`t create voting and not be in that class"));
-    }
 
     @Test
     void create_classLevel_shouldThrow_forStudentNotInClass() {

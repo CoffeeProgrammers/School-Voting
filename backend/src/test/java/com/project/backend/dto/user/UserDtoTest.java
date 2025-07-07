@@ -3,6 +3,7 @@ package com.project.backend.dto.user;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class UserDtoTest {
 
@@ -24,6 +25,7 @@ public class UserDtoTest {
         dto2.setRole(dto1.getRole());
         dto2.setEmailVerified(dto1.getEmailVerified());
 
+        assertNotEquals(dto1, null);
         assertEquals(dto1, dto2);
         assertEquals(dto1.hashCode(), dto2.hashCode());
         assertEquals(dto1.toString(), dto1.toString());
@@ -39,6 +41,7 @@ public class UserDtoTest {
         dto2.setFirstName(dto1.getFirstName());
         dto2.setLastName(dto1.getLastName());
 
+        assertNotEquals(dto1, null);
         assertEquals(dto1, dto2);
         assertEquals(dto1.hashCode(), dto2.hashCode());
         assertEquals(dto1.toString(), dto1.toString());
@@ -59,6 +62,7 @@ public class UserDtoTest {
         dto2.setFirstName(dto1.getFirstName());
         dto2.setLastName(dto1.getLastName());
 
+        assertNotEquals(dto1, null);
         assertEquals(dto1, dto2);
         assertEquals(dto1.hashCode(), dto2.hashCode());
         assertEquals(dto1.toString(), dto1.toString());
@@ -80,6 +84,7 @@ public class UserDtoTest {
         dto2.setLastName(dto1.getLastName());
         dto2.setRole(dto1.getRole());
 
+        assertNotEquals(dto1, null);
         assertEquals(dto1, dto2);
         assertEquals(dto1.hashCode(), dto2.hashCode());
         assertEquals(dto1.toString(), dto1.toString());
@@ -99,6 +104,7 @@ public class UserDtoTest {
         dto2.setFirstName(dto1.getFirstName());
         dto2.setLastName(dto1.getLastName());
 
+        assertNotEquals(dto1, null);
         assertEquals(dto1, dto2);
         assertEquals(dto1.hashCode(), dto2.hashCode());
         assertEquals(dto1.toString(), dto1.toString());

@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class ClassDtoTest {
 
@@ -18,6 +19,7 @@ public class ClassDtoTest {
         dto2.setName(dto1.getName());
         dto2.setUserIds(dto1.getUserIds());
 
+        assertNotEquals(dto1, null);
         assertEquals(dto1, dto2);
         assertEquals(dto1.hashCode(), dto2.hashCode());
         assertEquals(dto1.toString(), dto2.toString());
@@ -31,6 +33,7 @@ public class ClassDtoTest {
         ClassUpdateRequest dto2 = new ClassUpdateRequest();
         dto2.setName(dto1.getName());
 
+        assertNotEquals(dto1, null);
         assertEquals(dto1, dto2);
         assertEquals(dto1.hashCode(), dto2.hashCode());
         assertEquals(dto1.toString(), dto2.toString());
@@ -46,6 +49,7 @@ public class ClassDtoTest {
         dto2.setName(dto1.getName());
         dto2.setId(dto1.getId());
 
+        assertNotEquals(dto1, null);
         assertEquals(dto1, dto2);
         assertEquals(dto1.hashCode(), dto2.hashCode());
         assertEquals(dto1.toString(), dto2.toString());

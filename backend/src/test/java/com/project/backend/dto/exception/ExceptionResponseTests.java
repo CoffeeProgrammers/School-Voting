@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 class ExceptionResponseTests {
 
@@ -13,6 +14,7 @@ class ExceptionResponseTests {
         ExceptionResponse response1 = new ExceptionResponse("Error occurred");
         ExceptionResponse response2 = new ExceptionResponse(response1.getMessages().get(0));
 
+        assertNotEquals(response1, null);
         assertEquals(List.of("Error occurred"), response1.getMessages());
         assertEquals(response1, response2);
         assertEquals(response1.toString(), response2.toString());
@@ -25,6 +27,7 @@ class ExceptionResponseTests {
         ExceptionResponse response1 = new ExceptionResponse(errors);
         ExceptionResponse response2 = new ExceptionResponse(response1.getMessages());
 
+        assertNotEquals(response1, null);
         assertEquals(errors, response1.getMessages());
         assertEquals(response1, response2);
         assertEquals(response1.toString(), response2.toString());

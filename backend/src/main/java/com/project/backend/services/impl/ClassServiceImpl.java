@@ -104,6 +104,10 @@ public class ClassServiceImpl implements ClassService {
         }
         for (Long userId : userIds) {
             user = userService.findById(userId);
+            if(user.getMyClass() != null){
+                log.warn("Service: Can`t assign Users with id {} to Class with id {}", userId, classId);
+                continue;
+            }
             if (user.getRole().equals("STUDENT")) {
                 clazz.getUsers().add(user);
                 userService.assignClassToUser(clazz, user);
@@ -123,6 +127,10 @@ public class ClassServiceImpl implements ClassService {
         }
         for (Long userId : userIds) {
             user = userService.findById(userId);
+            if(user.getMyClass().getId() != classId){
+                log.warn("Service: Can`t unassign Users with id {} from Class with id {} because this user not in this class", userId, classId);
+                continue;
+            }
             if (user.getRole().equals("STUDENT")) {
                 clazz.getUsers().remove(user);
                 userService.unassignClassFromUser(user);

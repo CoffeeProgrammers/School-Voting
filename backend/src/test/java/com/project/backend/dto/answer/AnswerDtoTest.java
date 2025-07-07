@@ -3,6 +3,7 @@ package com.project.backend.dto.answer;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class AnswerDtoTest {
 
@@ -18,6 +19,7 @@ public class AnswerDtoTest {
         dto2.setId(dto1.getId());
         dto2.setCount(dto1.getCount());
 
+        assertNotEquals(null, dto1);
         assertEquals(dto1, dto2);
         assertEquals(dto1.hashCode(), dto2.hashCode());
         assertEquals(dto1.toString(), dto2.toString());

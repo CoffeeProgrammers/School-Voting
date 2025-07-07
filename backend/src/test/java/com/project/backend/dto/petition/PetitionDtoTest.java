@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class PetitionDtoTest {
 
@@ -21,6 +22,7 @@ public class PetitionDtoTest {
         dto2.setLevelType(dto1.getLevelType());
         dto2.setDescription(dto1.getDescription());
 
+        assertNotEquals(dto1, null);
         assertEquals(dto1, dto2);
         assertEquals(dto1.hashCode(), dto2.hashCode());
         assertEquals(dto1.toString(), dto2.toString());
@@ -53,6 +55,7 @@ public class PetitionDtoTest {
         dto2.setStatus(dto1.getStatus());
         dto2.setSupportedByCurrentId(dto1.getSupportedByCurrentId());
 
+        assertNotEquals(dto1, null);
         assertEquals(dto1, dto2);
         assertEquals(dto1.hashCode(), dto2.hashCode());
         assertEquals(dto1.toString(), dto2.toString());
@@ -83,6 +86,7 @@ public class PetitionDtoTest {
         dto2.setStatus(dto1.getStatus());
         dto2.setSupportedByCurrentId(dto1.getSupportedByCurrentId());
 
+        assertNotEquals(dto1, null);
         assertEquals(dto1, dto2);
         assertEquals(dto1.hashCode(), dto2.hashCode());
         assertEquals(dto1.toString(), dto2.toString());

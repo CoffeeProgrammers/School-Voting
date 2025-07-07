@@ -4,6 +4,7 @@ import com.project.backend.dto.user.UserListResponse;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 class CommentDtoTests {
 
@@ -15,6 +16,7 @@ class CommentDtoTests {
         CommentRequest request2 = new CommentRequest();
         request2.setText("Test comment");
 
+        assertNotEquals(request1, null);
         assertEquals(request1, request2);
         assertEquals(request1.toString(), request2.toString());
         assertEquals(request1.hashCode(), request2.hashCode());
@@ -35,6 +37,7 @@ class CommentDtoTests {
         response2.setText(response1.getText());
         response2.setCreatedTime(response1.getCreatedTime());
 
+        assertNotEquals(response1, null);
         assertEquals(response1, response2);
         assertEquals(response1.toString(), response2.toString());
         assertEquals(response1.hashCode(), response2.hashCode());

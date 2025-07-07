@@ -153,6 +153,7 @@ public class PetitionController {
                                 Authentication auth) {
         log.info("Controller: Support petition with id {}", petitionId);
         long newCount = petitionService.support(petitionId, userService.findUserByAuth(auth));
+        log.info("New count {}", newCount);
         messagingTemplate.convertAndSend("/topic/petitions/" + petitionId + "/counter", newCount);
     }
 

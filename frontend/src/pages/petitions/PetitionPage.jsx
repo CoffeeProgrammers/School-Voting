@@ -152,6 +152,7 @@ const PetitionPage = () => {
                             countSupported={petition.countSupported}
                             countNeeded={petition.countNeeded}
                             status={petition.status}
+                            petitionId={petition.id}
                         />
 
                     </Box>

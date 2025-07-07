@@ -5,7 +5,9 @@ import com.project.backend.dto.wrapper.PaginationListResponse;
 import com.project.backend.mappers.voting.AnswerMapper;
 import com.project.backend.mappers.voting.VotingMapper;
 import com.project.backend.models.User;
+import com.project.backend.models.voting.Answer;
 import com.project.backend.models.voting.Voting;
+import com.project.backend.services.inter.ClassService;
 import com.project.backend.services.inter.UserService;
 import com.project.backend.services.inter.google.GoogleCalendarService;
 import com.project.backend.services.inter.voting.AnswerService;
@@ -33,6 +35,7 @@ public class VotingController {
     private final VotingMapper votingMapper;
     private final AnswerMapper answerMapper;
     private final UserService userService;
+    private final ClassService classService;
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
@@ -45,7 +48,7 @@ public class VotingController {
                 votingCreateRequest.getAnswers(), votingCreateRequest.getTargetIds(), schoolId,
                 userService.findUserByAuth(auth).getId());
         googleCalendarService.saveVotingToUserCalendar(createdVoting);
-        return fromVotingToFullResponseWithStatistics(createdVoting);
+        return fromVotingToFullResponseWithStatistics(createdVoting, null);
     }
 
     @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and @userSecurity.checkCreatorVoting(#auth, #votingId)")
@@ -58,7 +61,7 @@ public class VotingController {
         log.info("Controller: Update vote with id {} with body {}", votingId, votingUpdateRequest);
         Voting updatedVoting = votingService.update(votingMapper.fromRequestToVoting(votingUpdateRequest), votingUpdateRequest.getAnswers(), votingId);
         googleCalendarService.updateVotingToUserCalendar(updatedVoting);
-        return fromVotingToFullResponseWithStatistics(updatedVoting);
+        return fromVotingToFullResponseWithStatistics(updatedVoting, null);
     }
 
     @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and @userSecurity.checkCreatorVoting(#auth, #votingId)")
@@ -126,14 +129,14 @@ public class VotingController {
             Authentication auth) {
         User user = userService.findUserByAuth(auth);
         log.info("Controller: Get all votings for director {}, role {}", user.getEmail(), user.getRole());
-        Page<Voting> votingPage = votingService.findAllForDirector(user.getId(), name, now, page, size);
+        Page<Voting> votingPage = votingService.findAllForDirector(schoolId, user.getId(), name, now, page, size);
         PaginationListResponse<VotingListResponse> response = new PaginationListResponse<>();
         response.setTotalPages(votingPage.getTotalPages());
         response.setContent(votingPage.getContent().stream().map(votingMapper::fromVotingToListResponse).toList());
         return response;
     }
 
-    @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and (@userSecurity.checkUserVoting(#auth, #votingId) or @userSecurity.checkCreatorVoting(#auth, #votingId) or hasRole('DIRECTOR'))")
+    @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and (@userSecurity.checkUserVoting(#auth, #votingId) or @userSecurity.checkCreatorVoting(#auth, #votingId) or (hasRole('DIRECTOR') and @userSecurity.checkUserInSameSchoolAsVoting(#auth, #votingId)))")
     @GetMapping("/{voting_id}")
     @ResponseStatus(HttpStatus.OK)
     public VotingFullResponse getById(@PathVariable("school_id") Long schoolId,
@@ -141,7 +144,7 @@ public class VotingController {
                                       Authentication auth) {
         log.info("Controller: Get voting by id {}", votingId);
         Voting voting = votingService.findById(votingId);
-        VotingFullResponse response = fromVotingToFullResponseWithStatistics(voting);
+        VotingFullResponse response = fromVotingToFullResponseWithStatistics(voting, userService.findUserByAuth(auth));
         return response;
     }
 
@@ -156,10 +159,18 @@ public class VotingController {
         votingService.vote(votingId, answerId, userService.findUserByAuth(auth));
     }
 
-    private VotingFullResponse fromVotingToFullResponseWithStatistics(Voting voting) {
+    private VotingFullResponse fromVotingToFullResponseWithStatistics(Voting voting, User user) {
         log.info("Controller: Mapping voting {} to voting full response with statistics", voting.getId());
         VotingFullResponse response = votingMapper.fromVotingToFullResponse(voting);
         response.setStatistics(fromVotingToStatisticsResponse(voting));
+        if(user != null) {
+            try {
+                Answer answer = votingUserService.findById(voting.getId(), user.getId()).getAnswer();
+                if (answer != null) {
+                    response.setMyAnswerId(answer.getId());
+                }
+            } catch (Exception e) {}
+        }
         return response;
     }
 

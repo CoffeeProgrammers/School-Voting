@@ -13,5 +13,5 @@ public class VotingFullResponse {
     private String endTime;
     private UserListResponse creator;
     private VotingStatisticsResponse statistics;
-    private Boolean isAnswered;
+    private Long myAnswerId;
 }

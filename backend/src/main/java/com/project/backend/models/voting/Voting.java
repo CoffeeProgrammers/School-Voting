@@ -1,5 +1,6 @@
 package com.project.backend.models.voting;
 
+import com.project.backend.models.School;
 import com.project.backend.models.User;
 import com.project.backend.models.enums.LevelType;
 import com.project.backend.models.google.UserVotingEvent;
@@ -37,6 +38,8 @@ public class Voting {
     @OneToMany(mappedBy = "voting")
     private Set<VotingUser> votingUsers = new HashSet<>();
     private long targetId;
+    @ManyToOne
+    private School school;
 
     public boolean now(){
         log.info("Model: checking if voting is now going");

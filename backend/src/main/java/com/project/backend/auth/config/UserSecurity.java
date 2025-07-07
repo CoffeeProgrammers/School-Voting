@@ -58,6 +58,11 @@ public class UserSecurity {
                 .equals(authentication.getName());
     }
 
+    public boolean checkUserInSameSchoolAsVoting(Authentication authentication, long votingId) {
+        log.info("preAuth: Checking if user in the same school as voting {}", votingId);
+        return votingService.findById(votingId).getSchool().getId() == userService.findUserByAuth(authentication).getSchool().getId();
+    }
+
     public boolean checkUserPetition(Authentication authentication, long petitionId) {
         log.info("preAuth: Checking if user in petition {}", petitionId);
         Petition petition = petitionService.findById(petitionId);

@@ -37,6 +37,12 @@ public class VotingSpecification {
         };
     }
 
+    public static Specification<Voting> bySchoolForDirector(Long schoolId) {
+        log.info("Building specification: bySchoolForDirector(schoolId = {}) ", schoolId);
+        return (root, query, cb) ->
+                        cb.equal(root.get("school").get("id"), schoolId);
+    }
+
     public static Specification<Voting> byUserInClass(long userId) {
         log.info("Building specification: byUserInClass(userId = {})", userId);
         return (root, query, cb) -> {

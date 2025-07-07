@@ -494,7 +494,7 @@ class VotingServiceImplTest {
 
             when(votingRepository.findAll((Specification<Voting>) any(), (Pageable) any())).thenReturn(Page.empty());
 
-            Page<Voting> page = votingService.findAllForDirector(userId, null, null, 0, 10);
+            Page<Voting> page = votingService.findAllForDirector(0L, userId, null, null, 0, 10);
 
             assertNotNull(page);
             verify(votingRepository).findAll(any(Specification.class), any(Pageable.class));
@@ -508,7 +508,7 @@ class VotingServiceImplTest {
 
             when(votingRepository.findAll((Specification<Voting>) any(), (Pageable) any())).thenReturn(Page.empty());
 
-            Page<Voting> page = votingService.findAllForDirector(userId, name, now, 2, 7);
+            Page<Voting> page = votingService.findAllForDirector(0L, userId, name, now, 2, 7);
 
             assertNotNull(page);
             verify(votingRepository).findAll(any(Specification.class), eq(PageRequest.of(2, 7, Sort.by(Sort.Direction.DESC, "endTime"))));

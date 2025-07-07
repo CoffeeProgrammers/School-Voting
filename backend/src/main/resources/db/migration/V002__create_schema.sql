@@ -50,6 +50,7 @@ CREATE TABLE "votings"
     "creator_id"  BIGINT       NOT NULL,
     "count_all"   BIGINT,
     "target_id"   BIGINT,
+    "school_id"   BIGINT,
     FOREIGN KEY ("creator_id") REFERENCES "users" ("id") ON DELETE SET NULL
 );
 

@@ -41,16 +41,17 @@ public class VotingServiceImpl implements VotingService {
     public Voting create(Voting votingRequest, List<String> answers, List<Long> targetIds, long schoolId, long userId) {
         log.info("Service: Creating voting {} with answers {} and creator with id {}", votingRequest, answers, userId);
 
-        if (targetIds == null || targetIds.isEmpty() ) {
-            throw new IllegalArgumentException("Target ids is null or empty");
-        }
-
         User creator = userService.findById(userId);
         votingRequest.setCreator(creator);
+        votingRequest.setSchool(creator.getSchool());
+
+        if(votingRequest.getLevelType() == LevelType.CLASS && (creator.getRole().equals("STUDENT") || creator.getRole().equals("PARENT")) && creator.getMyClass() == null) {
+            throw new IllegalArgumentException("Can not create a voting for class, while not in class");
+        }
 
         votingRequest.setTargetId(
-                votingRequest.getLevelType().equals(LevelType.SCHOOL) ? targetIds.get(0) :
-                        votingRequest.getLevelType().equals(LevelType.CLASS) ? targetIds.get(0) : -1);
+                votingRequest.getLevelType().equals(LevelType.SCHOOL) ? votingRequest.getSchool().getId() :
+                        votingRequest.getLevelType().equals(LevelType.CLASS) ? (creator.getRole().equals("STUDENT") ? creator.getMyClass().getId() : targetIds.get(0)) : -1);
 
         Voting voting = votingRepository.save(votingRequest);
 
@@ -181,11 +182,10 @@ public class VotingServiceImpl implements VotingService {
 
     @Override
     public Page<Voting> findAllForDirector(
-            long userId, String name, Boolean now, int page, int size) {
+            long schoolId, long userId, String name, Boolean now, int page, int size) {
         log.info("Service: Finding all votings for director {} and filters", userId);
-
         Specification<Voting> voitingSpecification = createSpecification(name, false, now, null, null, null);
-        Specification<Voting> fullSpecification = voitingSpecification == null ? VotingSpecification.byDirector(userId) : voitingSpecification.and(VotingSpecification.byDirector(userId));
+        Specification<Voting> fullSpecification = voitingSpecification == null ? VotingSpecification.bySchoolForDirector(schoolId) : voitingSpecification.and(VotingSpecification.bySchoolForDirector(schoolId));
 
         return votingRepository.findAll(
                 fullSpecification,

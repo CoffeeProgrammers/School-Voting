@@ -20,7 +20,7 @@ public class VotingDtoTest {
         dto1.setDescription("Description");
         dto1.setEndTime(LocalDateTime.now().toString());
         dto1.setStartTime(LocalDateTime.now().toString());
-        dto1.setIsAnswered(false);
+        dto1.setMyAnswerId(1L);
         dto1.setStatistics(new VotingStatisticsResponse());
 
         VotingFullResponse dto2 = new VotingFullResponse();
@@ -30,7 +30,7 @@ public class VotingDtoTest {
         dto2.setDescription(dto1.getDescription());
         dto2.setEndTime(dto1.getEndTime());
         dto2.setStartTime(dto1.getStartTime());
-        dto2.setIsAnswered(dto1.getIsAnswered());
+        dto2.setMyAnswerId(dto1.getMyAnswerId());
         dto2.setStatistics(dto1.getStatistics());
 
         assertEquals(dto1, dto2);

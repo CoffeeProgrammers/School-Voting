@@ -21,11 +21,6 @@ public class VotingUser {
         this.setId(votingUserId);
     }
 
-    public VotingUser(Voting voting, User user, Answer answer) {
-        this(voting, user);
-        this.setAnswer(answer);
-    }
-
     @EmbeddedId
     private VotingUserId id;
 

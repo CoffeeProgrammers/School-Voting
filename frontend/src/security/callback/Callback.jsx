@@ -6,9 +6,6 @@ import Loading from "../../components/layouts/Loading";
 const Callback = ({setRole}) => {
     const navigate = useNavigate();
 
-    const role = Cookies.get('role')
-
-
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
         const code = urlParams.get('code');
@@ -23,14 +20,15 @@ const Callback = ({setRole}) => {
                 credentials: 'include'
             }).then(res => {
                 if (res.ok) {
-                    setRole(Cookies.get('role'))
+                    let role = Cookies.get('role');
+                    setRole(role);
                     (role === 'STUDENT' || role === 'DIRECTOR') ? navigate('/petitions') : navigate('/voting');
                 } else {
                     alert('Помилка авторизації');
                 }
             });
         }
-    }, [navigate, role]);
+    }, [navigate]);
 
     return <Loading/>;
 };

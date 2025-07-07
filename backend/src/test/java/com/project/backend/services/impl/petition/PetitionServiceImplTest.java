@@ -155,7 +155,7 @@ class PetitionServiceImplTest {
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
             petitionService.support(10L, creator);
         });
-        assertEquals("Cannot support petition because user is already petition", ex.getMessage());
+        assertEquals("Cannot support petition because user has already supported it", ex.getMessage());
     }
 
     @Test

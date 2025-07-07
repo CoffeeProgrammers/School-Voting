@@ -297,7 +297,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findUserByAuth(Authentication authentication) {
-        log.info("Service: Finding user by authentication {}", authentication.getName());
+        log.info("Service: Finding user by authentication");
         return findUserByKeycloakUserId(authentication.getName());
     }
 

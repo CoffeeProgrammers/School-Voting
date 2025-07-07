@@ -75,7 +75,7 @@ const PetitionListBox = ({petition}) => {
                     ) : (
                         <Box/>
                     )}
-                    {petition.supportedByCurrentUser ? (
+                    {petition.supportedByCurrentId ? (
                         <Chip
                             icon={<ThumbUpAltIcon color="success"/>}
                             label="Supported"

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useParams} from "react-router-dom";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -11,31 +11,37 @@ import Utils from "../../utils/Utils";
 import {blueGrey} from "@mui/material/colors";
 import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
 import theme from "../../assets/theme";
-
-const petition = {
-    id: 1,
-    name: "Quality Wi-Fi for All: Let's Ensure Fast and Stable Internet in Our School!",
-    description: "We urge the administration of School №X (or [School Name]) to improve the quality of Wi-Fi coverage and internet speed throughout the entire school. Stable and fast internet is crucial for modern learning, access to online resources, and electronic journals and diaries. Current Wi-Fi issues hinder an effective educational process. Support this petition to help us create a more comfortable and tech-friendly environment for everyone!",
-    endTime: "2025-09-30T23:59:59",
-    levelType: "class",
-    status: "ACTIVE",
-    countSupport: 247,
-    countNeeded: 350,
-    supportedByCurrentUser: true,
-    creator: {
-        id: 10,
-        email: "jane.doe@example.com",
-        firstName: "Jane",
-        lastName: "Doe"
-    }
-};
+import Loading from "../../components/layouts/Loading";
+import PetitionService from "../../services/base/ext/PetitionService";
 
 const PetitionPage = () => {
-    const {petitionId} = useParams();
-
+    const {id} = useParams();
     const [tab, setTab] = useState("Description")
 
-    const viewDate = Utils.getDaysLeft(petition.endTime) + ' days left';
+    const [petition, setPetition] = useState()
+    const [viewDate, setViewDate] = useState()
+
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            setLoading(true);
+            try {
+                const response = await PetitionService.getPetition(id)
+
+                setPetition(response)
+                setViewDate(Utils.getDaysLeft(response.endTime) + ' days left')
+            } catch (error) {
+                setError(error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+    }, []);
+
 
     const renderSuccessSupportButton = () => {
         return (
@@ -81,6 +87,15 @@ const PetitionPage = () => {
                 return <Box mt={2.5}>Comments</Box>
         }
     }
+
+    if (loading) {
+        return <Loading/>;
+    }
+
+    if (error) {
+        return <Typography color={"error"}>Error: {error.message}</Typography>;
+    }
+
 
     return (
         <Box sx={{
@@ -134,7 +149,7 @@ const PetitionPage = () => {
                 <Box sx={{border: '1px solid #ddd', borderRadius: '5px', padding: '15px', marginX: 1}}>
                     <Box sx={{alignItems: 'center', display: 'flex', justifyContent: 'center',}}>
                         <CustomPieChart
-                            supportedCount={petition.countSupport}
+                            supportedCount={petition.countSupported}
                             totalCount={petition.countNeeded}
                             status={petition.status}
                         />
@@ -153,7 +168,7 @@ const PetitionPage = () => {
                                 <Typography mt={0.55}>
                                     {viewDate}
                                 </Typography>
-                                {petition.supportedByCurrentUser ? (
+                                {petition.supportedByCurrentId ? (
                                     <Box alignItems="center" display="flex" justifyContent="center" mt={5} mb={1.5}>
                                         {renderSuccessSupportButton()}
                                     </Box>
@@ -167,7 +182,7 @@ const PetitionPage = () => {
 
                             </Box>
                         ) : (
-                            petition.supportedByCurrentUser && (
+                            petition.supportedByCurrentId && (
                                 <Box alignItems="center" display="flex" justifyContent="center" mt={5} mb={1.5}>
                                     {renderSuccessSupportButton()}
                                 </Box>

@@ -224,6 +224,7 @@ public class PetitionServiceImpl implements PetitionService {
                                 checkingStatus(petition);
                             }
                         }).toList());
+        petitionRepository.saveAll(petitionRepository.findAll(PetitionSpecification.byUser(userService.findById(userId))).stream().peek(this::checkingStatus).toList());
     }
 
     @Override

@@ -5,12 +5,10 @@ class PetitionService extends BaseService {
         super(`/schools/${1}/petitions`);
     }
 
-    // Створити петицію
     createPetition(data) {
         return this.post("/create", data);
     }
 
-    // Видалити петицію
     deletePetition(petitionId) {
         return this.delete(`/delete/${petitionId}`);
     }

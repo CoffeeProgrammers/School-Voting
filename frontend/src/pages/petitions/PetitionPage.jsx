@@ -6,13 +6,13 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import Divider from "@mui/material/Divider";
 import Groups2Icon from '@mui/icons-material/Groups2';
 import {Button, Stack} from "@mui/material";
-import {CustomPieChart} from "../../components/layouts/statistics/CustomPieChart";
 import Utils from "../../utils/Utils";
 import {blueGrey} from "@mui/material/colors";
 import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
 import theme from "../../assets/theme";
 import Loading from "../../components/layouts/Loading";
 import PetitionService from "../../services/base/ext/PetitionService";
+import StatisticInPage from "../../components/basic/petition/StatisticInPage";
 
 const PetitionPage = () => {
     const {id} = useParams();
@@ -148,9 +148,9 @@ const PetitionPage = () => {
             <Box>
                 <Box sx={{border: '1px solid #ddd', borderRadius: '5px', padding: '15px', marginX: 1}}>
                     <Box sx={{alignItems: 'center', display: 'flex', justifyContent: 'center',}}>
-                        <CustomPieChart
-                            supportedCount={petition.countSupported}
-                            totalCount={petition.countNeeded}
+                        <StatisticInPage
+                            countSupported={petition.countSupported}
+                            countNeeded={petition.countNeeded}
                             status={petition.status}
                         />
 

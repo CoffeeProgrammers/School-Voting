@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Button, Stack} from "@mui/material";
 import Typography from "@mui/material/Typography";
 import theme from "../../assets/theme";
@@ -10,52 +10,42 @@ import VotingAnswerBox from "../../components/basic/voting/VotingAnswerBox";
 import VotingDate from "../../components/basic/voting/VotingDate";
 import {blueGrey} from "@mui/material/colors";
 import HowToVoteIcon from "@mui/icons-material/HowToVote";
-import UserList from "../../components/basic/user/UserList";
+import VotingService from "../../services/base/ext/VotingService";
+import {useParams} from "react-router-dom";
+import Loading from "../../components/layouts/Loading";
+import VotingParticipantsList from "../../components/basic/user/VotingParticipantsList";
 
-const voting = {
-    "id": 1,
-    "name": "Vote: Choosing the Theme for Our Annual School Ball!",
-    "description": "It's time to pick an unforgettable theme for our Annual School Ball! Your choice will set the atmosphere, decorations, and dress code for the celebration. Vote wisely, as your voice will help make this year's ball the most spectacular yet!",
-    "levelType": "NATIONAL",
-    "startTime": "2025-06-01T08:00:00Z",
-    "endTime": "2026-06-05T20:00:00Z",
-    "creator": {
-        "id": 10,
-        "email": "jane.doe@example.com",
-        "firstName": "Jane",
-        "lastName": "Doe"
-    },
-    "statistics": {
-        "answers": [
-            {"id": 1, "name": "Galactic Night", "count": 900},
-            {"id": 2, "name": "Masquerade Ball", "count": 500},
-            {"id": 3, "name": "80s Throwback", "count": 100},
-            {"id": 4, "name": "Need more info", "count": 50}
-        ],
-        "countAll": 1800,
-        "countAllAnswered": 1550
-    },
-    "isAnswered": true
-}
-
-const users = [
-    {id: 1, firstName: "Alice", lastName: "Johnson", email: "alice.johnson@example.com"},
-    {id: 2, firstName: "Bob", lastName: "Smith", email: "bob.smith@example.com"},
-    {id: 3, firstName: "Charlie", lastName: "Brown", email: "charlie.brown@example.com"},
-    {id: 4, firstName: "Diana", lastName: "Williams", email: "diana.williams@example.com"},
-    {id: 5, firstName: "Ethan", lastName: "Davis", email: "ethan.davis@example.com"},
-    {id: 6, firstName: "Fiona", lastName: "Clark", email: "fiona.clark@example.com"},
-    {id: 7, firstName: "George", lastName: "Miller", email: "george.miller@example.com"},
-    {id: 8, firstName: "Hannah", lastName: "Taylor", email: "hannah.taylor@example.com"},
-    {id: 9, firstName: "Ian", lastName: "Anderson", email: "ian.anderson@example.com"},
-    {id: 10, firstName: "Julia", lastName: "Thomas", email: "julia.thomas@example.com"}
-];
 
 const VotingPage = () => {
+    const {id} = useParams();
     const [tab, setTab] = useState("Description")
 
-    const isActive = new Date(voting.startTime) < new Date() && new Date(voting.endTime) > new Date();
+    const [selectedAnswer, setSelectedAnswer] = useState(-1)
 
+    const [voting, setVoting] = useState()
+    const [isActive, setIsActive] = useState()
+
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            setLoading(true);
+            try {
+                const response = await VotingService.getVoting(id)
+
+                setVoting(response)
+                setSelectedAnswer(response.selectedAnswer ? response.selectedAnswer : -1)
+                setIsActive(new Date(response.startTime) < new Date() && new Date(response.endTime) > new Date())
+            } catch (error) {
+                setError(error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+    }, []);
     const renderTabButton = (title, width) => {
         return (
             <Button onClick={() => setTab(title)} sx={{height: 33, borderRadius: 0, width: width}}>
@@ -78,7 +68,7 @@ const VotingPage = () => {
                         {voting.description}
                     </Typography>)
             case 'Participants':
-                return <UserList users={users}/>
+                return <VotingParticipantsList/>
         }
     }
 
@@ -100,6 +90,14 @@ const VotingPage = () => {
                 Voted
             </Button>
         )
+    }
+
+    if (loading) {
+        return <Loading/>;
+    }
+
+    if (error) {
+        return <Typography color={"error"}>Error: {error.message}</Typography>;
     }
 
     return (
@@ -167,9 +165,9 @@ const VotingPage = () => {
                                 <Box key={answer.id}>
                                     <VotingAnswerBox
                                         answer={answer}
-                                        maxAnswerCount={voting.statistics.countAllAnswered}
-                                        selectedAnswer={1}
-                                        setSelectedValue={() => {}}/>
+                                        maxAnswerCount={voting.statistics.countAnswered}
+                                        selectedAnswer={selectedAnswer}
+                                        setSelectedValue={setSelectedAnswer}/>
                                 </Box>
                             ))}
                         </Stack>
@@ -177,7 +175,7 @@ const VotingPage = () => {
                     <Divider sx={{marginY: 0.5}}/>
                     <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
                         <Typography mt={0.3}  variant='body1' fontWeight={'bold'}>
-                            Voted {voting.statistics.countAllAnswered}/{voting.statistics.countAll}
+                            Voted {voting.statistics.countAnswered}/{voting.statistics.countAll}
                         </Typography>
 
                         <VotingDate startDate={voting.startTime} endDate={voting.endTime}/>

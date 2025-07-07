@@ -133,7 +133,7 @@ public class VotingController {
         return response;
     }
 
-    @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and (@userSecurity.checkUserVoting(#auth, #votingId) or @userSecurity.checkCreatorVoting(#auth, #votingId))")
+    @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and (@userSecurity.checkUserVoting(#auth, #votingId) or @userSecurity.checkCreatorVoting(#auth, #votingId) or hasRole('DIRECTOR'))")
     @GetMapping("/{voting_id}")
     @ResponseStatus(HttpStatus.OK)
     public VotingFullResponse getById(@PathVariable("school_id") Long schoolId,

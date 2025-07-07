@@ -37,9 +37,9 @@ public class GoogleCalendarEventMapper {
         event.setEnd(new EventDateTime().setDateTime(end).setTimeZone(timezone));
 
         if (petition.getLevelType() == LevelType.CLASS) {
-//            event.setLocation("CLASS: " + petition.getTargetName());
+            event.setLocation("CLASS: " + petition.getTargetName());
         } else if (petition.getLevelType() == LevelType.SCHOOL) {
-//            event.setLocation("SCHOOL: " + petition.getTargetName());
+            event.setLocation("SCHOOL: " + petition.getTargetName());
         }
 
         List<EventReminder> reminders = new ArrayList<>();

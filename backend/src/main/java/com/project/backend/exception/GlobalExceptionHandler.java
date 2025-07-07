@@ -45,7 +45,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(LoginException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ExceptionResponse handleLoginException(RuntimeException e) {
+    public ExceptionResponse handleLoginException(LoginException e) {
         log.error("Exception: handleLoginException: {}", e.getMessage());
         return new ExceptionResponse(e.getMessage());
     }

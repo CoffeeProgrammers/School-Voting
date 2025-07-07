@@ -63,7 +63,7 @@ public class UserSecurity {
         Petition petition = petitionService.findById(petitionId);
         if(petition.getLevelType().equals(LevelType.SCHOOL)){
             log.info("preAuth: Checking if user in school");
-            return checkUserSchool(authentication, petition.getCreator().getSchool().getId());
+            return checkUserSchool(authentication, petition.getTargetId());
         }else{
             log.info("preAuth: Checking if user in class");
             return userService.findAllByClass(petition.getTargetId()).contains(userService.findUserByAuth(authentication));

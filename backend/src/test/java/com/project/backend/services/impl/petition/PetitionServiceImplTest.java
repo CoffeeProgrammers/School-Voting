@@ -66,7 +66,7 @@ class PetitionServiceImplTest {
         petition.setLevelType(LevelType.GROUP_OF_PARENTS_AND_STUDENTS);
 
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
-            petitionService.create(petition, 100L, creator, "target");
+            petitionService.create(petition, creator, "target");
         });
 
         assertEquals("Cannot create a petition with such level type.", ex.getMessage());
@@ -75,22 +75,14 @@ class PetitionServiceImplTest {
     @Test
     void create_shouldThrowIfCreatorNotInClassOrSchool() {
         petition.setLevelType(LevelType.CLASS);
-        creator.setMyClass(new com.project.backend.models.Class());
-        creator.getMyClass().setId(1L);
+        creator.setMyClass(null);
 
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
-            petitionService.create(petition, 2L, creator, "target");
+            petitionService.create(petition, creator, "target");
         });
-        assertEquals("Cannot create a petition in class where u are not.", ex.getMessage());
+        assertEquals("Can not create petition for class, while not in class", ex.getMessage());
 
         petition.setLevelType(LevelType.SCHOOL);
-        creator.setSchool(new com.project.backend.models.School());
-        creator.getSchool().setId(1L);
-
-        ex = assertThrows(IllegalArgumentException.class, () -> {
-            petitionService.create(petition, 2L, creator, "target");
-        });
-        assertEquals("Cannot create a petition in school where u are not.", ex.getMessage());
     }
 
     @Test
@@ -101,7 +93,7 @@ class PetitionServiceImplTest {
 
         when(petitionRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
 
-        Petition result = petitionService.create(petition, 100L, creator, "targetName");
+        Petition result = petitionService.create(petition, creator, "targetName");
 
         assertEquals(Status.ACTIVE, result.getStatus());
         assertEquals(creator, result.getCreator());
@@ -163,7 +155,7 @@ class PetitionServiceImplTest {
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
             petitionService.support(10L, creator);
         });
-        assertEquals("Cannot support petition because user is already petition", ex.getMessage());
+        assertEquals("Cannot support petition because user has already supported it", ex.getMessage());
     }
 
     @Test

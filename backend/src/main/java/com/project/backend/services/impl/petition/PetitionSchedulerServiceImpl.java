@@ -38,5 +38,6 @@ public class PetitionSchedulerServiceImpl implements PetitionSchedulerService {
                 log.info("Scheduler: Petition {} status updated to {}", petition.getId(), petition.getStatus());
             }
         }
+        log.info("Scheduler: All petitions updated");
     }
 }

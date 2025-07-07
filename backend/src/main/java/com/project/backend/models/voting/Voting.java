@@ -5,6 +5,7 @@ import com.project.backend.models.enums.LevelType;
 import com.project.backend.models.google.UserVotingEvent;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+@Slf4j
 @Entity
 @Table(name = "votings")
 @Getter
@@ -37,6 +39,7 @@ public class Voting {
     private long targetId;
 
     public boolean now(){
+        log.info("Model: checking if voting is now going");
         return LocalDateTime.now().isAfter(this.startTime) && LocalDateTime.now().isBefore(this.endTime);
     }
 

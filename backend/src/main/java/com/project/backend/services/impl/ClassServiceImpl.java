@@ -50,6 +50,7 @@ public class ClassServiceImpl implements ClassService {
             u.setMyClass(clazz);
             userService.save(u);
         });
+        log.info("Service: Class created: {}", clazz);
         return clazz;
     }
 
@@ -63,11 +64,12 @@ public class ClassServiceImpl implements ClassService {
 
     @Override
     public void deleteBySchool(long schoolId) {
-        log.info("Service: Deleting Class with by school with id {}", schoolId);
+        log.info("Service: Deleting Class from school with id {}", schoolId);
         List<Class> classes = classRepository.findAll(ClassSpecification.bySchool(schoolId));
         for (Class clazz : classes) {
             delete(clazz.getId(), true);
         }
+        log.info("Service: All classes from school with id {} deleted",  schoolId);
     }
 
     @Override
@@ -82,6 +84,7 @@ public class ClassServiceImpl implements ClassService {
             }
         }
         classRepository.deleteById(id);
+        log.info("Service: Deleted Class with id {}", id);
     }
 
     @Override
@@ -93,7 +96,7 @@ public class ClassServiceImpl implements ClassService {
 
     @Override
     public void assignUserToClass(long classId, List<Long> userIds) {
-        log.info("Service: Assigning User with id {} to Class with id {}", userIds, classId);
+        log.info("Service: Assigning Users with id {} to Class with id {}", userIds, classId);
         Class clazz = findById(classId);
         User user;
         if (userIds.isEmpty()) {
@@ -107,6 +110,7 @@ public class ClassServiceImpl implements ClassService {
             }
         }
         classRepository.save(clazz);
+        log.info("Service: Assigned Users with id {} to Class with id {}", userIds, classId);
     }
 
     @Override
@@ -125,11 +129,12 @@ public class ClassServiceImpl implements ClassService {
             }
         }
         classRepository.save(clazz);
+        log.info("Service: Unassigned User with id {} from Class with id {}", userIds, classId);
     }
 
     @Override
     public Page<Class> findAllBySchool(long schoolId, String name, int page, int size) {
-        log.info("Service: Finding all classes by school {} with name {}", schoolId, name);
+        log.info("Service: Finding all classes from school {} with name {}", schoolId, name);
         Specification<Class> specification = isValid(name) ?
                 ClassSpecification.bySchool(schoolId).and(ClassSpecification.byName(name)) : ClassSpecification.bySchool(schoolId);
         return classRepository.findAll(specification,
@@ -138,6 +143,7 @@ public class ClassServiceImpl implements ClassService {
 
     @Override
     public List<Class> findAllBySchool(long schoolId) {
+        log.info("Service: Finding all classes from school {}", schoolId);
         return classRepository.findAll(ClassSpecification.bySchool(schoolId));
     }
 

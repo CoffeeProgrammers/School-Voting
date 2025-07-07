@@ -8,7 +8,7 @@ import org.springframework.data.domain.Page;
 import java.util.List;
 
 public interface PetitionService {
-    Petition create(Petition petition, long levelId, User creator, String targetName);
+    Petition create(Petition petition, User creator, String targetName);
 
     void delete(long id);
 
@@ -40,4 +40,6 @@ public interface PetitionService {
     List<Petition> findAllByUserAndLevelClass(long userId);
 
     List<Petition> findAllByClass(long classId);
+
+    void save(Petition petition);
 }

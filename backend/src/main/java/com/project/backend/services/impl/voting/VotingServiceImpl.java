@@ -38,18 +38,24 @@ public class VotingServiceImpl implements VotingService {
     private final VotingUserService votingUserService;
 
     @Override
-    public Voting create(Voting votingRequest, List<String> answer, List<Long> targetIds, long schoolId, long userId) {
-        log.info("Service: Creating voting {}", votingRequest);
+    public Voting create(Voting votingRequest, List<String> answers, List<Long> targetIds, long schoolId, long userId) {
+        log.info("Service: Creating voting {} with answers {} and creator with id {}", votingRequest, answers, userId);
+
         if (targetIds == null || targetIds.isEmpty() ) {
-            throw new IllegalArgumentException("targetIds is null or empty");
+            throw new IllegalArgumentException("Target ids is null or empty");
         }
+
         User creator = userService.findById(userId);
         votingRequest.setCreator(creator);
+
         votingRequest.setTargetId(
                 votingRequest.getLevelType().equals(LevelType.SCHOOL) ? targetIds.get(0) :
                         votingRequest.getLevelType().equals(LevelType.CLASS) ? targetIds.get(0) : -1);
+
         Voting voting = votingRepository.save(votingRequest);
-        answerService.create(answer, voting);
+
+        answerService.create(answers, voting);
+
         Stream<User> users = null;
         switch (voting.getLevelType()) {
             case SCHOOL -> {
@@ -81,9 +87,16 @@ public class VotingServiceImpl implements VotingService {
             }
         }
         List<User> usersToAdd = users.filter(u -> u.getSchool().getId() == schoolId).toList();
+
         log.info("Service: Users to add: {}, before filters: {}", usersToAdd.stream().map(User::getId).toList(), targetIds);
+
         votingUserService.create(voting, usersToAdd);
         voting.setCountAll(usersToAdd.size());
+
+        votingRepository.save(voting);
+
+        log.info("Service: Created voting with name {}", voting.getName());
+
         return voting;
     }
 
@@ -108,7 +121,7 @@ public class VotingServiceImpl implements VotingService {
     @Transactional
     @Override
     public void deleteBy(LevelType levelType, long targetId) {
-        log.info("Service: Deleting votings with levelType {}", levelType);
+        log.info("Service: Deleting votings with levelType {} and target id {}", levelType, targetId);
         if (levelType.equals(LevelType.SCHOOL)) {
             votingRepository.deleteAllByCreator_School_Id(targetId);
         } else {
@@ -144,7 +157,7 @@ public class VotingServiceImpl implements VotingService {
     @Override
     public Page<Voting> findAllByUser(
             long userId, String name, Boolean now, Boolean isNotVoted, int page, int size) {
-        log.info("Service: Finding all votings by user {}", userId);
+        log.info("Service: Finding all votings by user {} and filters", userId);
         Specification<Voting> voitingSpecification = createSpecification(name, false, now, null, isNotVoted, userId);
         Specification<Voting> fullSpecification = voitingSpecification == null ? VotingSpecification.byUser(userId) : voitingSpecification.and(VotingSpecification.byUser(userId));
 
@@ -156,7 +169,7 @@ public class VotingServiceImpl implements VotingService {
     @Override
     public Page<Voting> findAllByCreator(
             long userId, String name, Boolean now, Boolean notStarted, int page, int size) {
-        log.info("Service: Finding all votings by creator {}", userId);
+        log.info("Service: Finding all votings by creator {} and filters", userId);
 
         Specification<Voting> voitingSpecification = createSpecification(name, true, now, notStarted, null, null);
         Specification<Voting> fullSpecification = voitingSpecification == null ? VotingSpecification.byCreator(userId) : voitingSpecification.and(VotingSpecification.byCreator(userId));
@@ -169,7 +182,7 @@ public class VotingServiceImpl implements VotingService {
     @Override
     public Page<Voting> findAllForDirector(
             long userId, String name, Boolean now, int page, int size) {
-        log.info("Service: Finding all votings for director {}", userId);
+        log.info("Service: Finding all votings for director {} and filters", userId);
 
         Specification<Voting> voitingSpecification = createSpecification(name, false, now, null, null, null);
         Specification<Voting> fullSpecification = voitingSpecification == null ? VotingSpecification.byDirector(userId) : voitingSpecification.and(VotingSpecification.byDirector(userId));
@@ -182,14 +195,18 @@ public class VotingServiceImpl implements VotingService {
     @Override
     public void vote(long votingId, long answerId, User user) {
         log.info("Service: Vote for answer with id {}", answerId);
+
         Voting voting = findById(votingId);
         Answer answer = answerService.findById(answerId);
+
         if(answer.getVoting().getId() != votingId){
             throw new EntityNotFoundException("Cant answer answer with id: " + answerId + " because it`s not in voting");
         }
+
         checkTimeForVote(voting);
         answerService.vote(answerId);
         votingUserService.update(voting, user, answer);
+        log.info("Service: Voted for answer with id {}", answerId);
     }
 
     @Transactional
@@ -199,6 +216,7 @@ public class VotingServiceImpl implements VotingService {
         List<Voting> votings = votingRepository.findAll(VotingSpecification.byCreator(userId))
                 .stream().peek(voting -> voting.setCreator(userService.findUserByEmail("!deleted-user!@deleted.com"))).toList();
         votingRepository.saveAll(votings);
+        log.info("Service: Deleted user with id {}", userId);
     }
 
     private void checkTimeForChanges(Voting voting) {
@@ -206,6 +224,7 @@ public class VotingServiceImpl implements VotingService {
         if (LocalDateTime.now().isAfter(voting.getStartTime())) {
             throw new IllegalArgumentException("Voting start time cannot be less than now for delete or update");
         }
+        log.info("Service: Checked time for changes {} and all is good", voting.getId());
     }
 
     private void checkTimeForVote(Voting voting) {
@@ -217,6 +236,7 @@ public class VotingServiceImpl implements VotingService {
         if(now.isAfter(voting.getEndTime())) {
             throw new IllegalArgumentException("Voting end time cannot be less than now for vote");
         }
+        log.info("Service: Checked time for voting {} and all is good", voting.getId());
     }
 
     private Specification<Voting> createSpecification(String name, boolean my, Boolean now, Boolean notStarted, Boolean canVote, Long userId) {

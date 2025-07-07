@@ -17,25 +17,26 @@ public class UserCalendarServiceImpl implements UserCalendarService {
 
     @Override
     public UserCalendar create(UserCalendar userCalendar){
+        log.info("Service: Creating user calendar {}", userCalendar.getId());
         return userCalendarRepository.save(userCalendar);
     }
 
     @Override
     public UserCalendar findByUser(long userId) {
-        log.info("Service: get user calendar existing user {}", userId);
+        log.info("Service: Get user calendar existing user {}", userId);
         return userCalendarRepository.findByUser_Id(userId).orElseThrow(()-> new EntityNotFoundException("UserCalendar with userId " + userId + " not found"));
     }
 
     @Override
     public boolean existsByUser(long userId) {
-        log.info("Service: check if existing user {}", userId);
+        log.info("Service: Check if existing user {}", userId);
         return userCalendarRepository.existsByUser_Id(userId);
     }
 
     @Transactional
     @Override
     public void deleteByUser(long userId){
-        log.info("Service: delete user calendar with user id {}", userId);
+        log.info("Service: Delete user calendar with user id {}", userId);
         userCalendarRepository.deleteByUser_Id(userId);
     }
 }

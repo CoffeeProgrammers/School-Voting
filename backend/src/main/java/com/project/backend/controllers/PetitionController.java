@@ -56,9 +56,11 @@ public class PetitionController {
         log.info("Controller: Creating a petition for school {}", schoolId);
         User user = userService.findUserByAuth(auth);
         LevelType levelType = LevelType.valueOf(petitionRequest.getLevelType());
-        long targetId = petitionRequest.getLevelId();
-        Petition petition = petitionService.create(petitionMapper.fromRequestToPetition(petitionRequest), targetId, user,
-                levelType == LevelType.SCHOOL ? schoolService.findById(targetId).getName() : classService.findById(targetId).getName());
+        if(levelType == LevelType.CLASS && user.getMyClass() == null) {
+            throw new IllegalArgumentException("Can not create petition for class, while not in class");
+        }
+        Petition petition = petitionService.create(petitionMapper.fromRequestToPetition(petitionRequest), user,
+                levelType == LevelType.SCHOOL ? user.getSchool().getName() : levelType == LevelType.CLASS ? user.getMyClass().getName() : "ERROR");
         googleCalendarService.savePetitionToUserCalendar(petition);
         return this.fromPetitionToPetitionFullResponseWithAllInfo(petition, user);
     }

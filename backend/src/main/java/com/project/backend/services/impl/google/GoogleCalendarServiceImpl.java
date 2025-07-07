@@ -58,7 +58,6 @@ public class GoogleCalendarServiceImpl implements GoogleCalendarService {
         userCalendar.setUser(userService.findById(userId));
         userCalendarService.create(userCalendar);
         return created;
-
     }
 
     @Override
@@ -73,6 +72,7 @@ public class GoogleCalendarServiceImpl implements GoogleCalendarService {
 
     @Override
     public void firstUploadPetitionsToUserCalendar(long userId) {
+        log.info("Service: Starting first upload petitions to user calendar for user {}", userId);
         List<Petition> myPetitions = petitionService.findAllMy(userId);
         Event[] result;
         User user = userService.findById(userId);
@@ -84,10 +84,12 @@ public class GoogleCalendarServiceImpl implements GoogleCalendarService {
             result = savePetitionToUserCalendar(petitionEvent, reminderPetitionEvent, userId);
             userPetitionEventService.create(user, p, result[0].getId(), result[1].getId());
         }
+        log.info("Service: Finished first upload petitions to user calendar for user {}", userId);
     }
 
     @Override
     public void firstUploadVotingToUserCalendar(long userId) {
+        log.info("Service: Starting first upload voting to user calendar for user {}", userId);
         List<Voting> myVoting = votingService.findAllByUser(userId);
         Event[] result;
         User user = userService.findById(userId);
@@ -99,10 +101,12 @@ public class GoogleCalendarServiceImpl implements GoogleCalendarService {
             result = saveVotingToUserCalendar(votingEvent, reminderVotingEvent, userId);
             userVotingEventService.create(user, v, result[0].getId(), result[1].getId());
         }
+        log.info("Service: Finished first upload voting to user calendar for user {}", userId);
     }
 
     @Override
     public Event[] savePetitionToUserCalendar(Event petitionEvent, Event petitionReminderEvent, long userId) {
+        log.info("Service: Starting save petition event {} to user calendar for user {}", petitionEvent, userId);
         Calendar service = getCalendarService(userId);
         UserCalendar userCalendar = userCalendarService.findByUser(userId);
         Event[] result = new Event[2];
@@ -119,6 +123,7 @@ public class GoogleCalendarServiceImpl implements GoogleCalendarService {
 
     @Override
     public Event[] saveVotingToUserCalendar(Event votingEvent, Event votingReminderEvent, long userId) {
+        log.info("Service: Starting save voting event {} to user calendar for user {}", votingEvent, userId);
         Calendar service = getCalendarService(userId);
         UserCalendar userCalendar = userCalendarService.findByUser(userId);
 
@@ -136,6 +141,7 @@ public class GoogleCalendarServiceImpl implements GoogleCalendarService {
 
     @Override
     public void deletePetitionFromUserCalendar(long petitionId, long userId) {
+        log.info("Service: Starting deletion petition event {} to user calendar for user {}", petitionId, userId);
         Calendar service = getCalendarService(userId);
         UserPetitionEvent userPetitionEvent = userPetitionEventService.findByUserAndPetition(userId, petitionId);
         UserCalendar userCalendar = userCalendarService.findByUser(userId);
@@ -147,10 +153,12 @@ public class GoogleCalendarServiceImpl implements GoogleCalendarService {
             log.error("Service: Failed to delete petition events for user {} and petition {}", userId, petitionId, e);
             throw new RuntimeException(e);
         }
+        log.info("Service: Deleted petition event {} to user calendar for user {}", petitionId, userId);
     }
 
     @Override
     public void deleteVotingFromUserCalendar(long votingId, long userId) {
+        log.info("Service: Starting deletion voting event {} to user calendar for user {}", votingId, userId);
         Calendar service = getCalendarService(userId);
         UserVotingEvent userPetitionEvent = userVotingEventService.findByUserAndVoting(userId, votingId);
         UserCalendar userCalendar = userCalendarService.findByUser(userId);
@@ -162,10 +170,12 @@ public class GoogleCalendarServiceImpl implements GoogleCalendarService {
             log.error("Service: Failed to delete voting events for user {} and voting {}", userId, votingId, e);
             throw new RuntimeException(e);
         }
+        log.info("Service: Deleted voting event {} to user calendar for user {}", votingId, userId);
     }
 
     @Override
     public Event[] updatePetitionInUserCalendar(Event petitionEvent, Event petitionReminderEvent, long petitionId, long userId) {
+        log.info("Service: Starting updating petition event {} to user calendar for user {}", petitionEvent, petitionId);
         Calendar service = getCalendarService(userId);
         UserPetitionEvent userPetitionEvent = userPetitionEventService.findByUserAndPetition(userId, petitionId);
         UserCalendar userCalendar = userCalendarService.findByUser(userId);
@@ -183,6 +193,7 @@ public class GoogleCalendarServiceImpl implements GoogleCalendarService {
 
     @Override
     public Event[] updateVotingInUserCalendar(Event votingEvent, Event votingReminderEvent, long votingId, long userId) {
+        log.info("Service: Starting updating voting event {} to user calendar for user {}", votingEvent, votingId);
         Calendar service = getCalendarService(userId);
         UserVotingEvent userVotingEvent = userVotingEventService.findByUserAndVoting(userId, votingId);
         UserCalendar userCalendar = userCalendarService.findByUser(userId);
@@ -200,6 +211,7 @@ public class GoogleCalendarServiceImpl implements GoogleCalendarService {
 
     @Override
     public void deleteCalendar(long userId) {
+        log.info("Service: Starting deletion calendar for user {}", userId);
         Calendar service = getCalendarService(userId);
         userVotingEventService.deleteByUser(userId);
         userPetitionEventService.deleteByUser(userId);
@@ -215,9 +227,11 @@ public class GoogleCalendarServiceImpl implements GoogleCalendarService {
             }
             userCalendarService.deleteByUser(userId);
         }
+        log.info("Service: Deleted calendar for user {}", userId);
     }
 
     public Calendar getCalendarService(long userId) {
+        log.info("Service: Getting calendar for user {}", userId);
         GoogleCalendarCredential googleCalendarCredential;
         if (googleCalendarCredentialService.existsByUserId(userId)) {
             googleCalendarCredential = googleCalendarCredentialService.refresh(userId);
@@ -243,6 +257,7 @@ public class GoogleCalendarServiceImpl implements GoogleCalendarService {
 
     @Override
     public void savePetitionToUserCalendar(Petition petition){
+        log.info("Service: Starting saving petition {} to user calendars",  petition.getName());
         List<User> users = userService.findAllByPetition(petition);
         Event[] events;
         Event petitionEvent = GoogleCalendarEventMapper.fromPetitionToEvent(petition);
@@ -257,6 +272,7 @@ public class GoogleCalendarServiceImpl implements GoogleCalendarService {
 
     @Override
     public void saveVotingToUserCalendar(Voting voting){
+        log.info("Service: Starting saving voting {} to user calendars", voting.getName());
         List<User> users = userService.findAllByVoting(voting);
         Event[] events;
         Event votingEvent = GoogleCalendarEventMapper.fromVotingToEvent(voting);
@@ -270,6 +286,7 @@ public class GoogleCalendarServiceImpl implements GoogleCalendarService {
 
     @Override
     public void updatePetitionToUserCalendar(Petition petition){
+        log.info("Service: Starting updating petition {} to user calendars", petition.getName());
         List<User> users = userService.findAllByPetition(petition);
         Event petitionEvent = GoogleCalendarEventMapper.fromPetitionToEvent(petition);
         Event petitionReminderEvent = GoogleCalendarEventMapper.fromPetitionToReminderEvent(petition);
@@ -282,6 +299,7 @@ public class GoogleCalendarServiceImpl implements GoogleCalendarService {
 
     @Override
     public void updateVotingToUserCalendar(Voting voting){
+        log.info("Service: Starting updating voting {} to user calendars", voting.getName());
         List<User> users = userService.findAllByVoting(voting);
         Event votingEvent = GoogleCalendarEventMapper.fromVotingToEvent(voting);
         Event votingReminderEvent = GoogleCalendarEventMapper.fromVotingToReminderEvent(voting);
@@ -294,17 +312,20 @@ public class GoogleCalendarServiceImpl implements GoogleCalendarService {
 
     @Override
     public void deleteCalendarAndRevoke(User user) {
+        log.info("Service: Deleting calendar and revoke for user {}", user.getId());
         if(googleCalendarCredentialService.existsByUserId(user.getId())) {
             deleteCalendar(user.getId());
             googleCalendarCredentialService.revokeAccess(user.getId()).subscribe();
             user.setGoogleCalendarCredential(null);
             userService.save(user);
             googleCalendarCredentialService.deleteByUser(user.getId());
+            log.info("Service: Deleted calendar and revoke for user {}", user.getId());
         }
     }
 
     @Override
     public void deletePetitionFromUserCalendar(long petitionId) {
+        log.info("Service: Deleting petition from user calendar {}", petitionId);
         Petition petition = petitionService.findById(petitionId);
         List<User> users = userService.findAllByPetition(petition);
         for(User user : users){
@@ -316,6 +337,7 @@ public class GoogleCalendarServiceImpl implements GoogleCalendarService {
 
     @Override
     public void deleteVotingFromUserCalendar(long votingId) {
+        log.info("Service: Deleting voting from user calendar {}", votingId);
         Voting voting = votingService.findById(votingId);
         List<User> users = userService.findAllByVoting(voting);
         for(User user : users){
@@ -327,36 +349,44 @@ public class GoogleCalendarServiceImpl implements GoogleCalendarService {
 
     @Override
     public void deleteAllClassPetitionsAndVotingsFromUsers(long userId){
+        log.info("Service: Deleting all petitions and votings from user {}", userId);
         if(!googleCalendarCredentialService.existsByUserId(userId)) {
             log.info("User with id {} didnt connect google calendar", userId);
             return;
         }
         List<Petition> petitions = petitionService.findAllByUserAndLevelClass(userId);
         for(Petition petition : petitions){
+            log.info("Service: Deleting petition {} from user", petition.getId());
             this.deletePetitionFromUserCalendar(petition.getId(), userId);
             userPetitionEventService.delete(userId, petition.getId());
         }
         List<Voting> votings = votingService.findAllByUserAndLevelClass(userId);
         for(Voting voting : votings){
+            log.info("Service: Deleting voting {} from user", voting.getId());
             this.deleteVotingFromUserCalendar(voting.getId(), userId);
             userVotingEventService.delete(userId, voting.getId());
         }
+        log.info("Service: Deleted all petitions and votings from user {}", userId);
     }
 
     @Override
     public void saveAllClassPetitionsAndVotingsToUsers(long userId){
+        log.info("Service: Saving all petitions and votings to user {}", userId);
         User user = userService.findById(userId);
         List<Petition> petitions = petitionService.findAllByClass(user.getMyClass().getId());
         Event[] result;
         for(Petition petition : petitions){
+            log.info("Service: Saving petition {} to user {}", petition.getId(), user.getId());
             result = this.savePetitionToUserCalendar(
                     GoogleCalendarEventMapper.fromPetitionToEvent(petition), GoogleCalendarEventMapper.fromPetitionToReminderEvent(petition), userId);
             userPetitionEventService.create(user, petition, result[0].getId(), result[1].getId());
         }
         List<Voting> votings = votingService.findAllByUserAndLevelClass(user.getMyClass().getId());
         for(Voting voting : votings){
+            log.info("Service: Saving voting {} to user {}", voting.getId(), user.getId());
             result = this.saveVotingToUserCalendar(GoogleCalendarEventMapper.fromVotingToEvent(voting), GoogleCalendarEventMapper.fromVotingToReminderEvent(voting), userId);
             userVotingEventService.create(user, voting, result[0].getId(), result[1].getId());
         }
+        log.info("Service: Saved all petitions and votings to user {}", userId);
     }
 }

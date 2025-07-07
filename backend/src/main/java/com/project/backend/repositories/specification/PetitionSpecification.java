@@ -15,6 +15,7 @@ import java.util.List;
 @Slf4j
 public class PetitionSpecification {
     public static Specification<Petition> bySchoolForDirector(Long schoolId, List<Long> classIds) {
+        log.info("Building specification: bySchoolForDirector(schoolId = {}) ", schoolId);
         return (root, query, cb) -> cb.or(
                 cb.and(
                         cb.equal(root.get("levelType"), LevelType.SCHOOL),
@@ -73,18 +74,27 @@ public class PetitionSpecification {
 
     public static Specification<Petition> byUser(User user) {
         long schoolId = user.getSchool().getId();
-        long classId = user.getMyClass().getId();
-        log.info("Building specification: byUser(schoolId = {}, classId = {})", schoolId, classId);
-        return (root, query, cb) -> cb.or(
-                cb.and(
+        log.info("Building specification: byUser(schoolId = {}, classId = {})", schoolId, user.getMyClass() == null ? "NO CLASS" : user.getMyClass().getId());
+        return (root, query, cb) -> {
+            if (user.getMyClass() == null) {
+                return cb.and(
                         cb.equal(root.get("levelType"), LevelType.SCHOOL),
                         cb.equal(root.get("targetId"), schoolId)
-                ),
-                cb.and(
-                        cb.equal(root.get("levelType"), LevelType.CLASS),
-                        cb.equal(root.get("targetId"), classId)
-                )
-        );
+                );
+            } else {
+                long classId = user.getMyClass().getId();
+                return cb.or(
+                        cb.and(
+                                cb.equal(root.get("levelType"), LevelType.SCHOOL),
+                                cb.equal(root.get("targetId"), schoolId)
+                        ),
+                        cb.and(
+                                cb.equal(root.get("levelType"), LevelType.CLASS),
+                                cb.equal(root.get("targetId"), classId)
+                        )
+                );
+            }
+        };
     }
 
     public static Specification<Petition> byUserWithVote(User user) {

@@ -25,6 +25,7 @@ import CreatePetition from "./pages/petitions/CreatePetition";
 import CreateVoting from "./pages/voting/CreateVoting";
 import CreateClass from "./pages/class/CreateClass";
 import CreateUsers from "./pages/user/CreateUsers";
+import CreateSchools from "./pages/school/CreateSchools";
 import UpdateUser from "./pages/user/UpdateUser";
 
 const InitNavigation = ({children}) => {
@@ -82,6 +83,7 @@ function App() {
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <Routes>
                                 <Route path={''} element={<IntroductionPage/>}/>
+                                <Route path={'/create-school'} element={<CreateSchools/>}/>
                                 {routes.map((route, index) => (
                                     <Route element={<PrivateRoute/>} key={index}>
                                         <Route

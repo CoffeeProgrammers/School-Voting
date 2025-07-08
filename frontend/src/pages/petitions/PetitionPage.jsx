@@ -217,7 +217,7 @@ const PetitionPage = () => {
                         <Box sx={{display: 'flex', alignItems: 'center', gap: 0.5}}>
                             <Groups2Icon sx={{fontSize: 20, color: 'primary'}}/>
                             <Typography color="primary" sx={{fontSize: 13}}>
-                                {petition.levelType === 'class' ? 'Class' : 'School'}
+                                {petition.levelType.toLowerCase()}
                             </Typography>
                         </Box>
                     </Stack>

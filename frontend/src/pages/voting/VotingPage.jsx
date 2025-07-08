@@ -172,7 +172,7 @@ const VotingPage = () => {
                     <Box sx={{display: 'flex', alignItems: 'center', gap: 0.5,}}>
                         <Groups2Icon sx={{fontSize: 20, color: 'primary'}}/>
                         <Typography color='primary' sx={{fontSize: 13}}>
-                            {voting.levelType === 'class' ? 'Class' : 'School'}
+                            {voting.levelType.toLowerCase()}
                         </Typography>
                     </Box>
                 </Stack>

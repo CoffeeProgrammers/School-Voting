@@ -16,11 +16,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.project.backend.utils.SpecificationUtil.addSpecification;
 import static com.project.backend.utils.SpecificationUtil.isValid;
@@ -32,6 +35,7 @@ public class PetitionServiceImpl implements PetitionService {
     private final PetitionRepository petitionRepository;
     private final UserService userService;
     private final CommentService commentService;
+    private final SimpMessagingTemplate messagingTemplate;
 
     @Override
     public Petition create(Petition petition, User creator, String targetName) {
@@ -127,8 +131,12 @@ public class PetitionServiceImpl implements PetitionService {
                 petition.setStatus(Status.UNSUCCESSFUL);
                 log.info("Service: Changed status for petition {}, status UNSUCCESSFUL", petition.getId());
             }
-        }
+            Map<String, Object> payload = new HashMap<>();
+            payload.put("count", petition.getCount());
+            payload.put("status", petition.getStatus());
 
+            messagingTemplate.convertAndSend("/topic/petitions/" + petition.getId() + "/counter", payload);
+        }
     }
 
     @Override

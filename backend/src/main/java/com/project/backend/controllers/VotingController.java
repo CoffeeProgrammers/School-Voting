@@ -164,12 +164,17 @@ public class VotingController {
         VotingFullResponse response = votingMapper.fromVotingToFullResponse(voting);
         response.setStatistics(fromVotingToStatisticsResponse(voting));
         if(user != null) {
-            try {
-                Answer answer = votingUserService.findById(voting.getId(), user.getId()).getAnswer();
-                if (answer != null) {
-                    response.setMyAnswerId(answer.getId());
+            if(votingUserService.existsById(voting.getId(), user.getId())) {
+                try {
+                    Answer answer = votingUserService.findById(voting.getId(), user.getId()).getAnswer();
+                    if (answer != null) {
+                        response.setMyAnswerId(answer.getId());
+                    } else {
+                        response.setMyAnswerId(-1L);
+                    }
+                } catch (Exception e) {
                 }
-            } catch (Exception e) {}
+            }
         }
         return response;
     }

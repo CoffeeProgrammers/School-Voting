@@ -40,9 +40,10 @@ const VotingPage = () => {
             try {
                 const response = await VotingService.getVoting(id)
 
+                console.log(response)
                 setVoting(response)
                 console.log(voting)
-                setSelectedAnswer(response.selectedAnswer ? response.selectedAnswer : -1)
+                setSelectedAnswer(response.myAnswerId ? response.myAnswerId : -1)
                 setIsActive(new Date(response.startTime) < new Date() && new Date(response.endTime) > new Date())
             } catch (error) {
                 setError(error);
@@ -71,7 +72,9 @@ const VotingPage = () => {
         try {
             setLoading(true)
             await VotingService.vote(voting.id, selectedAnswer)
-            setVoting({...voting, myAnswerId: selectedAnswer})
+            //TODO
+            window.location.reload()
+            // setVoting({...voting, myAnswerId: selectedAnswer})
         } catch (error) {
             showError(error);
         } finally {
@@ -209,6 +212,7 @@ const VotingPage = () => {
                                     <VotingAnswerBox
                                         answer={answer}
                                         maxAnswerCount={voting.statistics.countAnswered}
+                                        myAnswer={voting.myAnswerId}
                                         selectedAnswer={selectedAnswer}
                                         setSelectedValue={setSelectedAnswer}/>
                                 </Box>

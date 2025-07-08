@@ -14,7 +14,9 @@ import BalanceIcon from '@mui/icons-material/Balance';
 import HomeWorkIcon from '@mui/icons-material/HomeWork';
 import VotingPageImage from '../../images/voting1.png';
 import VotingStatistickImage from '../../images/voting2.png'
-import SchoolPageImage from '../../images/school page.png'
+import SchoolPageImage from '../../images/school1.jpg'
+import SchoolInformationImage from '../../images/school2.jpg'
+import "./introduction.css"
 
 interface
 TabPanelProps
@@ -68,8 +70,9 @@ const IntroductionPage = () => {
                         Login
                     </Button>
                 </Box>
-                <Box sx={{display: "grid", gridTemplateColumns: "1fr 1fr", alignItems: "center", marginTop: '20px'}}>
-                    <Box>
+                <Box sx={{display: "grid", gridTemplateColumns: "1fr 1fr", alignItems: "center", marginTop: '20px'}}
+                     className='mainBlock'>
+                    <Box className='mainBlockText'>
                         <Typography variant='h3' className="titleText" sx={{fontWeight: 500, marginBottom: "20px"}}>
                             Your Voice Matters: School governance
                         </Typography>
@@ -88,10 +91,10 @@ const IntroductionPage = () => {
                     <img src={yourVoiceMattersImage} alt="" width="646px"/>
                 </Box>
                 <Box sx={{marginTop: '30px', width: '100%'}}>
-                    <Box sx={{display: 'flex', justifyContent: 'center'}}>
+                    <Box sx={{display: 'flex', justifyContent: 'center'}} className='tabsContainer'>
                         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example"
-                              TabIndicatorProps={{style: {display: 'none'}}}>
-                            <Tab sx={{
+                              TabIndicatorProps={{style: {display: 'none'}}} className='tabBlock'>
+                            <Tab className='tabs' sx={{
                                 width: '345px', height: '100px',
                                 '&.Mui-selected': {
                                     textDecoration: 'underline',
@@ -121,7 +124,7 @@ const IntroductionPage = () => {
                                 </Box>
 
                             } {...a11yProps(0)} />
-                            <Tab sx={{
+                            <Tab className='tabs' sx={{
                                 width: '345px', height: '100px',
                                 '&.Mui-selected': {
                                     textDecoration: 'underline',
@@ -147,7 +150,7 @@ const IntroductionPage = () => {
                                 </Box>
 
                             } {...a11yProps(1)} />
-                            <Tab sx={{
+                            <Tab className='tabs' sx={{
                                 width: '345px', height: '100px',
                                 '&.Mui-selected': {
                                     textDecoration: 'underline',
@@ -179,11 +182,14 @@ const IntroductionPage = () => {
             </Container>
             <Box>
                 <CustomTabPanel value={value} index={0}>
-                    <Box sx={{display: 'grid', gridTemplateColumns: "2fr 1fr", padding: "30px", bgcolor: "#F8F8F8"}}>
-                        <Box sx={{position: "relative"}}>
-                            <img src={PetitionPageImage} alt="" width="700px"/>
-                            <img src={PetitionStatisticImage}
-                                 style={{position: "absolute", left: '490px', top: "134px"}} alt=""/>
+                    <Box sx={{display: 'grid', gridTemplateColumns: "2fr 1fr", padding: "30px", bgcolor: "#F8F8F8"}}
+                         className='petitionBlock'>
+                        <Box className='imageContainer'>
+                            <Box sx={{position: "relative"}} className='imageBox'>
+                                <img src={PetitionPageImage} alt="" width="700px"/>
+                                <img src={PetitionStatisticImage}
+                                     style={{position: "absolute", left: '490px', top: "134px", width: 270}} alt=""/>
+                            </Box>
                         </Box>
                         <Box>
                             <Typography sx={{fontSize: "30px", fontWeight: 'bold'}}>Your Voice, Our
@@ -200,7 +206,7 @@ const IntroductionPage = () => {
                                     width: '52px',
                                     height: "24px",
                                     borderRadius: 100
-                                }}>
+                                }} className='circle'>
                                     <Box sx={{
                                         height: "24px",
                                         display: "flex",
@@ -220,7 +226,7 @@ const IntroductionPage = () => {
                                     width: '49px',
                                     height: "24px",
                                     borderRadius: 100
-                                }}>
+                                }} className='circle'>
                                     <Box sx={{
                                         height: "24px",
                                         display: "flex",
@@ -240,7 +246,7 @@ const IntroductionPage = () => {
                                     width: '65px',
                                     height: "24px",
                                     borderRadius: 100
-                                }}>
+                                }} className='circle'>
                                     <Box sx={{
                                         height: "24px",
                                         display: "flex",
@@ -257,7 +263,8 @@ const IntroductionPage = () => {
                     </Box>
                 </CustomTabPanel>
                 <CustomTabPanel value={value} index={1}>
-                    <Box sx={{display: 'grid', gridTemplateColumns: "1fr 2fr", padding: "30px", bgcolor: "#F8F8F8"}}>
+                    <Box className='votingBlock'
+                         sx={{display: 'grid', gridTemplateColumns: "1fr 2fr", padding: "30px", bgcolor: "#F8F8F8"}}>
                         <Box>
                             <Typography sx={{fontSize: "30px", fontWeight: 'bold'}}>Voting Page: Your Choices, Our
                                 Future!</Typography>
@@ -274,7 +281,7 @@ const IntroductionPage = () => {
                                     width: '65px',
                                     height: "24px",
                                     borderRadius: 100
-                                }}>
+                                }} className='circle'>
                                     <Box sx={{
                                         height: "24px",
                                         display: "flex",
@@ -294,7 +301,7 @@ const IntroductionPage = () => {
                                     width: '53px',
                                     height: "24px",
                                     borderRadius: 100
-                                }}>
+                                }} className='circle'>
                                     <Box sx={{
                                         height: "24px",
                                         display: "flex",
@@ -314,7 +321,7 @@ const IntroductionPage = () => {
                                     width: '55px',
                                     height: "24px",
                                     borderRadius: 100
-                                }}>
+                                }} className='circle'>
                                     <Box sx={{
                                         height: "24px",
                                         display: "flex",
@@ -328,18 +335,30 @@ const IntroductionPage = () => {
                                     the community's voice has been heard.</Typography>
                             </Box>
                         </Box>
-                        <Box sx={{position: "relative"}}>
-                            <img src={VotingPageImage} alt="" width="700px"
-                                 style={{position: "absolute", right: '0', top: "0"}}/>
-                            <img src={VotingStatistickImage} width='276px'
-                                 style={{position: "absolute", right: '490px', top: "200px"}} alt=""/>
+                        <Box className='imageContainer votingImage'>
+                            <Box sx={{position: "relative", display: 'flex', justifyContent: 'flex-end'}}
+                                 className='imageBox'>
+                                <img src={VotingPageImage} alt="" width="700px"/>
+                                <img src={VotingStatistickImage} width='276px'
+                                     style={{position: "absolute", right: '490px', top: "200px"}} alt=""/>
+                            </Box>
                         </Box>
                     </Box>
                 </CustomTabPanel>
                 <CustomTabPanel value={value} index={2}>
-                    <Box sx={{display: 'grid', gridTemplateColumns: "2fr 1fr", padding: "30px", bgcolor: "#F8F8F8", alignItems:"center"}}>
-                        <Box>
-                            <img src={SchoolPageImage} alt="" width="750px"/>
+                    <Box sx={{
+                        display: 'grid',
+                        gridTemplateColumns: "2fr 1fr",
+                        padding: "30px",
+                        bgcolor: "#F8F8F8",
+                        alignItems: "center"
+                    }} className='schoolBlock'>
+                        <Box className="imageContainer">
+                            <Box sx={{position: "relative"}} className='imageBox'>
+                                <img src={SchoolPageImage} alt="" width="700px"/>
+                                <img src={SchoolInformationImage}
+                                     style={{position: "absolute", left: '490px', top: "134px", width: 250}} alt=""/>
+                            </Box>
                         </Box>
                         <Box>
                             <Typography sx={{fontSize: "30px", fontWeight: 'bold'}}>Our School Page: Get to Know Us
@@ -357,8 +376,14 @@ const IntroductionPage = () => {
                     </Box>
                 </CustomTabPanel>
             </Box>
-            <Box sx={{padding:'40px 40px 20px 40px', display:'grid', gritTemplateRows:"1fr 1fr", gap:'10px', bgcolor:'#F8F8F8'}}>
-                <Box sx={{display:"flex", justifyContent:'space-between', alignItems:"center"}}>
+            <Box sx={{
+                padding: '40px 40px 20px 40px',
+                display: 'grid',
+                gritTemplateRows: "1fr 1fr",
+                gap: '10px',
+                bgcolor: '#F8F8F8'
+            }}>
+                <Box sx={{display: "flex", justifyContent: 'space-between', alignItems: "center"}}>
                     <Stack sx={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
                         <PsychologyAltIcon color='primary' sx={{mt: '3px', mr: '6px', fontSize: '35px'}}/>
                         <Typography variant="h6" fontWeight='bold' noWrap>
@@ -369,8 +394,8 @@ const IntroductionPage = () => {
                         Login
                     </Button>
                 </Box>
-                <Box sx={{display:"flex", justifyContent:"center"}}>
-                    <Typography sx={{color:'#AFB5C0'}}>©2025 Coffee Programmers</Typography>
+                <Box sx={{display: "flex", justifyContent: "center"}}>
+                    <Typography sx={{color: '#AFB5C0'}}>©2025 Coffee Programmers</Typography>
                 </Box>
             </Box>
         </Box>

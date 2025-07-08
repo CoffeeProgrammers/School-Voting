@@ -15,7 +15,7 @@ import theme from "../../assets/theme";
 const petition = {
     id: 1,
     name: "Quality Wi-Fi for All: Let's Ensure Fast and Stable Internet in Our School!",
-    description: "We urge the administration of School №X (or [School Name]) to improve the quality of Wi-Fi coverage and internet speed throughout the entire school. Stable and fast internet is crucial for modern learning, access to online resources, and electronic journals and diaries. Current Wi-Fi issues hinder an effective educational process. Support this petition to help us create a more comfortable and tech-friendly environment for everyone!",
+    description: "We urge the administration of School to improve the quality of Wi-Fi coverage and internet speed throughout the entire school. Stable and fast internet is crucial for modern learning, access to online resources, and electronic journals and diaries. Current Wi-Fi issues hinder an effective educational process. Support this petition to help us create a more comfortable and tech-friendly environment for everyone!",
     endTime: "2025-09-30T23:59:59",
     levelType: "class",
     status: "ACTIVE",

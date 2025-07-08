@@ -13,8 +13,9 @@ const UserAdditionBox = () => {
     const role = Cookies.get('role');
     const isStudent = role === 'STUDENT';
     const isDirector = role === 'DIRECTOR';
+    const isTeacher = role === 'TEACHER';
 
-    const [tab, setTab] = useState("Created Petitions")
+    const [tab, setTab] = useState(!isStudent ? "Created Voting" : "Created Petitions")
 
     const renderTabButton = (title, width) => {
         return (

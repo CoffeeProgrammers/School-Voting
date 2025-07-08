@@ -11,14 +11,18 @@ import VotingDate from "../../components/basic/voting/VotingDate";
 import {blueGrey} from "@mui/material/colors";
 import HowToVoteIcon from "@mui/icons-material/HowToVote";
 import VotingService from "../../services/base/ext/VotingService";
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import Loading from "../../components/layouts/Loading";
 import VotingParticipantsList from "../../components/basic/user/VotingParticipantsList";
+import DeleteButton from "../../components/layouts/DeleteButton";
+import {useError} from "../../contexts/ErrorContext";
 
 
 const VotingPage = () => {
     const {id} = useParams();
     const [tab, setTab] = useState("Description")
+    const {showError} = useError()
+    const navigate = useNavigate()
 
     const [selectedAnswer, setSelectedAnswer] = useState(-1)
 
@@ -46,6 +50,21 @@ const VotingPage = () => {
 
         fetchData();
     }, []);
+
+
+    const handleDelete = async () => {
+        try {
+            setLoading(true)
+            await VotingService.deleteVoting(id)
+            navigate('/voting', {replace: true});
+        } catch (error) {
+            showError(error);
+        } finally {
+            setLoading(false)
+        }
+    };
+
+
     const renderTabButton = (title, width) => {
         return (
             <Button onClick={() => setTab(title)} sx={{height: 33, borderRadius: 0, width: width}}>
@@ -109,6 +128,11 @@ const VotingPage = () => {
             paddingBottom: 4
         }}>
             <Box paddingRight={4} mt={4.5}>
+                <DeleteButton
+                    text={'Are you sure you want to delete this voting?'}
+                    deleteFunction={handleDelete}
+                    fontSize={20}
+                />
                 <Typography variant='h4'>
                     {voting.name}
                 </Typography>

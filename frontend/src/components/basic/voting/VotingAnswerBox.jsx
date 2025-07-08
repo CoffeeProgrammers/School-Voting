@@ -5,7 +5,7 @@ import Typography from "@mui/material/Typography";
 import Progress from "../../layouts/statistics/Progress";
 import Box from "@mui/material/Box";
 
-const VotingAnswerBox = ({answer, maxAnswerCount, selectedAnswer, setSelectedValue}) => {
+const VotingAnswerBox = ({answer, maxAnswerCount, selectedAnswer, setSelectedValue, myAnswer}) => {
 
     const handleChange = (event) => {
         setSelectedValue(event.target.value);
@@ -14,7 +14,8 @@ const VotingAnswerBox = ({answer, maxAnswerCount, selectedAnswer, setSelectedVal
     return (
         <Stack direction='row' width={'100%'}>
             <Radio
-                checked={selectedAnswer === answer.id.toString()}
+                disabled={myAnswer ? myAnswer !== -1 : false}
+                checked={selectedAnswer.toString() === answer.id.toString()}
                 onChange={handleChange}
                 value={answer.id}
                 name="radio-buttons"

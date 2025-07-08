@@ -8,9 +8,11 @@ import Loading from "../../components/layouts/Loading";
 import PaginationBox from "../../components/layouts/list/PaginationBox";
 import ClassList from "../../components/basic/class/ClassList";
 import ClassService from "../../services/base/ext/ClassService";
+import {useNavigate} from "react-router-dom";
 
 
 const ClassListView = () => {
+    const navigate = useNavigate()
 
     const [classList, setClassList] = useState([])
 
@@ -75,7 +77,8 @@ const ClassListView = () => {
                         setSearchQuery={setSearchName}
                         sx={{mr: 1}}
                     />
-                    <Button variant="contained" color="primary" sx={{height: 32, borderRadius: 10}}>
+                    <Button onClick={() => navigate(`/school/class/create`)} variant="contained" color="primary"
+                            sx={{height: 32, borderRadius: 10}}>
                         Create a class
                     </Button>
                 </Box>

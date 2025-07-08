@@ -23,6 +23,7 @@ import Callback from "./security/callback/Callback";
 import Cookies from "js-cookie";
 import CreatePetition from "./pages/petitions/CreatePetition";
 import CreateVoting from "./pages/voting/CreateVoting";
+import CreateClass from "./pages/class/CreateClass";
 
 const InitNavigation = ({children}) => {
     const navigate = useNavigate();
@@ -58,6 +59,7 @@ function App() {
 
         {path: "/school", element: <SchoolPage/>},
         (isTeacher || isDirector) && {path: "/school/class/:id", element: <ClassPage/>},
+        (isTeacher || isDirector) && {path: "/school/class/create", element: <CreateClass/>},
 
         (isTeacher || isDirector) && {path: "/control-panel", element: <ControlPanel/>},
 

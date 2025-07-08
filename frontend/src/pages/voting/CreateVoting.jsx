@@ -73,8 +73,8 @@ const CreateVoting = () => {
         setAnswers(prev => [...prev, answer])
     }
 
-    const removeAnswer = (answer) => {
-        setAnswers(prev => prev.filter(a => a !== answer))
+    const removeAnswer = (index) => {
+        setAnswers(prev => prev.filter((_, i) => i !== index))
     }
 
     if (loading) {

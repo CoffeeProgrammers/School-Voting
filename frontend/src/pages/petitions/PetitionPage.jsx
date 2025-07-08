@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
@@ -13,9 +13,13 @@ import theme from "../../assets/theme";
 import Loading from "../../components/layouts/Loading";
 import PetitionService from "../../services/base/ext/PetitionService";
 import StatisticInPage from "../../components/basic/petition/StatisticInPage";
+import DeleteButton from "../../components/layouts/DeleteButton";
+import {useError} from "../../contexts/ErrorContext";
 
 const PetitionPage = () => {
     const {id} = useParams();
+    const {showError} = useError()
+    const navigate = useNavigate()
     const [tab, setTab] = useState("Description")
 
     const [petition, setPetition] = useState()
@@ -42,6 +46,17 @@ const PetitionPage = () => {
         fetchData();
     }, []);
 
+    const handleDelete = async () => {
+        try {
+            setLoading(true)
+            await PetitionService.deletePetition(id)
+            navigate('/petitions', {replace: true});
+        } catch (error) {
+            showError(error);
+        } finally {
+            setLoading(false)
+        }
+    };
 
     const renderSuccessSupportButton = () => {
         return (
@@ -88,6 +103,7 @@ const PetitionPage = () => {
         }
     }
 
+
     if (loading) {
         return <Loading/>;
     }
@@ -106,6 +122,11 @@ const PetitionPage = () => {
             paddingBottom: 4
         }}>
             <Box paddingRight={4} mt={4.5}>
+                <DeleteButton
+                    text={'Are you sure you want to delete this petition?'}
+                    deleteFunction={handleDelete}
+                    fontSize={20}
+                />
                 <Typography variant='h4'>
                     {petition.name}
                 </Typography>

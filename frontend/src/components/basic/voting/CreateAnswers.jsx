@@ -29,11 +29,11 @@ const CreateAnswers = ({answersList, addAnswer, deleteAnswer,}) => {
             </Box>
             <Box display={'flex'} flexDirection={'column'} gap={1} px={2} mr={4.5}>
                 <Divider/>
-                {answersList.map((answer) => (<>
-                    <Box display={"flex"} alignItems={"center"} justifyContent={'space-between'} gap={1}>
+                {answersList.map((answer, index) => (<>
+                    <Box display={"flex"} alignItems={"center"} justifyContent={'space-between'} gap={1} key={index}>
 
                         <Typography px={1} variant={"body2"}>{answer}</Typography>
-                        <IconButton onClick={() => deleteAnswer(answer)} size="small">
+                        <IconButton onClick={() => deleteAnswer(index)} size="small">
                             <CancelIcon color="primary"/>
                         </IconButton>
                     </Box>

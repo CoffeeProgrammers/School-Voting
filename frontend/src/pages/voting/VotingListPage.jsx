@@ -10,11 +10,13 @@ import VotingService from "../../services/base/ext/VotingService";
 import Cookies from "js-cookie";
 import Loading from "../../components/layouts/Loading";
 import PaginationBox from "../../components/layouts/list/PaginationBox";
+import {useNavigate} from "react-router-dom";
 
 
 const VotingListPage = () => {
     const role = Cookies.get('role')
     const isDirector = role === 'DIRECTOR'
+    const navigate = useNavigate()
 
     const [votingList, setVotingList] = useState([])
 
@@ -96,7 +98,8 @@ const VotingListPage = () => {
                         sx={{mr: 1.5}}
                     />
 
-                    <Button variant="contained" color="primary" sx={{height: 32, borderRadius: 10}}>
+                    <Button onClick={() => navigate('create')} variant="contained" color="primary"
+                            sx={{height: 32, borderRadius: 10}}>
                         Create a voting
                     </Button>
                 </Box>

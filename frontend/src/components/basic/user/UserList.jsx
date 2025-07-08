@@ -9,11 +9,15 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import Divider from "@mui/material/Divider";
 import PaginationBox from "../../layouts/list/PaginationBox";
 import Typography from "@mui/material/Typography";
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 const UserList = (
     {
         users,
         actions = false,
+        addButtons = false,
+        toggleUserId,
+        selectedIds,
         search = true,
         searchFirstName,
         setSearchFirstName,
@@ -91,6 +95,21 @@ const UserList = (
                 )
             });
         }
+
+    if (addButtons) {
+        columns.push({
+            id: 'add',
+            label: '',
+            align: 'right',
+            render: user => (
+                <IconButton onClick={() => toggleUserId(user.id)} size="small">
+                    {selectedIds.includes(user.id)
+                        ? <CheckCircleIcon color="success"/>
+                        : <AddCircleIcon color="primary"/>}
+                </IconButton>
+            )
+        });
+    }
         return (
             <>
                 <Box>

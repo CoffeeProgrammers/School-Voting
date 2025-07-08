@@ -8,8 +8,10 @@ import EmailIcon from "@mui/icons-material/Email";
 import NotesRoundedIcon from '@mui/icons-material/NotesRounded';
 import EditButton from "../../layouts/EditButton";
 import DeleteButton from "../../layouts/DeleteButton";
+import Cookies from "js-cookie";
 
 const SchoolBox = ({school}) => {
+
     return (
         <Box sx={{
             border: '1px solid',
@@ -26,16 +28,17 @@ const SchoolBox = ({school}) => {
                 <HomeWorkIcon color='primary' sx={{fontSize: 140,}}/>
                 <Typography variant='h4' fontWeight='bold'>School</Typography>
             </Box>
-            <Box display="flex" alignItems="center" justifyContent={'center'} gap={1} mb={1}>
-                <DeleteButton
-                    text={'Are you sure you want to delete this petition?'}
-                    deleteFunction={() => {
-                    }}
-                    fontSize={20}
-                />
+            {Cookies.get("role") === "TEACHER" || Cookies.get("role") === "DIRECTOR" ? (
+                <Box display="flex" alignItems="center" justifyContent={'center'} gap={1} mb={1}>
+                    <DeleteButton
+                        text={'Are you sure you want to delete this petition?'}
+                        deleteFunction={() => {
+                        }}
+                        fontSize={20}
+                    />
 
-                <EditButton path={'update'} state={school}/>
-            </Box>
+                    <EditButton path={'update'} state={school}/>
+                </Box>) : ""}
             <Box marginX={0.5} display='flex' flexDirection='column' justifyContent='center'>
                 <Typography sx={{fontSize: 15, display: 'flex', justifyContent: 'center'}}
                             fontWeight='bold'>Name:</Typography>

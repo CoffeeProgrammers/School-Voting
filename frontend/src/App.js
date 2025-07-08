@@ -27,6 +27,9 @@ import CreateClass from "./pages/class/CreateClass";
 import CreateUsers from "./pages/user/CreateUsers";
 import CreateSchools from "./pages/school/CreateSchools";
 import UpdateUser from "./pages/user/UpdateUser";
+import UpdateClass from "./pages/class/UpdateClass";
+import UpdateSchool from "./pages/school/UpdateSchool";
+import UpdateVoting from "./pages/voting/UpdateVoting";
 
 const InitNavigation = ({children}) => {
     const navigate = useNavigate();
@@ -56,6 +59,7 @@ function App() {
         {path: "/voting", element: <VotingListPage/>},
         {path: "/voting/:id", element: <VotingPage/>},
         {path: "/voting/create", element: <CreateVoting/>},
+        {path: "/voting/:id/update", element: <UpdateVoting/>},
 
 
         isDirector && {path: "/petitions-review", element: <PetitionsReviewPage/>},
@@ -63,6 +67,8 @@ function App() {
         {path: "/school", element: <SchoolPage/>},
         (isTeacher || isDirector) && {path: "/school/class/:id", element: <ClassPage/>},
         (isTeacher || isDirector) && {path: "/school/class/create", element: <CreateClass/>},
+        (isTeacher || isDirector) && {path: "/school/class/:id/update", element: <UpdateClass/>},
+        (isTeacher || isDirector) && {path: "/school/update", element: <UpdateSchool/>},
 
         (isTeacher || isDirector) && {path: "/control-panel", element: <ControlPanel/>},
         (isTeacher || isDirector) && {path: "/control-panel/createUsers", element: <CreateUsers/>},

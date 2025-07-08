@@ -17,6 +17,7 @@ import VotingParticipantsList from "../../components/basic/user/VotingParticipan
 import DeleteButton from "../../components/layouts/DeleteButton";
 import {useError} from "../../contexts/ErrorContext";
 import EditButton from "../../components/layouts/EditButton";
+import Cookies from "js-cookie";
 
 
 const VotingPage = () => {
@@ -129,15 +130,16 @@ const VotingPage = () => {
             paddingBottom: 4
         }}>
             <Box paddingRight={4} mt={4.5}>
-                <Box display="flex" alignItems="center" gap={1}>
-                    <DeleteButton
-                        text={'Are you sure you want to delete this petition?'}
-                        deleteFunction={handleDelete}
-                        fontSize={20}
-                    />
+                {Cookies.get("userId") === voting.creator.id.toString() ?
+                    (<Box display="flex" alignItems="center" gap={1}>
+                        <DeleteButton
+                            text={'Are you sure you want to delete this petition?'}
+                            deleteFunction={handleDelete}
+                            fontSize={20}
+                        />
 
-                    <EditButton path={'update'}/>
-                </Box>
+                        <EditButton path={'update'} state={voting}/>
+                    </Box>) : ""}
                 <Typography variant='h4'>
                     {voting.name}
                 </Typography>
@@ -203,7 +205,7 @@ const VotingPage = () => {
                     </Box>
                     <Divider sx={{marginY: 0.5}}/>
                     <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-                        <Typography mt={0.3}  variant='body1' fontWeight={'bold'}>
+                        <Typography mt={0.3} variant='body1' fontWeight={'bold'}>
                             Voted {voting.statistics.countAnswered}/{voting.statistics.countAll}
                         </Typography>
 
@@ -218,7 +220,8 @@ const VotingPage = () => {
                                         </Box>
                                     ) : (
                                         <Box alignItems="center" display="flex" justifyContent="center" mt={2.5} mb={1}>
-                                            <Button variant="contained" color="primary" sx={{height: 32, borderRadius: 10}}>
+                                            <Button variant="contained" color="primary"
+                                                    sx={{height: 32, borderRadius: 10}}>
                                                 Vote
                                             </Button>
                                         </Box>

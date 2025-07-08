@@ -42,7 +42,7 @@ public class UserDeletionServiceImpl implements UserDeletionService {
             if("DIRECTOR".equals(user.getRole())) {
                 throw new IllegalArgumentException("Cannot delete director");
             }
-        } else {
+        } else if("DIRECTOR".equals(user.getRole())) {
             School school = user.getSchool();
             school.setDirector(null);
             schoolService.save(school);

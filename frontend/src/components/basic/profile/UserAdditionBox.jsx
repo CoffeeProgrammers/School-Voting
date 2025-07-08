@@ -13,8 +13,9 @@ const UserAdditionBox = () => {
     const role = Cookies.get('role');
     const isStudent = role === 'STUDENT';
     const isDirector = role === 'DIRECTOR';
+    const isTeacher = role === 'TEACHER';
 
-    const [tab, setTab] = useState("Created Petitions")
+    const [tab, setTab] = useState(!isStudent ? "Created Voting" : "Created Petitions")
 
     const renderTabButton = (title, width) => {
         return (
@@ -43,7 +44,7 @@ const UserAdditionBox = () => {
 
     return (
         <div>
-            {!isDirector && (
+
                 <Box sx={{border: '1px solid #ddd', borderRadius: '5px', padding: '17px', pb: 0}}>
                     <Stack direction="row" width={'100%'} ml={1.25}>
                         {isStudent && renderTabButton('Created Petitions', 170)}
@@ -56,7 +57,7 @@ const UserAdditionBox = () => {
 
                     {renderTab()}
                 </Box>
-            )}
+
         </div>
     );
 };

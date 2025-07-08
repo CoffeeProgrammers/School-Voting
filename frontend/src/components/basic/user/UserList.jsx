@@ -15,6 +15,8 @@ const UserList = (
     {
         users,
         actions = false,
+        addToListFunction,
+        deleteFromListFunction,
         addButtons = false,
         toggleUserId,
         selectedIds,
@@ -81,7 +83,9 @@ const UserList = (
                         width: "37px",
                         height: "37px",
                         mr: 0.85
-                    }}>
+                    }}
+                                onClick={() => addToListFunction()}
+                    >
                         <AddCircleIcon sx={{
                             fontSize: 30, color: 'primary.main', borderRadius: 15,
                         }}/>
@@ -90,7 +94,7 @@ const UserList = (
                 align: 'right',
                 render: user => (
                     <IconButton size="small">
-                        <DeleteIcon sx={{color: 'error.main'}}/>
+                        <DeleteIcon onClick={() => deleteFromListFunction(user.id)} sx={{color: 'error.main'}}/>
                     </IconButton>
                 )
             });

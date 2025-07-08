@@ -4,7 +4,7 @@ import {Button} from "@mui/material";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 
-const CreateWrapper = ({children, label, onCreate}) => {
+const FormWrapper = ({children, label, onCreate}) => {
     return (
         <Box sx={{
             display: 'flex',
@@ -36,4 +36,4 @@ const CreateWrapper = ({children, label, onCreate}) => {
     );
 };
 
-export default CreateWrapper;
+export default FormWrapper;

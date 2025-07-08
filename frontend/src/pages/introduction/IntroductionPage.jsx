@@ -16,6 +16,7 @@ import VotingPageImage from '../../images/voting1.png';
 import VotingStatistickImage from '../../images/voting2.png'
 import SchoolPageImage from '../../images/school page.png'
 import AuthService from "../../services/auth/AuthService";
+import {useNavigate} from "react-router-dom";
 
 function CustomTabPanel(props) {
     const {children, value, index, ...other} = props;
@@ -42,6 +43,7 @@ function a11yProps(index) {
 
 const IntroductionPage = () => {
     const [value, setValue] = React.useState(0);
+    const navigate = useNavigate()
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -75,7 +77,7 @@ const IntroductionPage = () => {
                             for
                             active participation in shaping a better school environment.
                         </Typography>
-                        <Button variant="contained" color="primary"
+                        <Button variant="contained" color="primary" onClick={() => {navigate('/create-school')}}
                                 sx={{height: 32, borderRadius: 10, width: 250, marginTop: "20px"}}>
                             Register a school
                         </Button>

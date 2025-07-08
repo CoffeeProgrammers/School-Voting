@@ -23,6 +23,10 @@ import Callback from "./security/callback/Callback";
 import Cookies from "js-cookie";
 import CreatePetition from "./pages/petitions/CreatePetition";
 import CreateVoting from "./pages/voting/CreateVoting";
+import CreateClass from "./pages/class/CreateClass";
+import CreateUsers from "./pages/user/CreateUsers";
+import CreateSchools from "./pages/school/CreateSchools";
+import UpdateUser from "./pages/user/UpdateUser";
 
 const InitNavigation = ({children}) => {
     const navigate = useNavigate();
@@ -58,10 +62,14 @@ function App() {
 
         {path: "/school", element: <SchoolPage/>},
         (isTeacher || isDirector) && {path: "/school/class/:id", element: <ClassPage/>},
+        (isTeacher || isDirector) && {path: "/school/class/create", element: <CreateClass/>},
 
         (isTeacher || isDirector) && {path: "/control-panel", element: <ControlPanel/>},
+        (isTeacher || isDirector) && {path: "/control-panel/createUsers", element: <CreateUsers/>},
 
         {path: "/profile", element: <Profile/>},
+        {path: "/profile/update", element: <UpdateUser/>},
+
 
         {path: "*", element: <NotFoundPage/>},
 
@@ -75,6 +83,7 @@ function App() {
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <Routes>
                                 <Route path={''} element={<IntroductionPage/>}/>
+                                <Route path={'/create-school'} element={<CreateSchools/>}/>
                                 {routes.map((route, index) => (
                                     <Route element={<PrivateRoute/>} key={index}>
                                         <Route

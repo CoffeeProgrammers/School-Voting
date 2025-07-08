@@ -1,8 +1,10 @@
 import BaseService from "../BaseService";
+import Cookies from "js-cookie";
 
 class VotingService extends BaseService {
     constructor() {
-        super(`/schools/${1}/votings`);
+        const schoolId = Cookies.get("schoolId")
+        super(`/schools/${schoolId}/votings`);
     }
 
     createVoting(data) {

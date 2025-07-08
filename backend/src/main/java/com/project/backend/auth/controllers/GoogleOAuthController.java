@@ -45,7 +45,7 @@ public class GoogleOAuthController {
     private final JacksonFactory jsonFactory = JacksonFactory.getDefaultInstance();
 
     @GetMapping("/auth")
-    public void auth(Authentication authentication, HttpServletResponse response) throws IOException, GeneralSecurityException {
+    public String auth(Authentication authentication, HttpServletResponse response) throws IOException, GeneralSecurityException {
         Set<String> scopes = new HashSet<>();
         scopes.add("https://www.googleapis.com/auth/calendar");
         scopes.add("https://www.googleapis.com/auth/calendar.events");
@@ -61,7 +61,7 @@ public class GoogleOAuthController {
                 scopes
         ).setAccessType("offline").build().newAuthorizationUrl().setRedirectUri(REDIRECT_URI).setState(userService.findUserByAuth(authentication).getId() + "");
 
-        response.sendRedirect(url.build());
+        return url.build();
     }
 
     @GetMapping("/revoke")
@@ -112,5 +112,10 @@ public class GoogleOAuthController {
         }
 
         response.sendRedirect(frontendUrl + "/profile");
+    }
+
+    @GetMapping("/isConnected")
+    public boolean isConnected(Authentication authentication) {
+        return googleCalendarCredentialService.existsByUserId(userService.findUserByAuth(authentication).getId());
     }
 }

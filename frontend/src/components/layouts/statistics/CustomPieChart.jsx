@@ -7,10 +7,12 @@ import Utils from "../../../utils/Utils";
 export function CustomPieChart({supportedCount, totalCount, status}) {
     const isSupported = !(supportedCount < totalCount);
     const data = [
-        {name: 'Supported', value: supportedCount},
-        {name: 'needForReview', value: isSupported ? 0 : totalCount - supportedCount}
+        {name: 'Supported', value: Number(supportedCount)},
+        {name: 'needForReview', value: isSupported ? 0 : totalCount - Number(supportedCount)}
     ];
 
+    console.log(supportedCount)
+    console.log(data)
     const COLORS = [
         Utils.getStatusColor(status),
         blueGrey[50]

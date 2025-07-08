@@ -7,8 +7,16 @@ import ClassService from "../../../services/base/ext/ClassService";
 import UserService from "../../../services/base/ext/UserService";
 import Link from "@mui/material/Link";
 import {Link as RouterLink} from "react-router";
+import DeleteButton from "../../layouts/DeleteButton";
+import {useError} from "../../../contexts/ErrorContext";
+import {useNavigate} from "react-router-dom";
+import EditButton from "../../layouts/EditButton";
+// import AssignUsersToCLass from "../user/AssignStudentsToClass";
 
 const ClassBox = ({isMy, classId}) => {
+    const {showError} = useError()
+    const navigate = useNavigate();
+
     const [studentClass, setStudentClass] = useState(null);
     const [students, setStudents] = useState([]);
 
@@ -89,6 +97,23 @@ const ClassBox = ({isMy, classId}) => {
         fetchStudents();
     }, [studentClass, searchFirstName, searchLastName, searchEmail, page]);
 
+    const handleDelete = async () => {
+        try {
+            setLoadingClass(true);
+            setLoadingUsers(true);
+            await ClassService.deleteClass(studentClass.id);
+            navigate('/school', {replace: true});
+        } catch (error) {
+            showError(error);
+        } finally {
+            setLoadingClass(false);
+            setLoadingUsers(false);
+        }
+    };
+    const handleAssign = async () => {
+        //TODO:
+    }
+
     if (error) {
         return <Typography color={"error"}>Error: {error.message}</Typography>;
     }
@@ -97,15 +122,30 @@ const ClassBox = ({isMy, classId}) => {
         <>
             <Box sx={{paddingX: '15px', mb: 0.55}}>
                 {!isMy && (
-                    <Box ml={1.5} mt={0.75}>
+                    <Box ml={1.5} mt={0.75} display={'flex'} alignItems={'center'} justifyContent={'flex-start'}>
                         <Link component={RouterLink} to={'/school'}>
                             <Typography variant={'caption'}>← go back </Typography>
                         </Link>
+                        <Box ml={1}>
+                            <Box display="flex" alignItems="center" gap={1}>
+                                <DeleteButton
+                                    text={'Are you sure you want to delete this petition?'}
+                                    deleteFunction={handleDelete}
+                                    fontSize={19}
+                                />
+
+                                <EditButton path={'update'} fontSize={19}/>
+                            </Box>
+                        </Box>
                     </Box>
                 )}
-                <Typography variant={"h6"} fontWeight={'bold'}>
-                    {loadingClass ? 'Loading...' : `${isMy ? 'My class' : 'Class'}: ${studentClass?.name || ''}`}
-                </Typography>
+                <Box>
+                    <Typography variant={"h6"} fontWeight={'bold'}>
+                        {loadingClass ? 'Loading...' : `${isMy ? 'My class' : 'Class'}: ${studentClass?.name || ''}`}
+                    </Typography>
+                    {/*<AssignUsersToCLass onAssign={handleAssign} />*/}
+                </Box>
+
             </Box>
 
             <Divider/>

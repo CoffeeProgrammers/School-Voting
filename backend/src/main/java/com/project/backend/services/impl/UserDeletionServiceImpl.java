@@ -38,13 +38,14 @@ public class UserDeletionServiceImpl implements UserDeletionService {
         log.info("Service: Deleting User with id {}", user.getId());
         long userId = user.getId();
 
-        if (!isDeleteDirector && "DIRECTOR".equals(user.getRole())) {
-            throw new IllegalArgumentException("Cannot delete director");
-        } else {
+        if (!isDeleteDirector) {
+            if("DIRECTOR".equals(user.getRole())) {
+                throw new IllegalArgumentException("Cannot delete director");
+            }
+        } else if("DIRECTOR".equals(user.getRole())) {
             School school = user.getSchool();
             school.setDirector(null);
             schoolService.save(school);
-
         }
         if ("DELETED".equals(user.getRole())) {
             throw new IllegalArgumentException("Cannot delete deleted");

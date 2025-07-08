@@ -1,8 +1,10 @@
 import BaseService from "../BaseService";
+import Cookies from "js-cookie";
 
 class PetitionService extends BaseService {
     constructor() {
-        super(`/schools/${1}/petitions`);
+        const schoolId = Cookies.get("schoolId")
+        super(`/schools/${schoolId}/petitions`);
     }
 
     createPetition(data) {

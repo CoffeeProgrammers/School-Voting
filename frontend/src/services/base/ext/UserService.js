@@ -1,8 +1,10 @@
 import BaseService from "../BaseService";
+import Cookies from "js-cookie";
 
 class UserService extends BaseService {
     constructor() {
-        super(`/schools/${1}/users`);
+        const schoolId = Cookies.get("schoolId")
+        super(`/schools/${schoolId}/users`);
     }
 
     createUser(data) {

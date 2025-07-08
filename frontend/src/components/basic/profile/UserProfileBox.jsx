@@ -12,9 +12,14 @@ import GoogleAuthService from "../../../services/base/ext/GoogleAuthService";
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import EventBusyIcon from '@mui/icons-material/EventBusy';
 import EditButton from "../../layouts/EditButton";
+import {useSearchParams} from "react-router";
+import {useError} from "../../../contexts/ErrorContext";
 
 const UserProfileBox = () => {
     const [user, setUser] = useState()
+
+    const [searchParams] = useSearchParams();
+    const { showError } = useError();
 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -37,6 +42,12 @@ const UserProfileBox = () => {
 
         fetchData();
     }, []);
+    useEffect(() => {
+        const urlError = searchParams.get('error');
+        if (urlError === 'already_linked') {
+            showError({message: "This Google account is already linked to another user."});
+        }
+    }, [searchParams, showError]);
 
     const handleConnect = async () => {
         try {

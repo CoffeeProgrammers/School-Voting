@@ -42,7 +42,6 @@ const VotingPage = () => {
 
                 console.log(response)
                 setVoting(response)
-                console.log(voting)
                 setSelectedAnswer(response.myAnswerId ? response.myAnswerId : -1)
                 setIsActive(new Date(response.startTime) < new Date() && new Date(response.endTime) > new Date())
             } catch (error) {
@@ -71,10 +70,9 @@ const VotingPage = () => {
     const vote = async () => {
         try {
             setLoading(true)
-            await VotingService.vote(voting.id, selectedAnswer)
-            //TODO
-            window.location.reload()
-            // setVoting({...voting, myAnswerId: selectedAnswer})
+            const updatedVoting = await VotingService.vote(voting.id, selectedAnswer)
+            console.log(updatedVoting)
+            setVoting(updatedVoting)
         } catch (error) {
             showError(error);
         } finally {
@@ -107,6 +105,7 @@ const VotingPage = () => {
                 return <VotingParticipantsList/>
         }
     }
+
 
 
     const renderSuccessSupportButton = () => {
@@ -145,10 +144,10 @@ const VotingPage = () => {
             paddingBottom: 4
         }}>
             <Box paddingRight={4} mt={4.5}>
-                {Cookies.get("userId") === voting.creator.id.toString() ?
+                {Cookies.get("userId") === voting.creator.id.toString() && new Date(voting.startTime) > new Date() ?
                     (<Box display="flex" alignItems="center" gap={1}>
                         <DeleteButton
-                            text={'Are you sure you want to delete this petition?'}
+                            text={'Are you sure you want to delete this voting?'}
                             deleteFunction={handleDelete}
                             fontSize={20}
                         />
@@ -227,35 +226,63 @@ const VotingPage = () => {
 
                         <VotingDate startDate={voting.startTime} endDate={voting.endTime}/>
 
-                        <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-                            {isActive && voting.myAnswerId !== null ? (
-                                <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-                                    {voting.myAnswerId ? (
-                                        <Box alignItems="center" display="flex" justifyContent="center" mt={2.5} mb={1}>
-                                            {renderSuccessSupportButton()}
-                                        </Box>
-                                    ) : (
-                                        <Box alignItems="center" display="flex" justifyContent="center" mt={2.5} mb={1}>
-                                            <Button disabled={selectedAnswer === -1} onClick={() => vote()}
-                                                    variant="contained" color="primary"
-                                                    sx={{height: 32, borderRadius: 10}}>
-                                                Vote
-                                            </Button>
-                                        </Box>
-                                    )}
-                                </Box>
-                            ) : (
-                                voting.myAnswerId && (
-                                    <Box alignItems="center" display="flex" justifyContent="center" mt={2.5} mb={1}>
-                                        {renderSuccessSupportButton()}
+                        {voting.myAnswerId !== null ?
+                            <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                                {isActive ? (
+                                    <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                                        {Number(voting.myAnswerId) !== -1 ? (
+                                            <Box alignItems="center" display="flex" justifyContent="center" mt={2.5}
+                                                 mb={1}>
+                                                {renderSuccessSupportButton()}
+                                            </Box>
+                                        ) : (
+                                            <Box alignItems="center" display="flex" justifyContent="center" mt={2.5}
+                                                 mb={1}>
+                                                <Button disabled={selectedAnswer === -1} onClick={() => vote()}
+                                                        variant="contained" color="primary"
+                                                        sx={{height: 32, borderRadius: 10}}>
+                                                    Vote
+                                                </Button>
+                                            </Box>
+                                        )}
                                     </Box>
-                                ))}
-                        </Box>
+                                ) : Number(voting.myAnswerId) !== -1 ? (
+                                    <Box alignItems="center" display="flex" justifyContent="center" mt={2.5}
+                                         mb={1}>
+                                        {renderSuccessSupportButton()}
+                                    </Box>) : ""}
+                            </Box> : ""}
+                        {/*<Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>*/}
+                        {/*    {isActive ? (*/}
+                        {/*        <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>*/}
+                        {/*            {voting.myAnswerId ? (*/}
+                        {/*                <Box alignItems="center" display="flex" justifyContent="center" mt={2.5} mb={1}>*/}
+                        {/*                    {renderSuccessSupportButton()}*/}
+                        {/*                </Box>*/}
+                        {/*            ) : (*/}
+                        {/*                <Box alignItems="center" display="flex" justifyContent="center" mt={2.5} mb={1}>*/}
+                        {/*                    <Button disabled={selectedAnswer === -1} onClick={() => vote()}*/}
+                        {/*                            variant="contained" color="primary"*/}
+                        {/*                            sx={{height: 32, borderRadius: 10}}>*/}
+                        {/*                        Vote*/}
+                        {/*                    </Button>*/}
+                        {/*                </Box>*/}
+                        {/*            )}*/}
+                        {/*        </Box>*/}
+                        {/*    ) : (*/}
+                        {/*        voting.myAnswerId && (*/}
+                        {/*            <Box alignItems="center" display="flex" justifyContent="center" mt={2.5} mb={1}>*/}
+                        {/*                {renderSuccessSupportButton()}*/}
+                        {/*            </Box>*/}
+                        {/*        ))}*/}
+                        {/*</Box>*/}
+
                     </Box>
                 </Box>
             </Box>
         </Box>
-    );
+    )
+        ;
 };
 
 export default VotingPage;

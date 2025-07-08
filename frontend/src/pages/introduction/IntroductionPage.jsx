@@ -362,7 +362,8 @@ const IntroductionPage = () => {
                             School Governance
                         </Typography>
                     </Stack>
-                    <Button variant="contained" color="primary" sx={{height: 32, borderRadius: 10}}>
+                    <Button variant="contained" color="primary" sx={{height: 32, borderRadius: 10}}
+                    onClick={() => {AuthService.redirectToKeycloak()}}>
                         Login
                     </Button>
                 </Box>

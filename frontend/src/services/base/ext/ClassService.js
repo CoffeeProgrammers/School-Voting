@@ -3,43 +3,50 @@ import Cookies from "js-cookie";
 
 class ClassService extends BaseService {
     constructor() {
-        const schoolId = Cookies.get("schoolId")
-        super(`/schools/${schoolId}/classes`);
+        super(`/schools`);
     }
 
     createClass(data) {
-        return this.post("/create", data);
+        const schoolId = Cookies.get("schoolId")
+        return this.post(`/${schoolId}/classes/create`, data);
     }
 
     updateClass(classId, data) {
-        return this.put(`/update/${classId}`, data);
+        const schoolId = Cookies.get("schoolId")
+        return this.put(`/${schoolId}/classes/update/${classId}`, data);
     }
 
     deleteClass(classId, deletedUsers = false) {
-        return this.delete(`/delete/${classId}`, {
+        const schoolId = Cookies.get("schoolId")
+        return this.delete(`/${schoolId}/classes/delete/${classId}`, {
             params: {deletedUsers}
         });
     }
 
     getClassById(classId) {
-        return this.get(`/${classId}`);
+        const schoolId = Cookies.get("schoolId")
+        return this.get(`/${schoolId}/classes/${classId}`);
     }
 
     getMyClass() {
-        return this.get("/my");
+        const schoolId = Cookies.get("schoolId")
+        return this.get(`/${schoolId}/classes/my`);
     }
 
     getAllClasses({name, page, size}) {
         const params = {name, page, size};
-        return this.get("", {params});
+        const schoolId = Cookies.get("schoolId")
+        return this.get(`/${schoolId}/classes`, {params});
     }
 
     assignUsers(classId, userIds) {
-        return this.post(`/${classId}/assign-users`, userIds);
+        const schoolId = Cookies.get("schoolId")
+        return this.post(`/${schoolId}/classes/${classId}/assign-users`, userIds);
     }
 
     unassignUsers(classId, userIds) {
-        return this.post(`/${classId}/unassign-users`, userIds);
+        const schoolId = Cookies.get("schoolId")
+        return this.post(`/${schoolId}/classes/${classId}/unassign-users`, userIds);
     }
 }
 

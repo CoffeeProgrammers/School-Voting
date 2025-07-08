@@ -222,8 +222,8 @@ class UserServiceImplTest {
         assertEquals(page, votingPage);
 
         // findAllByRoleInSchool with createSpecification null or non-null
-        Page<User> rolePage1 = userService.findAllByRoleInSchool(1L, "TEACHER", null, null, null, 0, 10);
-        Page<User> rolePage2 = userService.findAllByRoleInSchool(1L, "TEACHER", "email@example.com", null, null, 0, 10);
+        Page<User> rolePage1 = userService.findAllByRoleInSchool(1L, "TEACHER", null, null, null, 0, 10, -1);
+        Page<User> rolePage2 = userService.findAllByRoleInSchool(1L, "TEACHER", "email@example.com", null, null, 0, 10, -1);
         assertEquals(page, rolePage1);
         assertEquals(page, rolePage2);
 

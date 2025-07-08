@@ -92,7 +92,7 @@ public class UserController {
         return userListResponse;
     }
 
-    @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasAnyRole('DIRECTOR', 'TEACHER')")
+    @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasAnyRole('DIRECTOR', 'TEACHER', 'STUDENT')")
     @GetMapping("/role/{role}")
     @ResponseStatus(HttpStatus.OK)
     public PaginationListResponse<UserListResponse> getUsersByRole(
@@ -105,7 +105,8 @@ public class UserController {
             @RequestParam int size,
             Authentication auth) {
         log.info("Controller: Get users by role {}", role);
-        Page<User> userPage = userService.findAllByRoleInSchool(schoolId, role, email, firstName, lastName, page, size);
+        User user =  userService.findUserByAuth(auth);
+        Page<User> userPage = userService.findAllByRoleInSchool(schoolId, role, email, firstName, lastName, page, size, user.getId());
         PaginationListResponse<UserListResponse> userListResponse = new PaginationListResponse<>();
         userListResponse.setContent(userPage.getContent().stream().map(userMapper::fromUserToListResponse).toList());
         userListResponse.setTotalPages(userPage.getTotalPages());

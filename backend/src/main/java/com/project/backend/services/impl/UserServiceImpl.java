@@ -233,10 +233,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Page<User> findAllByRoleInSchool(long schoolId, String role, String email, String firstName, String lastName, int page, int size) {
+    public Page<User> findAllByRoleInSchool(long schoolId, String role, String email, String firstName, String lastName, int page, int size, long userId) {
         log.info("Service: Finding all users by role {} and filters", role);
         Specification<User> userSpecification = createSpecification(email, firstName, lastName, role);
-        Specification<User> fullSpecification = userSpecification == null ? UserSpecification.bySchool(schoolId) : userSpecification.and(UserSpecification.bySchool(schoolId));
+        Specification<User> fullSpecification = userSpecification == null ?
+                UserSpecification.bySchool(schoolId).and(UserSpecification.notUser(userId)) :
+                userSpecification.and(UserSpecification.bySchool(schoolId).and(UserSpecification.notUser(userId)));
         return userRepository.findAll(
                 fullSpecification,
                 PageRequest.of(

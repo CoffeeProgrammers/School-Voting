@@ -34,7 +34,7 @@ const ClassBox = ({isMy, classId}) => {
     const [loadingClass, setLoadingClass] = useState(true);
     const [loadingUsers, setLoadingUsers] = useState(false);
     const [error, setError] = useState(null);
-
+    
     useEffect(() => {
         window.scrollTo({top: 0, behavior: 'smooth'});
     }, [page]);
@@ -153,7 +153,7 @@ const ClassBox = ({isMy, classId}) => {
                             (<Box ml={1}>
                                 <Box display="flex" alignItems="center" gap={1}>
                                     <DeleteButton
-                                        text={'Are you sure you want to delete this petition?'}
+                                        text={'Are you sure you want to delete this class?'}
                                         deleteFunction={handleDelete}
                                         fontSize={19}
                                     />

@@ -64,9 +64,8 @@ public class VotingServiceImpl implements VotingService {
                 if(creator.getSchool().getId() != schoolId && schoolIdFromRequest != schoolId) {
                     throw new IllegalArgumentException("Can`t create voting and not be in that school");
                 }
-                if(creator.getRole().equals("DIRECTOR") || creator.getRole().equals("TEACHER")) {
-                    votingUserService.create(voting, List.of(creator));
-                }
+                votingUserService.create(voting, List.of(creator));
+
                 users = userService.findAllBySchool(schoolId, userId).stream();
             }
             case CLASS -> {

@@ -151,12 +151,13 @@ public class VotingController {
     @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and @userSecurity.checkUserVoting(#auth, #votingId)")
     @PostMapping("/{voting_id}/vote/{answer_id}")
     @ResponseStatus(HttpStatus.OK)
-    public void vote(@PathVariable("school_id") Long schoolId,
+    public VotingFullResponse vote(@PathVariable("school_id") Long schoolId,
                      @PathVariable("voting_id") Long votingId,
                      @PathVariable("answer_id") Long answerId,
                      Authentication auth) {
         log.info("Controller: vote for answer {} in voting {}", answerId, votingId);
         votingService.vote(votingId, answerId, userService.findUserByAuth(auth));
+        return fromVotingToFullResponseWithStatistics(votingService.findById(votingId),  userService.findUserByAuth(auth));
     }
 
     private VotingFullResponse fromVotingToFullResponseWithStatistics(Voting voting, User user) {

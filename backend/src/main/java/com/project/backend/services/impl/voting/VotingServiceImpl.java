@@ -54,7 +54,6 @@ public class VotingServiceImpl implements VotingService {
                         votingRequest.getLevelType().equals(LevelType.CLASS) ? (creator.getRole().equals("STUDENT") ? creator.getMyClass().getId() : targetIds.get(0)) : -1);
 
         Voting voting = votingRepository.save(votingRequest);
-
         answerService.create(answers, voting);
 
         Stream<User> users = null;
@@ -64,6 +63,9 @@ public class VotingServiceImpl implements VotingService {
                 Long schoolIdFromRequest = votingRequest.getTargetId();
                 if(creator.getSchool().getId() != schoolId && schoolIdFromRequest != schoolId) {
                     throw new IllegalArgumentException("Can`t create voting and not be in that school");
+                }
+                if(creator.getRole().equals("DIRECTOR") || creator.getRole().equals("TEACHER")) {
+                    votingUserService.create(voting, List.of(creator));
                 }
                 users = userService.findAllBySchool(schoolId, userId).stream();
             }
@@ -75,16 +77,25 @@ public class VotingServiceImpl implements VotingService {
                 if(creator.getRole().equals("STUDENT") && creator.getMyClass().getId() != classId) {
                     throw new IllegalArgumentException("Can`t create voting and not be in that class or be not director or teacher");
                 }
+                if(creator.getRole().equals("STUDENT")) {
+                    votingUserService.create(voting, List.of(creator));
+                }
                 log.info("Service: Adding users from class {}", classId);
                 users = userService.findAllByClass(classId, userId).stream();
             }
             case GROUP_OF_TEACHERS -> {
                 log.info("Service: Adding users from group of teachers");
                 users = targetIds.stream().map(userService::findById).filter(u -> u.getRole().equalsIgnoreCase("TEACHER"));
+                if(creator.getRole().equals("TEACHER")) {
+                    users = Stream.concat(users, Stream.of(creator));
+                }
             }
             case GROUP_OF_PARENTS_AND_STUDENTS -> {
                 log.info("Service: Adding users from group of parents and students");
                 users = targetIds.stream().map(userService::findById).filter(u -> u.getRole().equalsIgnoreCase("PARENT") || u.getRole().equalsIgnoreCase("STUDENT"));
+                if(creator.getRole().equals("PARENT") || creator.getRole().equals("STUDENT")) {
+                    users = Stream.concat(users, Stream.of(creator));
+                }
             }
         }
         List<User> usersToAdd = users.filter(u -> u.getSchool().getId() == schoolId).toList();

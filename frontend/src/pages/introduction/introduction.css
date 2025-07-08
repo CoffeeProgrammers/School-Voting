@@ -1,0 +1,45 @@
+@media (min-width: 768px) and (max-width:1200px) {
+    .mainBlock{
+        display:flex !important;
+        flex-direction: column;
+    }
+
+    .mainBlockText{
+        max-width: 909px;
+    }
+
+    .tabs{
+        width:auto !important;
+    }
+
+    .petitionBlock, .schoolBlock{
+        display: flex !important;
+        flex-direction: column-reverse;
+    }
+
+    .imageContainer{
+        display:flex;
+        justify-content: center !important;
+    }
+
+    .imageBox{
+        max-width: 100%;
+        display: flex;
+        justify-content: center !important;
+        margin: 20px 0;
+    }
+
+    .circle{
+        width: 24px !important;
+    }
+
+    .votingBlock{
+        display: flex !important;
+        flex-direction: column;
+    }
+
+    .votingImage{
+        margin-bottom: 50px;
+    }
+
+}

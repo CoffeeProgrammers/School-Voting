@@ -11,12 +11,15 @@ import DeleteButton from "../../layouts/DeleteButton";
 import {useError} from "../../../contexts/ErrorContext";
 import {useNavigate} from "react-router-dom";
 import EditButton from "../../layouts/EditButton";
+import AssignUsersToClass from "../user/AssignStudentsToClass";
 import Cookies from "js-cookie";
 // import AssignUsersToCLass from "../user/AssignStudentsToClass";
 
 const ClassBox = ({isMy, classId}) => {
     const {showError} = useError()
     const navigate = useNavigate();
+
+    const [openAssignDialog, setOpenAssignDialog] = useState(false)
 
     const [studentClass, setStudentClass] = useState(null);
     const [students, setStudents] = useState([]);
@@ -44,8 +47,6 @@ const ClassBox = ({isMy, classId}) => {
         const fetchClass = async () => {
             setLoadingClass(true);
             try {
-                console.log("HERE: " + isMy)
-
                 const studentClassResponse = isMy ? (
                     await ClassService.getMyClass()
                 ) : (
@@ -111,9 +112,30 @@ const ClassBox = ({isMy, classId}) => {
             setLoadingUsers(false);
         }
     };
-    const handleAssign = async () => {
-        //TODO:
+    const handleAssign = async (userIds) => {
+        try {
+            setLoadingUsers(true);
+            const response = await ClassService.assignUsers(studentClass.id, userIds);
+            setStudents([...students, ...response]);
+        } catch (error) {
+            showError(error);
+        } finally {
+            setLoadingUsers(false);
+        }
     }
+
+    const handleUnassign = async (userId) => {
+        try {
+            setLoadingUsers(true);
+            const response = await ClassService.unassignUsers(studentClass.id, [userId]);
+            setStudents(students.filter(student => student.id !== userId));
+        } catch (error) {
+            showError(error);
+        } finally {
+            setLoadingUsers(false);
+        }
+    }
+
 
     if (error) {
         return <Typography color={"error"}>Error: {error.message}</Typography>;
@@ -146,7 +168,6 @@ const ClassBox = ({isMy, classId}) => {
                     <Typography variant={"h6"} fontWeight={'bold'}>
                         {loadingClass ? 'Loading...' : `${isMy ? 'My class' : 'Class'}: ${studentClass?.name || ''}`}
                     </Typography>
-                    {/*<AssignUsersToCLass onAssign={handleAssign} />*/}
                 </Box>
 
             </Box>
@@ -155,6 +176,9 @@ const ClassBox = ({isMy, classId}) => {
 
             <UserList
                 users={students}
+                actions={true}
+                addToListFunction={() => setOpenAssignDialog(true)}
+                deleteFromListFunction={handleUnassign}
                 searchFirstName={searchFirstName}
                 searchLastName={searchLastName}
                 searchEmail={searchEmail}
@@ -165,6 +189,12 @@ const ClassBox = ({isMy, classId}) => {
                 page={page}
                 setPage={setPage}
                 pagesCount={pagesCount}
+            />
+            <AssignUsersToClass
+                students={students}
+                onAssign={handleAssign}
+                open={openAssignDialog}
+                setOpen={setOpenAssignDialog}
             />
         </>
     );

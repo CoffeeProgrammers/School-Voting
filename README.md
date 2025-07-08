@@ -120,5 +120,6 @@ administrators to engage in school governance processes, enhancing transparency,
 5. Create a pull request.
 
 ---
+Our FR, API and DTOs: [NOTION-API](https://www.notion.so/School-Voting-System-22465dc50c2380dfa529c4ef3fffd7c8?source=copy_link)
 
 Our db(but it can be not up to date): [database](https://drawsql.app/teams/coffeeprogrammers-1/diagrams/voting-system)

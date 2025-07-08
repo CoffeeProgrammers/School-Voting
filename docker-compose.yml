@@ -62,21 +62,21 @@ services:
       - CLIENT_SECRET=QRZGWTnEuxoXNo7eML4qXyZ3ru4xzrIY
       - GOOGLE_CLIENT_ID=716028690880-44mpq4lt4rg4t4g6d4sjg1magcareteg.apps.googleusercontent.com
       - GOOGLE_CLIENT_SECRET=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
-    command: ["sh", "-c", "mvn clean package -DskipTests && java -jar target/*.jar"]
+    command: [ "sh", "-c", "mvn clean package -DskipTests && java -jar target/*.jar" ]
     network_mode: "service:localhost"
 
-#  frontend:
-#     build: ./frontend
-#     restart: always
-#     ports:
-#       - "3000:3000"
-#     depends_on:
-#       - backend
-#     volumes:
-#       - ./frontend:/app
-#       - /app/node_modules
-#     environment:
-#       - CHOKIDAR_USEPOLLING=true
+  frontend:
+    build: ./frontend
+    restart: always
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - CHOKIDAR_USEPOLLING=true
 
 volumes:
   pgdata-keycloak:

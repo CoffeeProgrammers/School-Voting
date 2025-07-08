@@ -61,14 +61,14 @@ public class VotingServiceImpl implements VotingService {
         switch (voting.getLevelType()) {
             case SCHOOL -> {
                 log.info("Service: Adding users from school {}", schoolId);
-                Long schoolIdFromRequest = targetIds.get(0);
+                Long schoolIdFromRequest = votingRequest.getTargetId();
                 if(creator.getSchool().getId() != schoolId && schoolIdFromRequest != schoolId) {
                     throw new IllegalArgumentException("Can`t create voting and not be in that school");
                 }
                 users = userService.findAllBySchool(schoolId, userId).stream();
             }
             case CLASS -> {
-                Long classId = targetIds.get(0);
+                Long classId = votingRequest.getTargetId();
                 if (creator.getRole().equals("PARENT")){
                     throw new IllegalArgumentException("Can`t create voting and not be in that class or be not director or teacher");
                 }

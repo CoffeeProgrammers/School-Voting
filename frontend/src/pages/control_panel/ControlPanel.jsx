@@ -112,7 +112,7 @@ const ControlPanel = () => {
                     <UserList
                         users={users}
                         actions={true}
-                        addToListButton={() => navigate('/control-panel/createUsers')}
+                        addToListFunction={() => navigate('/control-panel/createUsers')}
                         deleteFromListFunction={handleDeleteUser}
                         loading={loading}
                         page={page}

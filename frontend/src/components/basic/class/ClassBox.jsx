@@ -34,7 +34,7 @@ const ClassBox = ({isMy, classId}) => {
     const [loadingClass, setLoadingClass] = useState(true);
     const [loadingUsers, setLoadingUsers] = useState(false);
     const [error, setError] = useState(null);
-    
+
     useEffect(() => {
         window.scrollTo({top: 0, behavior: 'smooth'});
     }, [page]);
@@ -194,12 +194,14 @@ const ClassBox = ({isMy, classId}) => {
                 setPage={setPage}
                 pagesCount={pagesCount}
             />
-            <AssignUsersToClass
-                students={students}
-                onAssign={handleAssign}
-                open={openAssignDialog}
-                setOpen={setOpenAssignDialog}
-            />
+            {!isStudent && (
+                <AssignUsersToClass
+                    students={students}
+                    onAssign={handleAssign}
+                    open={openAssignDialog}
+                    setOpen={setOpenAssignDialog}
+                />)}
+
         </>
     );
 };

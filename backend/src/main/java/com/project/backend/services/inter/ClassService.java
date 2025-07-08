@@ -15,7 +15,7 @@ public interface ClassService {
 
     void delete(long id, boolean deleteUsers);
     Class findById(long id);
-    void assignUserToClass(long classId, List<Long> userIds);
+    List<Long> assignUserToClass(long classId, List<Long> userIds);
     void unassignUserFromClass(long classId, List<Long> userIds);
     Page<Class> findAllBySchool(long schoolId, String name, int page, int size);
     List<Class> findAllBySchool(long schoolId);

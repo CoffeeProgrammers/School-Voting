@@ -3,8 +3,10 @@ package com.project.backend.controllers;
 import com.project.backend.dto.clazz.ClassCreateRequest;
 import com.project.backend.dto.clazz.ClassResponse;
 import com.project.backend.dto.clazz.ClassUpdateRequest;
+import com.project.backend.dto.user.UserListResponse;
 import com.project.backend.dto.wrapper.PaginationListResponse;
 import com.project.backend.mappers.ClassMapper;
+import com.project.backend.mappers.UserMapper;
 import com.project.backend.models.Class;
 import com.project.backend.models.User;
 import com.project.backend.models.petition.Petition;
@@ -25,6 +27,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -34,6 +37,7 @@ public class ClassController {
 
     private final ClassService classService;
     private final ClassMapper classMapper;
+    private final UserMapper userMapper;
     private final VotingUserService votingUserService;
     private final PetitionService petitionService;
     private final VotingService votingService;
@@ -116,18 +120,19 @@ public class ClassController {
     @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasAnyRole('DIRECTOR', 'TEACHER')")
     @PostMapping("/{class_id}/assign-users")
     @ResponseStatus(HttpStatus.OK)
-    public void assignUsers(@PathVariable(value = "school_id") long schoolId,
-                            @PathVariable(value = "class_id") long classId,
-                            @RequestBody List<Long> userIds,
-                            Authentication auth) {
+    public List<UserListResponse> assignUsers(@PathVariable(value = "school_id") long schoolId,
+                                              @PathVariable(value = "class_id") long classId,
+                                              @RequestBody List<Long> userIds,
+                                              Authentication auth) {
         log.info("Controller: Assigning users");
-        classService.assignUserToClass(classId, userIds);
+        userIds = classService.assignUserToClass(classId, userIds);
         for(Long userId : userIds) {
             votingUserService.create(votingService.findAllByClass(classId), userService.findById(userId));
             if(googleCalendarCredentialService.existsByUserId(userId)) {
                 googleCalendarService.saveAllClassPetitionsAndVotingsToUsers(userId);
             }
         }
+        return userIds.stream().map(userId -> userMapper.fromUserToListResponse(userService.findById(userId))).collect(Collectors.toList());
     }
 
     @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasAnyRole('DIRECTOR', 'TEACHER')")
@@ -139,6 +144,10 @@ public class ClassController {
                               Authentication auth) {
         log.info("Controller: Unassigning users");
         for(Long userId : userIds) {
+            if(userService.findById(userId).getMyClass().getId() != classId){
+                log.warn("Service: Can`t unassign Users with id {} from Class with id {} because this user not in this class", userId, classId);
+                continue;
+            }
             if(googleCalendarCredentialService.existsByUserId(userId)) {
                 googleCalendarService.deleteAllClassPetitionsAndVotingsFromUsers(userId);
             }

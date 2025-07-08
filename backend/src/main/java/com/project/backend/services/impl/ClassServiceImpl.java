@@ -20,6 +20,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -95,12 +96,13 @@ public class ClassServiceImpl implements ClassService {
     }
 
     @Override
-    public void assignUserToClass(long classId, List<Long> userIds) {
+    public List<Long> assignUserToClass(long classId, List<Long> userIds) {
         log.info("Service: Assigning Users with id {} to Class with id {}", userIds, classId);
         Class clazz = findById(classId);
         User user;
+        List<Long> addedUserIds = new ArrayList<>();
         if (userIds.isEmpty()) {
-            return;
+            return new ArrayList<>();
         }
         for (Long userId : userIds) {
             user = userService.findById(userId);
@@ -108,13 +110,19 @@ public class ClassServiceImpl implements ClassService {
                 log.warn("Service: Can`t assign Users with id {} to Class with id {}", userId, classId);
                 continue;
             }
+            if(user.getSchool().getId() != clazz.getSchool().getId()){
+                log.warn("Service: Can`t assign Users with id {} to Class with id {} because they are in different schools", userId, classId);
+                continue;
+            }
             if (user.getRole().equals("STUDENT")) {
                 clazz.getUsers().add(user);
                 userService.assignClassToUser(clazz, user);
+                addedUserIds.add(user.getId());
             }
         }
         classRepository.save(clazz);
         log.info("Service: Assigned Users with id {} to Class with id {}", userIds, classId);
+        return addedUserIds;
     }
 
     @Override

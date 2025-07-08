@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import CreateWrapper from "../../components/layouts/CreateWrapper";
+import FormWrapper from "../../components/layouts/FormWrapper";
 import ClassService from "../../services/base/ext/ClassService";
 import {useNavigate} from "react-router-dom";
 import {useError} from "../../contexts/ErrorContext";
@@ -44,7 +44,7 @@ const CreateClass = () => {
 
     return (
         <div>
-            <CreateWrapper
+            <FormWrapper
                 label={"Create petition"}
                 onCreate={handleSubmit}
             >
@@ -58,7 +58,7 @@ const CreateClass = () => {
                 />
 
                 <AddStudentsToClassDialog userIds={userIds} selectedIds={userIds} toggleUserId={toggleUserId}/>
-            </CreateWrapper>
+            </FormWrapper>
         </div>
     );
 };

@@ -10,6 +10,7 @@ import {Link as RouterLink} from "react-router";
 import DeleteButton from "../../layouts/DeleteButton";
 import {useError} from "../../../contexts/ErrorContext";
 import {useNavigate} from "react-router-dom";
+import EditButton from "../../layouts/EditButton";
 // import AssignUsersToCLass from "../user/AssignStudentsToClass";
 
 const ClassBox = ({isMy, classId}) => {
@@ -126,11 +127,15 @@ const ClassBox = ({isMy, classId}) => {
                             <Typography variant={'caption'}>← go back </Typography>
                         </Link>
                         <Box ml={1}>
-                            <DeleteButton
-                                text={"Are you sure you want to delete this class?"}
-                                deleteFunction={handleDelete}
-                                fontSize={19}
-                            />
+                            <Box display="flex" alignItems="center" gap={1}>
+                                <DeleteButton
+                                    text={'Are you sure you want to delete this petition?'}
+                                    deleteFunction={handleDelete}
+                                    fontSize={19}
+                                />
+
+                                <EditButton path={'update'} fontSize={19}/>
+                            </Box>
                         </Box>
                     </Box>
                 )}

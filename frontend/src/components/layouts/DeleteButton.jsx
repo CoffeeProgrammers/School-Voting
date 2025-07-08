@@ -4,7 +4,7 @@ import {IconButton} from "@mui/material";
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
 
-export default function DeleteButton({text, deleteFunction, fontSize = 24}) {
+export default function DeleteButton({text, deleteFunction, fontSize = 19}) {
     const [open, setOpen] = React.useState(false);
 
     const handleClickOpen = () => {

@@ -11,6 +11,7 @@ import {Button} from "@mui/material";
 import GoogleAuthService from "../../../services/base/ext/GoogleAuthService";
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import EventBusyIcon from '@mui/icons-material/EventBusy';
+import EditButton from "../../layouts/EditButton";
 
 const UserProfileBox = () => {
     const [user, setUser] = useState()
@@ -89,6 +90,9 @@ const UserProfileBox = () => {
                 }}>
                     <PersonIcon color="primary" sx={{fontSize: 180, padding: 0, margin: 0}}/>
                 </Box>
+                <Box display="flex" justifyContent={'left'} my={0.3}>
+                    <EditButton path={'update'} state={user}/>
+                </Box>
                 <Typography variant='h6' fontWeight='bold'>{user.firstName + " " + user.lastName}</Typography>
 
                 <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 0.375, mx: 0.5}}>
@@ -114,7 +118,8 @@ const UserProfileBox = () => {
                             <EventBusyIcon sx={{mr: 0.5}}/> Disconnect Google Calendar
                         </Button> :
                         <Button variant="contained" color="primary" sx={{ height: 32, borderRadius: 10 }} onClick={handleConnect}>
-                            <EventAvailableIcon sx={{mr: 0.5}}/> Connect Google Calendar
+                            <EventAvailableIcon sx={{mr: 0.5}}/>
+                            <Typography variant={'body2'} noWrap>Connect Google Calendar </Typography>
                         </Button>}
                 </Box>
 

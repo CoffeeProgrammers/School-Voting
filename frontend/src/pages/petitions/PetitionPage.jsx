@@ -160,6 +160,8 @@ const PetitionPage = () => {
                         deleteFunction={handleDelete}
                         fontSize={20}
                     />
+
+
                     <Typography variant='h4'>
                         {petition.name}
                     </Typography>

@@ -25,6 +25,7 @@ import CreatePetition from "./pages/petitions/CreatePetition";
 import CreateVoting from "./pages/voting/CreateVoting";
 import CreateClass from "./pages/class/CreateClass";
 import CreateUsers from "./pages/user/CreateUsers";
+import UpdateUser from "./pages/user/UpdateUser";
 
 const InitNavigation = ({children}) => {
     const navigate = useNavigate();
@@ -66,6 +67,8 @@ function App() {
         (isTeacher || isDirector) && {path: "/control-panel/createUsers", element: <CreateUsers/>},
 
         {path: "/profile", element: <Profile/>},
+        {path: "/profile/update", element: <UpdateUser/>},
+
 
         {path: "*", element: <NotFoundPage/>},
 

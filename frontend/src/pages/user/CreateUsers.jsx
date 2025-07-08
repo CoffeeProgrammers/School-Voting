@@ -4,7 +4,7 @@ import {useError} from "../../contexts/ErrorContext";
 import Loading from "../../components/layouts/Loading";
 import UserService from "../../services/base/ext/UserService";
 import {Button, Checkbox, FormControlLabel, Stack, TextField} from "@mui/material";
-import CreateWrapper from "../../components/layouts/CreateWrapper";
+import FormWrapper from "../../components/layouts/FormWrapper";
 import Typography from "@mui/material/Typography";
 import theme from "../../assets/theme";
 import Divider from "@mui/material/Divider";
@@ -63,7 +63,7 @@ const CreateUsers = () => {
     }
     return (
         <div>
-            <CreateWrapper
+            <FormWrapper
                 label={"Create user"}
                 onCreate={handleSubmit}
             >
@@ -122,7 +122,7 @@ const CreateUsers = () => {
                     />
                 </Box>
 
-            </CreateWrapper>
+            </FormWrapper>
         </div>
     );
 };

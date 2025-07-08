@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import CreateWrapper from "../../components/layouts/CreateWrapper";
+import FormWrapper from "../../components/layouts/FormWrapper";
 import {TextField} from "@mui/material";
 import MenuItem from "@mui/material/MenuItem";
 import {useError} from "../../contexts/ErrorContext";
@@ -82,7 +82,7 @@ const CreateVoting = () => {
     }
     return (
         <div>
-            <CreateWrapper
+            <FormWrapper
                 label={"Create voting"}
                 onCreate={handleSubmit}
             >
@@ -149,7 +149,7 @@ const CreateVoting = () => {
 
                 <Divider/>
 
-            </CreateWrapper>
+            </FormWrapper>
         </div>
     );
 };

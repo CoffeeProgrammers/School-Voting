@@ -16,6 +16,7 @@ import Loading from "../../components/layouts/Loading";
 import VotingParticipantsList from "../../components/basic/user/VotingParticipantsList";
 import DeleteButton from "../../components/layouts/DeleteButton";
 import {useError} from "../../contexts/ErrorContext";
+import EditButton from "../../components/layouts/EditButton";
 
 
 const VotingPage = () => {
@@ -128,11 +129,15 @@ const VotingPage = () => {
             paddingBottom: 4
         }}>
             <Box paddingRight={4} mt={4.5}>
-                <DeleteButton
-                    text={'Are you sure you want to delete this voting?'}
-                    deleteFunction={handleDelete}
-                    fontSize={20}
-                />
+                <Box display="flex" alignItems="center" gap={1}>
+                    <DeleteButton
+                        text={'Are you sure you want to delete this petition?'}
+                        deleteFunction={handleDelete}
+                        fontSize={20}
+                    />
+
+                    <EditButton path={'update'}/>
+                </Box>
                 <Typography variant='h4'>
                     {voting.name}
                 </Typography>

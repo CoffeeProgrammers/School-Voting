@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import CreateWrapper from "../../components/layouts/CreateWrapper";
+import FormWrapper from "../../components/layouts/FormWrapper";
 import {TextField} from "@mui/material";
 import MenuItem from "@mui/material/MenuItem";
 import {useError} from "../../contexts/ErrorContext";
@@ -42,7 +42,7 @@ const CreatePetition = () => {
     }
     return (
         <div>
-            <CreateWrapper
+            <FormWrapper
                 label={"Create petition"}
                 onCreate={handleSubmit}
             >
@@ -78,7 +78,7 @@ const CreatePetition = () => {
 
                     ))}
                 </TextField>
-            </CreateWrapper>
+            </FormWrapper>
         </div>
     );
 };

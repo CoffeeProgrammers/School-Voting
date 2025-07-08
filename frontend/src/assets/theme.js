@@ -1,6 +1,6 @@
 import {createTheme} from "@mui/material/styles";
 import "@fontsource/open-sans";
-import {blueGrey, brown} from "@mui/material/colors";
+import {blue, blueGrey} from "@mui/material/colors";
 
 const theme = createTheme({
     palette: {
@@ -37,6 +37,33 @@ const theme = createTheme({
                 },
             },
         },
+        MuiTypography: {
+            styleOverrides: {
+                root: {
+                    wordBreak: "break-word",
+                },
+            },
+        },
+        MuiLink: {
+            styleOverrides: {
+                root: {
+                    textDecoration: 'none',
+                    color: blueGrey[600],
+                    fontWeight: 500,
+                    transition: 'color 0.2s ease',
+                    '&:hover': {
+                        textDecoration: 'none',
+                        color: blue[500],
+                    },
+                    '&:active': {
+                        color: blue[500],
+                    }
+                },
+            },
+            defaultProps: {
+                underline: 'hover',
+            },
+        }
     },
 });
 

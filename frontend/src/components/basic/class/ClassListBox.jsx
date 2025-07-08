@@ -1,5 +1,5 @@
 import React from 'react';
-import {Card, Typography} from '@mui/material';
+import {Typography} from '@mui/material';
 import Box from "@mui/material/Box";
 import Groups2Icon from '@mui/icons-material/Groups2';
 import {useNavigate} from "react-router-dom";
@@ -19,16 +19,16 @@ const ClassListBox = ({studentClass}) => {
             },
             display:'flex',
             gap:1,
-            height: 100,
+            height: 80,
             padding: [15, 4],
             border: '1px solid #ddd',
             borderRadius: '5px',
             alignItems:"center"
             }} onClick={() => {
-                navigate(`${studentClass.id}`)
+                navigate(`classes/${studentClass.id}`)
             }}>
-            <Groups2Icon color={'primary'}></Groups2Icon>
-            <Typography>{studentClass.className}</Typography>
+            <Groups2Icon sx={{fontSize: 35}} color={'primary'}/>
+            <Typography>{studentClass.name}</Typography>
         </Box>
     );
 };

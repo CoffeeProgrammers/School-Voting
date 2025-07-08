@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Button, Stack} from "@mui/material";
 import Typography from "@mui/material/Typography";
 import theme from "../../assets/theme";
@@ -8,41 +8,77 @@ import Groups2Icon from "@mui/icons-material/Groups2";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import VotingAnswerBox from "../../components/basic/voting/VotingAnswerBox";
 import VotingDate from "../../components/basic/voting/VotingDate";
-import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
 import {blueGrey} from "@mui/material/colors";
 import HowToVoteIcon from "@mui/icons-material/HowToVote";
-
-const voting = {
-    "id": 1,
-    "name": "Vote: Choosing the Theme for Our Annual School Ball!",
-    "description": "It's time to pick an unforgettable theme for our Annual School Ball! Your choice will set the atmosphere, decorations, and dress code for the celebration. Vote wisely, as your voice will help make this year's ball the most spectacular yet!",
-    "levelType": "NATIONAL",
-    "startTime": "2025-06-01T08:00:00Z",
-    "endTime": "2026-06-05T20:00:00Z",
-    "creator": {
-        "id": 10,
-        "email": "jane.doe@example.com",
-        "firstName": "Jane",
-        "lastName": "Doe"
-    },
-    "statistics": {
-        "answers": [
-            {"id": 1, "name": "Galactic Night", "count": 900},
-            {"id": 2, "name": "Masquerade Ball", "count": 500},
-            {"id": 3, "name": "80s Throwback", "count": 100},
-            {"id": 4, "name": "Need more info", "count": 50}
-        ],
-        "countAll": 1800,
-        "countAllAnswered": 1550
-    },
-    "isAnswered": true
-}
+import VotingService from "../../services/base/ext/VotingService";
+import {useNavigate, useParams} from "react-router-dom";
+import Loading from "../../components/layouts/Loading";
+import VotingParticipantsList from "../../components/basic/user/VotingParticipantsList";
+import DeleteButton from "../../components/layouts/DeleteButton";
+import {useError} from "../../contexts/ErrorContext";
+import EditButton from "../../components/layouts/EditButton";
+import Cookies from "js-cookie";
 
 
 const VotingPage = () => {
+    const {id} = useParams();
     const [tab, setTab] = useState("Description")
+    const {showError} = useError()
+    const navigate = useNavigate()
 
-    const isActive = new Date(voting.startTime) < new Date() && new Date(voting.endTime) > new Date();
+    const [selectedAnswer, setSelectedAnswer] = useState(-1)
+
+    const [voting, setVoting] = useState()
+    const [isActive, setIsActive] = useState()
+
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            setLoading(true);
+            try {
+                const response = await VotingService.getVoting(id)
+
+                console.log(response)
+                setVoting(response)
+                setSelectedAnswer(response.myAnswerId ? response.myAnswerId : -1)
+                setIsActive(new Date(response.startTime) < new Date() && new Date(response.endTime) > new Date())
+            } catch (error) {
+                setError(error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+
+    const handleDelete = async () => {
+        try {
+            setLoading(true)
+            await VotingService.deleteVoting(id)
+            navigate('/voting', {replace: true});
+        } catch (error) {
+            showError(error);
+        } finally {
+            setLoading(false)
+        }
+    };
+
+    const vote = async () => {
+        try {
+            setLoading(true)
+            const updatedVoting = await VotingService.vote(voting.id, selectedAnswer)
+            console.log(updatedVoting)
+            setVoting(updatedVoting)
+        } catch (error) {
+            showError(error);
+        } finally {
+            setLoading(false)
+        }
+    };
 
     const renderTabButton = (title, width) => {
         return (
@@ -66,9 +102,10 @@ const VotingPage = () => {
                         {voting.description}
                     </Typography>)
             case 'Participants':
-                return <Box mt={2.5}>Participants</Box>
+                return <VotingParticipantsList/>
         }
     }
+
 
 
     const renderSuccessSupportButton = () => {
@@ -90,6 +127,14 @@ const VotingPage = () => {
         )
     }
 
+    if (loading) {
+        return <Loading/>;
+    }
+
+    if (error) {
+        return <Typography color={"error"}>Error: {error.message}</Typography>;
+    }
+
     return (
         <Box sx={{
             display: 'grid',
@@ -99,6 +144,16 @@ const VotingPage = () => {
             paddingBottom: 4
         }}>
             <Box paddingRight={4} mt={4.5}>
+                {Cookies.get("userId") === voting.creator.id.toString() && new Date(voting.startTime) > new Date() ?
+                    (<Box display="flex" alignItems="center" gap={1}>
+                        <DeleteButton
+                            text={'Are you sure you want to delete this voting?'}
+                            deleteFunction={handleDelete}
+                            fontSize={20}
+                        />
+
+                        <EditButton path={'update'} state={voting}/>
+                    </Box>) : ""}
                 <Typography variant='h4'>
                     {voting.name}
                 </Typography>
@@ -119,14 +174,14 @@ const VotingPage = () => {
                     <Box sx={{display: 'flex', alignItems: 'center', gap: 0.5,}}>
                         <Groups2Icon sx={{fontSize: 20, color: 'primary'}}/>
                         <Typography color='primary' sx={{fontSize: 13}}>
-                            {voting.levelType === 'class' ? 'Class' : 'School'}
+                            {voting.levelType.toLowerCase()}
                         </Typography>
                     </Box>
                 </Stack>
 
                 <Stack direction="row" width={'100%'}>
-                    {renderTabButton('Description', 105)}
-                    {renderTabButton('Participants', 100)}
+                    {renderTabButton('Description', 110)}
+                    {renderTabButton('Participants', 105)}
                 </Stack>
 
                 <Divider/>
@@ -150,54 +205,84 @@ const VotingPage = () => {
                     <Divider sx={{marginY: 0.5}}/>
 
                     <Box sx={{alignItems: 'center', display: 'flex', justifyContent: 'center',}}>
-                        <Stack direction={'column'} width={'85%'}>
+                        <Stack direction={'column'} width={'100%'} maxWidth={270}>
                             {voting.statistics.answers.map((answer) => (
                                 <Box key={answer.id}>
                                     <VotingAnswerBox
                                         answer={answer}
-                                        maxAnswerCount={voting.statistics.countAllAnswered}
-                                        selectedAnswer={1}
-                                        setSelectedValue={() => {
-                                        }}/>
+                                        maxAnswerCount={voting.statistics.countAnswered}
+                                        myAnswer={voting.myAnswerId}
+                                        selectedAnswer={selectedAnswer}
+                                        setSelectedValue={setSelectedAnswer}/>
                                 </Box>
                             ))}
                         </Stack>
                     </Box>
                     <Divider sx={{marginY: 0.5}}/>
                     <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-                        <Typography mt={0.3}  variant='body1' fontWeight={'bold'}>
-                            Voted {voting.statistics.countAllAnswered}/{voting.statistics.countAll}
+                        <Typography mt={0.3} variant='body1' fontWeight={'bold'}>
+                            Voted {voting.statistics.countAnswered}/{voting.statistics.countAll}
                         </Typography>
 
                         <VotingDate startDate={voting.startTime} endDate={voting.endTime}/>
 
-                        <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-                            {isActive ? (
-                                <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-                                    {voting.isAnswered ? (
-                                        <Box alignItems="center" display="flex" justifyContent="center" mt={2.5} mb={1}>
-                                            {renderSuccessSupportButton()}
-                                        </Box>
-                                    ) : (
-                                        <Box alignItems="center" display="flex" justifyContent="center" mt={2.5} mb={1}>
-                                            <Button variant="contained" color="primary" sx={{height: 32, borderRadius: 10}}>
-                                                Vote
-                                            </Button>
-                                        </Box>
-                                    )}
-                                </Box>
-                            ) : (
-                                voting.isAnswered && (
-                                    <Box alignItems="center" display="flex" justifyContent="center" mt={2.5} mb={1}>
-                                        {renderSuccessSupportButton()}
+                        {voting.myAnswerId !== null ?
+                            <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                                {isActive ? (
+                                    <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                                        {Number(voting.myAnswerId) !== -1 ? (
+                                            <Box alignItems="center" display="flex" justifyContent="center" mt={2.5}
+                                                 mb={1}>
+                                                {renderSuccessSupportButton()}
+                                            </Box>
+                                        ) : (
+                                            <Box alignItems="center" display="flex" justifyContent="center" mt={2.5}
+                                                 mb={1}>
+                                                <Button disabled={selectedAnswer === -1} onClick={() => vote()}
+                                                        variant="contained" color="primary"
+                                                        sx={{height: 32, borderRadius: 10}}>
+                                                    Vote
+                                                </Button>
+                                            </Box>
+                                        )}
                                     </Box>
-                                ))}
-                        </Box>
+                                ) : Number(voting.myAnswerId) !== -1 ? (
+                                    <Box alignItems="center" display="flex" justifyContent="center" mt={2.5}
+                                         mb={1}>
+                                        {renderSuccessSupportButton()}
+                                    </Box>) : ""}
+                            </Box> : ""}
+                        {/*<Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>*/}
+                        {/*    {isActive ? (*/}
+                        {/*        <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>*/}
+                        {/*            {voting.myAnswerId ? (*/}
+                        {/*                <Box alignItems="center" display="flex" justifyContent="center" mt={2.5} mb={1}>*/}
+                        {/*                    {renderSuccessSupportButton()}*/}
+                        {/*                </Box>*/}
+                        {/*            ) : (*/}
+                        {/*                <Box alignItems="center" display="flex" justifyContent="center" mt={2.5} mb={1}>*/}
+                        {/*                    <Button disabled={selectedAnswer === -1} onClick={() => vote()}*/}
+                        {/*                            variant="contained" color="primary"*/}
+                        {/*                            sx={{height: 32, borderRadius: 10}}>*/}
+                        {/*                        Vote*/}
+                        {/*                    </Button>*/}
+                        {/*                </Box>*/}
+                        {/*            )}*/}
+                        {/*        </Box>*/}
+                        {/*    ) : (*/}
+                        {/*        voting.myAnswerId && (*/}
+                        {/*            <Box alignItems="center" display="flex" justifyContent="center" mt={2.5} mb={1}>*/}
+                        {/*                {renderSuccessSupportButton()}*/}
+                        {/*            </Box>*/}
+                        {/*        ))}*/}
+                        {/*</Box>*/}
+
                     </Box>
                 </Box>
             </Box>
         </Box>
-    );
+    )
+        ;
 };
 
 export default VotingPage;

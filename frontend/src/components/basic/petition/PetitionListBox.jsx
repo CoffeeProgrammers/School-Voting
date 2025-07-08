@@ -2,11 +2,11 @@ import React from 'react';
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import {Chip} from "@mui/material";
-import Progress from "../../layouts/statistics/Progress";
 import Utils from "../../../utils/Utils";
 import {useNavigate} from "react-router-dom";
 import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
 import {blueGrey} from "@mui/material/colors";
+import PetitionStatisticsInListPage from "./PetitionStatisticsInListPage";
 
 const PetitionListBox = ({petition}) => {
     const navigate = useNavigate();
@@ -39,12 +39,12 @@ const PetitionListBox = ({petition}) => {
             },
         }}
              onClick={() => {
-                 navigate(`${petition.id}`)
+                 navigate(`/petitions/${petition.id}`)
              }}
         >
             <Box mt={0.5}>
                 <Typography color='text.secondary' variant='body2'>
-                    {"#" + petition.levelType}
+                    {"#" + petition.levelType.toLowerCase()}
                 </Typography>
 
                 <Typography variant='h5'>
@@ -52,20 +52,13 @@ const PetitionListBox = ({petition}) => {
                 </Typography>
             </Box>
             <Box>
-                <Box mt={2}>
-                    <Typography variant='h5' mb={0.5} fontWeight="bold">
-                        {petition.countSupport}
-                    </Typography>
-
-                    <Progress
-                        color={Utils.getStatusMUIColor(petition.status)}
-                        count={petition.countSupport}
-                        maxCount={petition.countNeeded}
+                <Box>
+                    <PetitionStatisticsInListPage
+                        countSupported={petition.countSupported}
+                        countNeeded={petition.countNeeded}
+                        status={petition.status}
+                        petitionId={petition.id}
                     />
-
-                </Box>
-                <Box mt={0.75} display="flex" alignItems="center">
-                    {Utils.getStatus(petition.status, {mr: 0.25, fontSize: 18}, {fontSize: 13})}
                 </Box>
                 <Box mt={1.5} display="flex" justifyContent="space-between" alignItems="center">
                     {petition.status === 'ACTIVE' ? (
@@ -75,7 +68,7 @@ const PetitionListBox = ({petition}) => {
                     ) : (
                         <Box/>
                     )}
-                    {petition.supportedByCurrentUser ? (
+                    {petition.supportedByCurrentId ? (
                         <Chip
                             icon={<ThumbUpAltIcon color="success"/>}
                             label="Supported"

@@ -1,20 +1,35 @@
-import {BrowserRouter, Navigate, Route, Routes, useNavigate} from 'react-router-dom';
+import {BrowserRouter, Route, Routes, useNavigate} from 'react-router-dom';
 import {ThemeProvider} from '@mui/material';
 import {LocalizationProvider} from '@mui/x-date-pickers';
 import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs';
 import theme from './assets/theme';
 import {history} from "./utils/history";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import {ErrorProvider} from "./contexts/ErrorContext";
 import PageContainer from "./components/layouts/appbar_with_drawer/PageContainer";
 import NotFoundPage from "./pages/not_found_page/NotFoundPage";
-import Classes from "./pages/classes/Classes";
 import PetitionsListPage from "./pages/petitions/PetitionsListPage";
 import PetitionPage from "./pages/petitions/PetitionPage";
-import ClassPage from "./pages/classes/ClassPage";
+import ClassPage from "./pages/class/ClassPage";
 import VotingListPage from "./pages/voting/VotingListPage";
 import VotingPage from "./pages/voting/VotingPage";
 import IntroductionPage from "./pages/introduction/IntroductionPage";
+import SchoolPage from "./pages/school/SchoolPage";
+import ControlPanel from "./pages/control_panel/ControlPanel";
+import Profile from "./pages/user/Profile";
+import PetitionsReviewPage from "./pages/petitions/PetitionsReviewPage";
+import PrivateRoute from "./security/PrivateRoute";
+import Callback from "./security/callback/Callback";
+import Cookies from "js-cookie";
+import CreatePetition from "./pages/petitions/CreatePetition";
+import CreateVoting from "./pages/voting/CreateVoting";
+import CreateClass from "./pages/class/CreateClass";
+import CreateUsers from "./pages/user/CreateUsers";
+import CreateSchools from "./pages/school/CreateSchools";
+import UpdateUser from "./pages/user/UpdateUser";
+import UpdateClass from "./pages/class/UpdateClass";
+import UpdateSchool from "./pages/school/UpdateSchool";
+import UpdateVoting from "./pages/voting/UpdateVoting";
 
 const InitNavigation = ({children}) => {
     const navigate = useNavigate();
@@ -27,22 +42,42 @@ const InitNavigation = ({children}) => {
 };
 
 function App() {
+    const [role, setRole] = useState(Cookies.get('role'))
+    const isStudent = role === 'STUDENT';
+    const isTeacher = role === 'TEACHER';
+    const isDirector = role === 'DIRECTOR';
+
 
     const routes = [
-        { path: "/", element: <Navigate to="/petitions" replace /> },
+        {path: "/callback", element: <Callback setRole={setRole}/>},
 
-        {path: "/introduction", element: <IntroductionPage/>},
+        (isStudent || isDirector) && {path: "/petitions", element: <PetitionsListPage/>},
+        (isStudent || isDirector) && {path: "/petitions/:id", element: <PetitionPage/>},
+        (isStudent) && {path: "/petitions/create", element: <CreatePetition/>},
 
-        {path: "/petitions", element: <PetitionsListPage/>},
-        {path: "/petitions/:id", element: <PetitionPage/>},
 
         {path: "/voting", element: <VotingListPage/>},
         {path: "/voting/:id", element: <VotingPage/>},
+        {path: "/voting/create", element: <CreateVoting/>},
+        {path: "/voting/:id/update", element: <UpdateVoting/>},
 
-        {path: "/classes", element: <Classes/>},
-        {path: "/classes/:id", element: <ClassPage/>},
 
-        {path: "*", element:<NotFoundPage/>},
+        isDirector && {path: "/petitions-review", element: <PetitionsReviewPage/>},
+
+        {path: "/school", element: <SchoolPage/>},
+        (isTeacher || isDirector) && {path: "/school/class/:id", element: <ClassPage/>},
+        (isTeacher || isDirector) && {path: "/school/class/create", element: <CreateClass/>},
+        (isTeacher || isDirector) && {path: "/school/class/:id/update", element: <UpdateClass/>},
+        (isTeacher || isDirector) && {path: "/school/update", element: <UpdateSchool/>},
+
+        (isTeacher || isDirector) && {path: "/control-panel", element: <ControlPanel/>},
+        (isTeacher || isDirector) && {path: "/control-panel/createUsers", element: <CreateUsers/>},
+
+        {path: "/profile", element: <Profile/>},
+        {path: "/profile/update", element: <UpdateUser/>},
+
+
+        {path: "*", element: <NotFoundPage/>},
 
     ];
 
@@ -53,14 +88,15 @@ function App() {
                     <ThemeProvider theme={theme}>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <Routes>
-                                <Route path={'/introduction'} element={<IntroductionPage/>}/>
+                                <Route path={''} element={<IntroductionPage/>}/>
+                                <Route path={'/create-school'} element={<CreateSchools/>}/>
                                 {routes.map((route, index) => (
-                                    // <Route element={<PrivateRoute/>} key={index}>
+                                    <Route element={<PrivateRoute/>} key={index}>
                                         <Route
                                             path={route.path}
                                             element={<PageContainer>{route.element}</PageContainer>}
                                         />
-                                    // </Route>
+                                    </Route>
                                 ))}
                             </Routes>
                         </LocalizationProvider>

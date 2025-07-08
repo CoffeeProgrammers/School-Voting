@@ -88,6 +88,18 @@ const PetitionPage = () => {
             }
         };
 
+        const support = async () => {
+            try {
+                setLoading(true)
+                await PetitionService.supportPetition(petition.id)
+                petition.supportedByCurrentId = true
+            } catch (error) {
+                showError(error);
+            } finally {
+                setLoading(false)
+            }
+        };
+
         const renderSuccessSupportButton = () => (
             <Button
                 disabled
@@ -135,7 +147,6 @@ const PetitionPage = () => {
                     return <Box mt={2.5}>Comments</Box>
             }
         }
-
 
         if (loading) {
             return <Loading/>;
@@ -226,7 +237,8 @@ const PetitionPage = () => {
                                         </Box>
                                     ) : (
                                         <Box mt={5} mb={1.5} display="flex" justifyContent="center" alignItems="center">
-                                            <Button variant="contained" color="primary" sx={{height: 32, borderRadius: 10}}>
+                                            <Button variant="contained" color="primary" sx={{height: 32, borderRadius: 10}}
+                                                    onClick={support}>
                                                 Support petition
                                             </Button>
                                         </Box>

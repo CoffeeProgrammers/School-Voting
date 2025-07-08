@@ -20,14 +20,14 @@ administrators to engage in school governance processes, enhancing transparency,
 - Parents
     - Initiate voting on relevant school issues.
     - Participate in decision-making by vote on open voting.
-- Directors (Head Administrator)
+- Directors
     - Has full administrative control over their school, including all features and users.
     - Make the final decision on active petitions (those with ≥ 50% votes).
 
 ## Functionalities of the Project:
 
 - School System:
-    - School Creating: Only directors can create school
+    - School Creating: Only guests can create school
     - school Updating: Only directors can update school
     - School Deleting: Only directors can delete school
 - Class System
@@ -37,7 +37,7 @@ administrators to engage in school governance processes, enhancing transparency,
     - Assign/unassign: Only teachers and directors can assign/unassign students to classes in their school
 - Voting System
     - Voting Creation:
-        - Any user (student, teacher, or parent) can create a voting.
+        - Any user (student, teacher, director or parent) can create a voting.
         - Scope Options: Voting can be created for:
             - The entire school
             - A specific class
@@ -47,8 +47,8 @@ administrators to engage in school governance processes, enhancing transparency,
         - Scope Options:
             - Class-wide petition
             - School-wide petition
-    - Support Threshold: When a petition reaches 50% or more of required votes, it becomes active.
-    - Only the principal can support an active petition.
+    - Support Threshold: When a petition reaches 50% or more of required votes, it becomes waiting.
+    - Only the director can accept/reject a waiting petition.
 
 ---
 

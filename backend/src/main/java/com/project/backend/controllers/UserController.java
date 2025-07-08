@@ -72,7 +72,7 @@ public class UserController {
         return userMapper.fromUserToFullResponse(userService.findUserByAuth(auth));
     }
 
-    @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and (@userSecurity.checkUserVoting(#auth, #votingId) or hasRole('DIRECTOR'))")
+    @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and (@userSecurity.checkUserVoting(#auth, #votingId) or hasRole('DIRECTOR') or @userSecurity.checkCreatorVoting(#auth, #votingId))")
     @GetMapping("/voting/{voting_id}")
     @ResponseStatus(HttpStatus.OK)
     public PaginationListResponse<UserListResponse> getUsersByVoting(
@@ -92,7 +92,7 @@ public class UserController {
         return userListResponse;
     }
 
-    @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasAnyRole('DIRECTOR', 'TEACHER', 'STUDENT')")
+    @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasAnyRole('DIRECTOR', 'TEACHER')")
     @GetMapping("/role/{role}")
     @ResponseStatus(HttpStatus.OK)
     public PaginationListResponse<UserListResponse> getUsersByRole(
@@ -105,8 +105,7 @@ public class UserController {
             @RequestParam int size,
             Authentication auth) {
         log.info("Controller: Get users by role {}", role);
-        User user =  userService.findUserByAuth(auth);
-        Page<User> userPage = userService.findAllByRoleInSchool(schoolId, role, email, firstName, lastName, page, size, user.getId());
+        Page<User> userPage = userService.findAllByRoleInSchool(schoolId, role, email, firstName, lastName, page, size);
         PaginationListResponse<UserListResponse> userListResponse = new PaginationListResponse<>();
         userListResponse.setContent(userPage.getContent().stream().map(userMapper::fromUserToListResponse).toList());
         userListResponse.setTotalPages(userPage.getTotalPages());

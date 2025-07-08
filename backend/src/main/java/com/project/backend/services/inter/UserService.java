@@ -23,7 +23,7 @@ public interface UserService {
 
     Page<User> findAllByVoting(long votingId, String email, String firstName, String lastName, int page, int size);
 
-    Page<User> findAllByRoleInSchool(long schoolId, String role, String email, String firstName, String lastName, int page, int size, long userId);
+    Page<User> findAllByRoleInSchool(long schoolId, String role, String email, String firstName, String lastName, int page, int size);
 
     Page<User> findAllByClass(long classId, String email, String firstName, String lastName, int page, int size);
 

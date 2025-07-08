@@ -52,6 +52,7 @@ class ClassServiceImplTest {
 
         User user = new User();
         user.setId(2L);
+        user.setMyClass(null);
 
         when(userService.findById(2L)).thenReturn(user);
         when(schoolService.findById(1L)).thenReturn(school);

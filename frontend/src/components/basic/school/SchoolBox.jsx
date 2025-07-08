@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import HomeWorkIcon from "@mui/icons-material/HomeWork";
@@ -9,8 +9,27 @@ import NotesRoundedIcon from '@mui/icons-material/NotesRounded';
 import EditButton from "../../layouts/EditButton";
 import DeleteButton from "../../layouts/DeleteButton";
 import Cookies from "js-cookie";
+import SchoolService from "../../../services/base/ext/SchoolService";
+import {useNavigate} from "react-router-dom";
+import {useError} from "../../../contexts/ErrorContext";
 
 const SchoolBox = ({school}) => {
+
+    const navigate = useNavigate();
+    const {showError} = useError()
+    const [loading, setLoading] = useState(false);
+
+    const handleDelete = async () => {
+        try {
+            setLoading(true)
+            await SchoolService.deleteSchool(Cookies.get("schoolId"));
+            navigate("/", {replace: true});
+        } catch (error) {
+            showError(error);
+        }finally {
+            setLoading(false);
+        }
+    };
 
     return (
         <Box sx={{
@@ -31,9 +50,8 @@ const SchoolBox = ({school}) => {
             {Cookies.get("role") === "TEACHER" || Cookies.get("role") === "DIRECTOR" ? (
                 <Box display="flex" alignItems="center" justifyContent={'center'} gap={1} mb={1}>
                     <DeleteButton
-                        text={'Are you sure you want to delete this petition?'}
-                        deleteFunction={() => {
-                        }}
+                        text={'Are you sure you want to delete this school?'}
+                        deleteFunction={handleDelete}
                         fontSize={20}
                     />
 

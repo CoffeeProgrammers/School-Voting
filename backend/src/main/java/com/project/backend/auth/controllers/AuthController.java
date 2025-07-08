@@ -25,7 +25,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 import java.util.Map;
 
-import static com.project.backend.auth.utils.CookieUtil.deleteCookie;
+import static com.project.backend.auth.utils.CookieUtil.deleteAllCookies;
 import static com.project.backend.auth.utils.SecurityUtil.extractRole;
 
 @Slf4j
@@ -144,12 +144,7 @@ public class AuthController {
         realmResource.users().get(userService.findById(userId).getKeycloakUserId()).logout();
         return ResponseEntity.ok()
                 .headers(headers ->
-                        headers.put(HttpHeaders.SET_COOKIE, List.of(
-                                deleteCookie("schoolId").toString(),
-                                deleteCookie("accessToken").toString(),
-                                deleteCookie("refreshToken").toString(),
-                                deleteCookie("userId").toString(),
-                                deleteCookie("role").toString())))
+                        headers.put(HttpHeaders.SET_COOKIE, deleteAllCookies()))
                 .build();
     }
 }

@@ -35,6 +35,8 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 import java.util.List;
 import java.util.Map;
 
+import static com.project.backend.auth.utils.CookieUtil.deleteAllCookies;
+
 @RestController
 @Slf4j
 @RequestMapping("/api/schools")
@@ -125,11 +127,15 @@ public class SchoolController {
     @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasRole('DIRECTOR')")
     @DeleteMapping("/delete/{school_id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteSchool(@PathVariable("school_id") long schoolId, Authentication auth) {
+    public ResponseEntity<Void> deleteSchool(@PathVariable("school_id") long schoolId, Authentication auth) {
         petitionService.deleteBy(LevelType.SCHOOL, schoolId);
         votingService.deleteBy(LevelType.SCHOOL, schoolId);
         classService.deleteBySchool(schoolId);
         userDeletionService.deleteAllBySchool(schoolId);
         schoolService.delete(schoolId);
+        return ResponseEntity.ok()
+                .headers(headers ->
+                        headers.put(HttpHeaders.SET_COOKIE, deleteAllCookies()))
+                .build();
     }
 }

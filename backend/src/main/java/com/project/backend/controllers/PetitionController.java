@@ -29,6 +29,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Slf4j
 @RestController
 @RequestMapping("/api/schools/{school_id}/petitions")
@@ -151,8 +154,6 @@ public class PetitionController {
                                 Authentication auth) {
         log.info("Controller: Support petition with id {}", petitionId);
         long newCount = petitionService.support(petitionId, userService.findUserByAuth(auth));
-        log.info("New count {}", newCount);
-        messagingTemplate.convertAndSend("/topic/petitions/" + petitionId + "/counter", newCount);
     }
 
     @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasRole('DIRECTOR')")
@@ -163,6 +164,7 @@ public class PetitionController {
                                 Authentication auth) {
         log.info("Controller: Approve petition with id {}", petitionId);
         petitionService.approve(petitionId);
+        sendMassage(petitionId);
     }
 
     @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasRole('DIRECTOR')")
@@ -173,6 +175,7 @@ public class PetitionController {
                                Authentication auth) {
         log.info("Controller: Reject petition with id {}", petitionId);
         petitionService.reject(petitionId);
+        sendMassage(petitionId);
     }
 
     @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and hasRole('STUDENT') and @userSecurity.checkUserPetition(#auth, #petitionId)")
@@ -242,5 +245,14 @@ public class PetitionController {
         petitionFullResponse.setCountSupported(petition.getCount());
         petitionFullResponse.setSupportedByCurrentId(petition.getUsers().contains(user));
         return petitionFullResponse;
+    }
+
+    private void sendMassage(long petitionId){
+        Petition petition = petitionService.findById(petitionId);
+        Map<String, Object> payload = new HashMap<>();
+        payload.put("count", petition.getCount());
+        payload.put("status", petition.getStatus());
+
+        messagingTemplate.convertAndSend("/topic/petitions/" + petition.getId() + "/counter", payload);
     }
 }

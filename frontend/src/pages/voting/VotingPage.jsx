@@ -41,6 +41,7 @@ const VotingPage = () => {
                 const response = await VotingService.getVoting(id)
 
                 setVoting(response)
+                console.log(voting)
                 setSelectedAnswer(response.selectedAnswer ? response.selectedAnswer : -1)
                 setIsActive(new Date(response.startTime) < new Date() && new Date(response.endTime) > new Date())
             } catch (error) {
@@ -223,7 +224,7 @@ const VotingPage = () => {
                         <VotingDate startDate={voting.startTime} endDate={voting.endTime}/>
 
                         <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-                            {isActive ? (
+                            {isActive && voting.myAnswerId !== null ? (
                                 <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
                                     {voting.myAnswerId ? (
                                         <Box alignItems="center" display="flex" justifyContent="center" mt={2.5} mb={1}>

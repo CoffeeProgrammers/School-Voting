@@ -26,20 +26,21 @@ const PetitionPage = () => {
         const [tab, setTab] = useState("Description")
 
         const [petition, setPetition] = useState()
-        const [viewDate, setViewDate] = useState()
-        ;
+        const [viewDate, setViewDate] = useState();
         const [loading, setLoading] = useState(true);
         const [error, setError] = useState(null);
         const [supportCount, setSupportCount] = useState(0);
         const [petitionStatus, setPetitionStatus] = useState(null);
 
         const stompClientRef = useRef(null);
+        const role = Cookies.get('role')
 
         useEffect(() => {
             const fetchData = async () => {
                 setLoading(true);
                 try {
                     const response = await PetitionService.getPetition(id);
+                    console.log(response)
                     setPetition(response);
                     setSupportCount(response.countSupported);
                     setPetitionStatus(response.status);
@@ -93,6 +94,28 @@ const PetitionPage = () => {
                 setLoading(true)
                 await PetitionService.supportPetition(petition.id)
                 setPetition({...petition, supportedByCurrentId: true})
+            } catch (error) {
+                showError(error);
+            } finally {
+                setLoading(false)
+            }
+        };
+
+        const approve = async () => {
+            try {
+                setLoading(true)
+                await PetitionService.approvePetition(petition.id)
+            } catch (error) {
+                showError(error);
+            } finally {
+                setLoading(false)
+            }
+        };
+
+        const reject = async () => {
+            try {
+                setLoading(true)
+                await PetitionService.rejectPetition(petition.id)
             } catch (error) {
                 showError(error);
             } finally {
@@ -228,7 +251,7 @@ const PetitionPage = () => {
                                 )}
                             </Box>
 
-                            {petitionStatus === 'ACTIVE' && Cookies.get('role') === 'STUDENT' ? (
+                            {petitionStatus === 'ACTIVE' && role === 'STUDENT' ? (
                                 <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
                                     <Typography mt={0.55}>{viewDate}</Typography>
                                     {petition.supportedByCurrentId ? (
@@ -244,13 +267,23 @@ const PetitionPage = () => {
                                         </Box>
                                     )}
                                 </Box>
-                            ) : (
-                                petition.supportedByCurrentId && (
+                            ) : (petition.supportedByCurrentId && (
                                     <Box mt={5} mb={1.5} display="flex" justifyContent="center" alignItems="center">
                                         {renderSuccessSupportButton()}
                                     </Box>
                                 )
                             )}
+                            {role === 'DIRECTOR' && petitionStatus === 'WAITING_FOR_CONSIDERATION' ?
+                            <Box mt={0.25} sx={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+                                <Button variant="contained" color="success" sx={{height: 32, borderRadius: 10, mx: 1}}
+                                        onClick={approve}>
+                                    Approve petition
+                                </Button>
+                                <Button variant="contained" color="error" sx={{height: 32, borderRadius: 10, mx: 1}}
+                                        onClick={reject}>
+                                    Reject petition
+                                </Button>
+                            </Box> : ""}
                         </Box>
                     </Box>
                 </Box>

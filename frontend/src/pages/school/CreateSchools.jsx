@@ -3,7 +3,7 @@ import {useNavigate} from "react-router-dom";
 import {useError} from "../../contexts/ErrorContext";
 import Loading from "../../components/layouts/Loading";
 import {Box, TextField} from "@mui/material";
-import CreateWrapper from "../../components/layouts/CreateWrapper";
+import FormWrapper from "../../components/layouts/FormWrapper";
 import SchoolService from "../../services/base/ext/SchoolService";
 import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
@@ -44,7 +44,7 @@ const CreateSchools = () => {
     }
     return (
         <Box py={3}>
-            <CreateWrapper
+            <FormWrapper
                 label={"Create school"}
                 onCreate={handleSubmit}
             >
@@ -94,7 +94,7 @@ const CreateSchools = () => {
                     />
                 </Box>
 
-            </CreateWrapper>
+            </FormWrapper>
         </Box>
     );
 };

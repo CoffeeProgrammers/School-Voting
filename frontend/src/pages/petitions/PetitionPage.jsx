@@ -228,7 +228,7 @@ const PetitionPage = () => {
                                 )}
                             </Box>
 
-                            {petitionStatus === 'ACTIVE' ? (
+                            {petitionStatus === 'ACTIVE' && Cookies.get('role') === 'STUDENT' ? (
                                 <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
                                     <Typography mt={0.55}>{viewDate}</Typography>
                                     {petition.supportedByCurrentId ? (

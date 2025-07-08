@@ -42,4 +42,13 @@ public class CookieUtil {
                 refreshTokenCookie.toString()
         );
     }
+
+    public static List<String> deleteAllCookies() {
+        return List.of(
+                deleteCookie("schoolId").toString(),
+                deleteCookie("accessToken").toString(),
+                deleteCookie("refreshToken").toString(),
+                deleteCookie("userId").toString(),
+                deleteCookie("role").toString());
+    }
 }

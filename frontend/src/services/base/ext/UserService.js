@@ -3,24 +3,27 @@ import Cookies from "js-cookie";
 
 class UserService extends BaseService {
     constructor() {
-        const schoolId = Cookies.get("schoolId")
-        super(`/schools/${schoolId}/users`);
+        super(`/schools`);
     }
 
     createUser(data) {
-        return this.post("/create", data);
+        const schoolId = Cookies.get("schoolId")
+        return this.post(`/${schoolId}/users/create`, data);
     }
 
     updateUser(userId, data) {
-        return this.put(`/update/${userId}`, data);
+        const schoolId = Cookies.get("schoolId")
+        return this.put(`/${schoolId}/users/update/${userId}`, data);
     }
 
     deleteUser(userId) {
-        return this.delete(`/delete/${userId}`);
+        const schoolId = Cookies.get("schoolId")
+        return this.delete(`/${schoolId}/users/delete/${userId}`);
     }
 
     getMyUser() {
-        return this.get("/my");
+        const schoolId = Cookies.get("schoolId")
+        return this.get(`/${schoolId}/users/my`);
     }
 
     getUsersByVoting(votingId, {email, firstName, lastName, page, size}) {
@@ -31,7 +34,8 @@ class UserService extends BaseService {
             page,
             size
         };
-        return this.get(`/voting/${votingId}`, {params});
+        const schoolId = Cookies.get("schoolId")
+        return this.get(`/${schoolId}/users/voting/${votingId}`, {params});
     }
 
     getUsersByRole(role, {email, firstName, lastName, page, size}) {
@@ -42,7 +46,8 @@ class UserService extends BaseService {
             page,
             size
         };
-        return this.get(`/role/${role}`, {params});
+        const schoolId = Cookies.get("schoolId")
+        return this.get(`/${schoolId}/users/role/${role}`, {params});
     }
 
     getUsersByClass(classId, {email, firstName, lastName, page, size}) {
@@ -53,7 +58,8 @@ class UserService extends BaseService {
             page,
             size
         };
-        return this.get(`/class/${classId}`, {params});
+        const schoolId = Cookies.get("schoolId")
+        return this.get(`/${schoolId}/users/class/${classId}`, {params});
     }
 
     getUsersOfMyClass({email, firstName, lastName, page, size}) {
@@ -64,7 +70,8 @@ class UserService extends BaseService {
             page,
             size
         };
-        return this.get(`/class/my`, {params});
+        const schoolId = Cookies.get("schoolId")
+        return this.get(`/${schoolId}/users/class/my`, {params});
     }
 
 
@@ -76,7 +83,8 @@ class UserService extends BaseService {
             page,
             size
         };
-        return this.get(`/withoutClass`, {params});
+        const schoolId = Cookies.get("schoolId")
+        return this.get(`/${schoolId}/users/withoutClass`, {params});
     }
 }
 

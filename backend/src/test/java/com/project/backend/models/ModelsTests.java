@@ -214,6 +214,7 @@ public class ModelsTests {
         googleCalendarCredential2.setExpiresAt(googleCalendarCredential1.getExpiresAt());
         googleCalendarCredential2.setAccessToken(googleCalendarCredential1.getAccessToken());
         googleCalendarCredential2.setRefreshToken(googleCalendarCredential1.getRefreshToken());
+        googleCalendarCredential2.setEmail(googleCalendarCredential1.getEmail());
 
         assertNotEquals(googleCalendarCredential1, null);
         assertEquals(googleCalendarCredential1, googleCalendarCredential2);

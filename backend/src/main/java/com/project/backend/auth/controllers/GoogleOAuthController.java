@@ -1,13 +1,9 @@
 package com.project.backend.auth.controllers;
 
-import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
-import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeRequestUrl;
-import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeTokenRequest;
-import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
+import com.google.api.client.googleapis.auth.oauth2.*;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
-import com.google.api.services.calendar.CalendarScopes;
 import com.project.backend.models.User;
 import com.project.backend.models.google.GoogleCalendarCredential;
 import com.project.backend.services.inter.UserService;
@@ -26,6 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/auth/google")
@@ -48,12 +46,19 @@ public class GoogleOAuthController {
 
     @GetMapping("/auth")
     public String auth(Authentication authentication, HttpServletResponse response) throws IOException, GeneralSecurityException {
+        Set<String> scopes = new HashSet<>();
+        scopes.add("https://www.googleapis.com/auth/calendar");
+        scopes.add("https://www.googleapis.com/auth/calendar.events");
+        scopes.add("https://www.googleapis.com/auth/calendar.events.readonly");
+        scopes.add("https://www.googleapis.com/auth/calendar.readonly");
+        scopes.add("https://www.googleapis.com/auth/calendar.settings.readonly");
+        scopes.add("https://www.googleapis.com/auth/userinfo.email");
         GoogleAuthorizationCodeRequestUrl url = new GoogleAuthorizationCodeFlow.Builder(
                 GoogleNetHttpTransport.newTrustedTransport(),
                 jsonFactory,
                 clientId,
                 clientSecret,
-                CalendarScopes.all()
+                scopes
         ).setAccessType("offline").build().newAuthorizationUrl().setRedirectUri(REDIRECT_URI).setState(userService.findUserByAuth(authentication).getId() + "");
 
         return url.build();
@@ -79,8 +84,17 @@ public class GoogleOAuthController {
 
         String accessToken = tokenResponse.getAccessToken();
         String refreshToken = tokenResponse.getRefreshToken();
+        GoogleIdToken idToken = tokenResponse.parseIdToken();
+        GoogleIdToken.Payload payload = idToken.getPayload();
+
+        String email = payload.getEmail();
+
 
         log.info(tokenResponse.toPrettyString());
+        if(googleCalendarCredentialService.existsByEmail(email)) {
+            response.sendRedirect(frontendUrl + "/profile?error=already_linked");
+            return;
+        }
         if(googleCalendarCredentialService.existsByUserId(userId)) {
             GoogleCalendarCredential googleCalendarCredential = new GoogleCalendarCredential();
             googleCalendarCredential.setAccessToken(accessToken);
@@ -92,6 +106,7 @@ public class GoogleOAuthController {
             googleCalendarCredential.setRefreshToken(refreshToken);
             googleCalendarCredential.setUser(userService.findById(userId));
             googleCalendarCredential.setExpiresAt(LocalDateTime.now().plusSeconds(tokenResponse.getExpiresInSeconds()));
+            googleCalendarCredential.setEmail(email);
             googleCalendarCredentialService.create(googleCalendarCredential);
             googleCalendarService.firstUploadToUserCalendar(userId);
         }

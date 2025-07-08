@@ -21,6 +21,7 @@ public class GoogleCalendarCredential {
     private String accessToken;
     private String refreshToken;
     private LocalDateTime expiresAt;
+    private String email;
 
     @OneToOne
     @JoinColumn(name = "user_id", nullable = false, unique = true)

@@ -9,6 +9,8 @@ public interface GoogleCalendarCredentialService {
 
     GoogleCalendarCredential findByUserId(long userId);
     boolean existsByUserId(long userId);
+    boolean existsByEmail(String email);
+    GoogleCalendarCredential findByEmail(String email);
     GoogleCalendarCredential create(GoogleCalendarCredential googleCalendarCredential);
     GoogleCalendarCredential update(GoogleCalendarCredential googleCalendarCredential, long userId);
     GoogleCalendarCredential refresh(long userId);

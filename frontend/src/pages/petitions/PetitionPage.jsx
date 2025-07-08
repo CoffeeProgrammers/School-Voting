@@ -17,6 +17,7 @@ import SockJS from 'sockjs-client';
 import {Stomp} from '@stomp/stompjs';
 import {CustomPieChart} from "../../components/layouts/statistics/CustomPieChart";
 import Utils from "../../utils/Utils";
+import Cookies from "js-cookie";
 
 const PetitionPage = () => {
         const {id} = useParams();
@@ -123,17 +124,17 @@ const PetitionPage = () => {
             </Button>
         );
 
-    const renderTab = () => {
-        switch (tab) {
-            case 'Description':
-                return (
-                    <Typography variant='body1' mt={1.25}>
-                        {petition.description}
-                    </Typography>)
-            case 'Comments':
-                return <Box mt={2.5}>Comments</Box>
+        const renderTab = () => {
+            switch (tab) {
+                case 'Description':
+                    return (
+                        <Typography variant='body1' mt={1.25}>
+                            {petition.description}
+                        </Typography>)
+                case 'Comments':
+                    return <Box mt={2.5}>Comments</Box>
+            }
         }
-    }
 
 
         if (loading) {
@@ -155,11 +156,12 @@ const PetitionPage = () => {
                 }}
             >
                 <Box paddingRight={4} mt={4.5}>
-                    <DeleteButton
-                        text={'Are you sure you want to delete this petition?'}
-                        deleteFunction={handleDelete}
-                        fontSize={20}
-                    />
+                    {Cookies.get("userId") === petition.creator.id.toString() ?
+                        (<DeleteButton
+                            text={'Are you sure you want to delete this petition?'}
+                            deleteFunction={handleDelete}
+                            fontSize={20}
+                        />) : ""}
 
 
                     <Typography variant='h4'>

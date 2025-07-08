@@ -12,6 +12,7 @@ import {useError} from "../../../contexts/ErrorContext";
 import {useNavigate} from "react-router-dom";
 import EditButton from "../../layouts/EditButton";
 import AssignUsersToClass from "../user/AssignStudentsToClass";
+import Cookies from "js-cookie";
 // import AssignUsersToCLass from "../user/AssignStudentsToClass";
 
 const ClassBox = ({isMy, classId}) => {
@@ -148,17 +149,19 @@ const ClassBox = ({isMy, classId}) => {
                         <Link component={RouterLink} to={'/school'}>
                             <Typography variant={'caption'}>← go back </Typography>
                         </Link>
-                        <Box ml={1}>
-                            <Box display="flex" alignItems="center" gap={1}>
-                                <DeleteButton
-                                    text={'Are you sure you want to delete this petition?'}
-                                    deleteFunction={handleDelete}
-                                    fontSize={19}
-                                />
+                        {Cookies.get("role") === "TEACHER" || Cookies.get("role") === "DIRECTOR" ?
+                            (<Box ml={1}>
+                                <Box display="flex" alignItems="center" gap={1}>
+                                    <DeleteButton
+                                        text={'Are you sure you want to delete this petition?'}
+                                        deleteFunction={handleDelete}
+                                        fontSize={19}
+                                    />
 
-                                <EditButton path={'update'} fontSize={19}/>
-                            </Box>
-                        </Box>
+                                    <EditButton path={'update'} fontSize={19} state={studentClass}/>
+                                </Box>
+                            </Box>) : ""
+                        }
                     </Box>
                 )}
                 <Box>

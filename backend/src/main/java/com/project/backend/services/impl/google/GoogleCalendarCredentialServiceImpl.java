@@ -84,6 +84,18 @@ public class GoogleCalendarCredentialServiceImpl implements GoogleCalendarCreden
     }
 
     @Override
+    public boolean existsByEmail(String email) {
+        log.info("Service: check if existing user with email {}", email);
+        return googleCalendarCredentialRepository.existsByEmail(email);
+    }
+
+    @Override
+    public GoogleCalendarCredential findByEmail(String email) {
+        log.info("Service: get google user with email {}", email);
+        return googleCalendarCredentialRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("Google calendar credentials for user with email " + email + " not found"));
+    }
+
+    @Override
     public GoogleCalendarCredential create(GoogleCalendarCredential googleCalendarCredential) {
         log.info("Service: create google calendar credential");
         return googleCalendarCredentialRepository.save(googleCalendarCredential);

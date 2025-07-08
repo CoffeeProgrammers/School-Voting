@@ -135,6 +135,10 @@ const ClassBox = ({isMy, classId}) => {
             setLoadingUsers(false);
         }
     }
+    const role = Cookies.get("role");
+    const isStudent = role === 'STUDENT';
+    const isTeacher = role === 'TEACHER';
+    const isDirector = role === 'DIRECTOR';
 
 
     if (error) {
@@ -176,7 +180,7 @@ const ClassBox = ({isMy, classId}) => {
 
             <UserList
                 users={students}
-                actions={true}
+                actions={isDirector || isTeacher}
                 addToListFunction={() => setOpenAssignDialog(true)}
                 deleteFromListFunction={handleUnassign}
                 searchFirstName={searchFirstName}

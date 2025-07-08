@@ -66,6 +66,17 @@ const VotingPage = () => {
         }
     };
 
+    const vote = async () => {
+        try {
+            setLoading(true)
+            await VotingService.vote(voting.id, selectedAnswer)
+            setVoting({...voting, myAnswerId: selectedAnswer})
+        } catch (error) {
+            showError(error);
+        } finally {
+            setLoading(false)
+        }
+    };
 
     const renderTabButton = (title, width) => {
         return (
@@ -214,13 +225,14 @@ const VotingPage = () => {
                         <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
                             {isActive ? (
                                 <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-                                    {voting.isAnswered ? (
+                                    {voting.myAnswerId ? (
                                         <Box alignItems="center" display="flex" justifyContent="center" mt={2.5} mb={1}>
                                             {renderSuccessSupportButton()}
                                         </Box>
                                     ) : (
                                         <Box alignItems="center" display="flex" justifyContent="center" mt={2.5} mb={1}>
-                                            <Button variant="contained" color="primary"
+                                            <Button disabled={selectedAnswer === -1} onClick={() => vote()}
+                                                    variant="contained" color="primary"
                                                     sx={{height: 32, borderRadius: 10}}>
                                                 Vote
                                             </Button>
@@ -228,7 +240,7 @@ const VotingPage = () => {
                                     )}
                                 </Box>
                             ) : (
-                                voting.isAnswered && (
+                                voting.myAnswerId && (
                                     <Box alignItems="center" display="flex" justifyContent="center" mt={2.5} mb={1}>
                                         {renderSuccessSupportButton()}
                                     </Box>

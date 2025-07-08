@@ -92,7 +92,7 @@ const PetitionPage = () => {
             try {
                 setLoading(true)
                 await PetitionService.supportPetition(petition.id)
-                petition.supportedByCurrentId = true
+                setPetition({...petition, supportedByCurrentId: true})
             } catch (error) {
                 showError(error);
             } finally {

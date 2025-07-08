@@ -63,11 +63,11 @@ const AddUsersToVotingDialog = ({userIds, toggleUserId, levelType, selectedIds})
 
     const renderTabButton = (tabRole, width) => {
         return (
-            <Button onClick={() => setRole(tabRole)} sx={{height: 33, borderRadius: 0, width: width}}>
-                <Typography variant='body1' color={role === tabRole ? 'primary' : 'text.secondary'}
+            <Button onClick={() => setRole(tabRole.toUpperCase)} sx={{height: 33, borderRadius: 0, width: width}}>
+                <Typography variant='body1' color={role === tabRole.toUpperCase() ? 'primary' : 'text.secondary'}
                             sx={{
                                 borderBottom: "2.5px solid",
-                                borderBottomColor: role === tabRole ? theme.palette.primary.main : "transparent",
+                                borderBottomColor: role === tabRole.toUpperCase() ? theme.palette.primary.main : "transparent",
                             }}>
                     {tabRole}s
                 </Typography>

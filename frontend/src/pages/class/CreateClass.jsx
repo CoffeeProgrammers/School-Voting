@@ -45,7 +45,7 @@ const CreateClass = () => {
     return (
         <div>
             <FormWrapper
-                label={"Create petition"}
+                label={"Create class"}
                 onCreate={handleSubmit}
             >
                 <TextField

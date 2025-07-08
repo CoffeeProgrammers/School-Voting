@@ -44,7 +44,7 @@ const PetitionListBox = ({petition}) => {
         >
             <Box mt={0.5}>
                 <Typography color='text.secondary' variant='body2'>
-                    {"#" + petition.levelType}
+                    {"#" + petition.levelType.toLowerCase()}
                 </Typography>
 
                 <Typography variant='h5'>

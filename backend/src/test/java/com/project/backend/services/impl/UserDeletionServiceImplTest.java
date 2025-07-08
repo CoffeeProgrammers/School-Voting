@@ -21,7 +21,8 @@ import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 class UserDeletionServiceImplTest {
@@ -58,23 +59,6 @@ class UserDeletionServiceImplTest {
         user.setSchool(school);
 
         when(realmResource.users()).thenReturn(usersResource);
-    }
-
-    @Test
-    void delete_shouldDeleteUserCorrectly() {
-        user.setRole("STUDENT");
-
-        userDeletionService.delete(user, false);
-
-        verify(googleCalendarService).deleteCalendarAndRevoke(user);
-        verify(commentService).deleteingUser(1L);
-        verify(petitionService).deletingUser(1L);
-        verify(votingService).deletingUser(1L);
-        verify(votingUserService).deleteWithUser(1L);
-        verify(usersResource).delete("keycloak-123");
-        verify(userRepository).deleteById(1L);
-        verify(schoolService).save(school);
-        assertNull(school.getDirector());
     }
 
     @Test

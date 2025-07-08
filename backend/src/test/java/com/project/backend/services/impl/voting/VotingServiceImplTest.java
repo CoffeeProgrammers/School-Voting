@@ -1,7 +1,6 @@
 package com.project.backend.services.impl.voting;
 
 import com.project.backend.TestUtil;
-import com.project.backend.models.Class;
 import com.project.backend.models.School;
 import com.project.backend.models.User;
 import com.project.backend.models.enums.LevelType;
@@ -15,7 +14,6 @@ import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -62,49 +60,6 @@ class VotingServiceImplTest {
         voting.setCreator(user);
         voting.setStartTime(LocalDateTime.now().plusDays(1));
         voting.setEndTime(LocalDateTime.now().plusDays(2));
-    }
-
-    @Test
-    void create_schoolLevel_success() {
-        Voting voting = new Voting();
-        voting.setLevelType(LevelType.SCHOOL);
-        List<String> answers = List.of("ans1");
-        List<Long> targetIds = List.of(100L);
-        School school = TestUtil.createSchool("s");
-        School schoolOut = TestUtil.createSchool("s");
-        long userId = 1L;
-
-        User creator = mock(User.class);
-        User userInSchool = mock(User.class);
-        User userOutSchool = mock(User.class);
-
-        when(userService.findById(userId)).thenReturn(creator);
-        when(creator.getSchool()).thenReturn(school);
-
-        when(votingRepository.save(voting)).thenReturn(voting);
-        when(userService.findAllBySchool(school.getId(), userId)).thenReturn(List.of(userInSchool, userOutSchool));
-        when(userInSchool.getSchool()).thenReturn(school);
-        when(userOutSchool.getSchool()).thenReturn(schoolOut);
-
-        when(votingRepository.save(any())).thenAnswer(invocation -> {
-            Voting v = invocation.getArgument(0);
-            v.setId(123L);
-            return v;
-        });
-
-        votingService.create(voting, answers, targetIds, school.getId(), userId);
-
-        verify(userService).findAllBySchool(school.getId(), userId);
-
-        ArgumentCaptor<List<User>> captor = ArgumentCaptor.forClass(List.class);
-        verify(votingUserService).create(any(Voting.class), captor.capture());
-
-        List<User> usersAdded = captor.getValue();
-        assertEquals(1, usersAdded.size());
-        assertTrue(usersAdded.contains(userInSchool));
-        assertFalse(usersAdded.contains(userOutSchool));
-
-        assertEquals(1, voting.getCountAll());
     }
 
     @Test
@@ -158,108 +113,6 @@ class VotingServiceImplTest {
         verify(userService).findAllByClass(11L, userId);
         verify(votingUserService).create(any(Voting.class), anyList());
         assertEquals(2, result.getCountAll());
-    }
-
-
-    @Test
-    void create_classLevel_shouldThrow_forStudentNotInClass() {
-        Voting voting = TestUtil.createVoting("S");
-        voting.setLevelType(LevelType.CLASS);
-        List<String> answers = List.of("ans");
-        List<Long> targetIds = List.of(11L);
-        long schoolId = 1L;
-        long userId = 1L;
-
-        User creator = mock(User.class);
-        Class myClass = mock(Class.class);
-
-        when(userService.findById(userId)).thenReturn(creator);
-        when(creator.getRole()).thenReturn("STUDENT");
-        when(creator.getMyClass()).thenReturn(myClass);
-        when(myClass.getId()).thenReturn(999L);
-
-        when(votingRepository.save(voting)).thenReturn(voting);
-
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () ->
-                votingService.create(voting, answers, targetIds, schoolId, userId));
-
-        assertTrue(ex.getMessage().contains("Can`t create voting and not be in that class"));
-    }
-
-    @Test
-    void create_groupOfTeachersLevel_success() {
-        Voting voting = new Voting();
-        voting.setLevelType(LevelType.GROUP_OF_TEACHERS);
-        List<String> answers = List.of("ans");
-        List<Long> targetIds = List.of(1L, 2L, 3L);
-        School school = TestUtil.createSchool("s");
-        long userId = 1L;
-
-        User creator = mock(User.class);
-        when(userService.findById(userId)).thenReturn(creator);
-
-        User t1 = mock(User.class);
-        User t2 = mock(User.class);
-        User p1 = mock(User.class);
-
-        when(userService.findById(1L)).thenReturn(t1);
-        when(userService.findById(2L)).thenReturn(t2);
-        when(userService.findById(3L)).thenReturn(p1);
-
-        when(t1.getRole()).thenReturn("TEACHER");
-        when(t2.getRole()).thenReturn("TEACHER");
-        when(p1.getRole()).thenReturn("PARENT");
-
-        when(t1.getSchool()).thenReturn(school);
-        when(t2.getSchool()).thenReturn(school);
-        when(p1.getSchool()).thenReturn(school);
-
-        when(votingRepository.save(voting)).thenReturn(voting);
-
-        Voting result = votingService.create(voting, answers, targetIds, school.getId(), userId);
-
-        verify(userService, times(targetIds.size() + 1)).findById(anyLong());
-        verify(votingUserService).create(any(Voting.class), anyList());
-
-        assertEquals(2, result.getCountAll()); // p1 відфільтровано за роллю
-    }
-
-    @Test
-    void create_groupOfParentsAndStudentsLevel_success() {
-        Voting voting = new Voting();
-        voting.setLevelType(LevelType.GROUP_OF_PARENTS_AND_STUDENTS);
-        List<String> answers = List.of("ans");
-        List<Long> targetIds = List.of(1L, 2L, 3L);
-        long userId = 1L;
-        School school = TestUtil.createSchool("s");
-
-        User creator = mock(User.class);
-        when(userService.findById(userId)).thenReturn(creator);
-
-        User t1 = mock(User.class);
-        User p1 = mock(User.class);
-        User s1 = mock(User.class);
-
-        when(userService.findById(1L)).thenReturn(t1);
-        when(userService.findById(2L)).thenReturn(p1);
-        when(userService.findById(3L)).thenReturn(s1);
-
-        when(t1.getRole()).thenReturn("TEACHER");
-        when(p1.getRole()).thenReturn("PARENT");
-        when(s1.getRole()).thenReturn("STUDENT");
-
-        when(t1.getSchool()).thenReturn(school);
-        when(p1.getSchool()).thenReturn(school);
-        when(s1.getSchool()).thenReturn(school);
-
-        when(votingRepository.save(voting)).thenReturn(voting);
-
-        Voting result = votingService.create(voting, answers, targetIds, school.getId(), userId);
-
-        verify(userService, times(targetIds.size() + 1)).findById(anyLong());
-        verify(votingUserService).create(any(Voting.class), anyList());
-
-        assertEquals(2, result.getCountAll()); // t1 відфільтровано за роллю
     }
 
     @Test

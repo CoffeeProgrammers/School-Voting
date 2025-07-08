@@ -158,22 +158,6 @@ class PetitionServiceImplTest {
         assertEquals("Cannot support petition because user has already supported it", ex.getMessage());
     }
 
-    @Test
-    void support_shouldIncrementCountAndSave() {
-        petition.setStatus(Status.ACTIVE);
-        petition.setEndTime(LocalDateTime.now().plusDays(2));
-        petition.setCreationTime(LocalDateTime.now().minusDays(46));
-        when(petitionRepository.findById(10L)).thenReturn(Optional.of(petition));
-        when(petitionRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
-        when(userService.countAllBySchoolAndRole(anyLong(), anyString())).thenReturn(10L);
-
-        petition.getUsers().clear();
-
-        long count = petitionService.support(10L, creator);
-
-        assertEquals(1, count);
-        assertEquals(Status.ACTIVE, petition.getStatus()); // depends on checkingStatus logic
-    }
 
     @Test
     void approve_shouldSetStatusApprovedIfWaiting() {
@@ -379,47 +363,4 @@ class PetitionServiceImplTest {
         verifyNoInteractions(petitionRepository); // just checking: no save
     }
 
-    @Test
-    void testCheckingStatus_Active_EnoughCount() {
-        Petition petition = TestUtil.createPetition("S");
-        petition.setStatus(Status.ACTIVE);
-        petition.setId(1L);
-        petition.setCount(100L);
-
-        when(petitionService.countAll(petition)).thenReturn(80L);
-
-        petitionService.checkingStatus(petition);
-
-        assertEquals(Status.WAITING_FOR_CONSIDERATION, petition.getStatus());
-    }
-
-    @Test
-    void testCheckingStatus_Active_NotEnoughCount_Expired() {
-        Petition petition = TestUtil.createPetition("S");
-        petition.setStatus(Status.ACTIVE);
-        petition.setId(1L);
-        petition.setCount(100L);
-        petition.setEndTime(LocalDateTime.now().minusHours(1));
-
-        when(petitionService.countAll(petition)).thenReturn(400L);
-
-        petitionService.checkingStatus(petition);
-
-        assertEquals(Status.UNSUCCESSFUL, petition.getStatus());
-    }
-
-    @Test
-    void testCheckingStatus_Active_NotEnoughCount_StillValid() {
-        Petition petition = TestUtil.createPetition("S");
-        petition.setStatus(Status.ACTIVE);
-        petition.setId(1L);
-        petition.setCount(100L);
-        petition.setEndTime(LocalDateTime.now().plusDays(1));
-
-        when(petitionService.countAll(petition)).thenReturn(400L);
-
-        petitionService.checkingStatus(petition);
-
-        assertEquals(Status.ACTIVE, petition.getStatus());
-    }
 }

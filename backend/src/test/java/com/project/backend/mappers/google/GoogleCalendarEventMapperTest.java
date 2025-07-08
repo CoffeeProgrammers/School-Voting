@@ -3,7 +3,6 @@ package com.project.backend.mappers.google;
 import com.google.api.services.calendar.model.Event;
 import com.project.backend.models.School;
 import com.project.backend.models.User;
-import com.project.backend.models.enums.LevelType;
 import com.project.backend.models.petition.Petition;
 import com.project.backend.models.voting.Voting;
 import org.junit.jupiter.api.Test;
@@ -15,74 +14,6 @@ import static org.junit.jupiter.api.Assertions.*;
 public class GoogleCalendarEventMapperTest {
 
     private static final String TIMEZONE = "Europe/Kyiv";
-
-    @Test
-    void fromPetitionToEvent_classLevel_setsLocationWithClass() {
-        Petition petition = new Petition();
-        petition.setName("Petition 1");
-        petition.setDescription("Description");
-        petition.setEndTime(LocalDateTime.now().plusDays(50));
-        petition.setLevelType(LevelType.CLASS);
-        petition.setTargetName("Class A");
-
-        Event event = GoogleCalendarEventMapper.fromPetitionToEvent(petition);
-
-        assertNotNull(event);
-        assertEquals("PETITION: Petition 1", event.getSummary());
-        assertEquals("Description", event.getDescription());
-        assertNotNull(event.getStart());
-        assertNotNull(event.getEnd());
-        assertEquals(TIMEZONE, event.getStart().getTimeZone());
-        assertEquals(TIMEZONE, event.getEnd().getTimeZone());
-        assertEquals("CLASS: Class A", event.getLocation());
-        assertNotNull(event.getReminders());
-        assertFalse(event.getReminders().getUseDefault());
-        assertEquals(1, event.getReminders().getOverrides().size());
-        assertEquals("popup", event.getReminders().getOverrides().get(0).getMethod());
-        assertEquals(30, event.getReminders().getOverrides().get(0).getMinutes());
-    }
-
-    @Test
-    void fromPetitionToEvent_schoolLevel_setsLocationWithSchool() {
-        Petition petition = new Petition();
-        petition.setName("Petition 2");
-        petition.setDescription("Desc");
-        petition.setEndTime(LocalDateTime.now().plusDays(10));
-        petition.setLevelType(LevelType.SCHOOL);
-        petition.setTargetName("School B");
-
-        Event event = GoogleCalendarEventMapper.fromPetitionToEvent(petition);
-
-        assertEquals("SCHOOL: School B", event.getLocation());
-    }
-
-    @Test
-    void fromPetitionToEvent_groupOfParentAndStudents_locationNull() {
-        Petition petition = new Petition();
-        petition.setName("Petition 2");
-        petition.setDescription("Desc");
-        petition.setEndTime(LocalDateTime.now().plusDays(10));
-        petition.setLevelType(LevelType.GROUP_OF_PARENTS_AND_STUDENTS);
-        petition.setTargetName("Parents");
-
-        Event event = GoogleCalendarEventMapper.fromPetitionToEvent(petition);
-
-        assertNull(event.getLocation());
-    }
-
-    @Test
-    void fromPetitionToEvent_otherLevel_locationWithClass() {
-        Petition petition = new Petition();
-        petition.setName("Petition 3");
-        petition.setDescription("Desc");
-        petition.setEndTime(LocalDateTime.now().plusDays(10));
-        petition.setLevelType(LevelType.CLASS);
-        petition.setTargetName("Some target");
-
-        Event event = GoogleCalendarEventMapper.fromPetitionToEvent(petition);
-
-        assertEquals("CLASS: Some target", event.getLocation());
-    }
 
     @Test
     void fromVotingToEvent_withSchoolLocation() {

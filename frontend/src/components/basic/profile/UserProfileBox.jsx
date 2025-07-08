@@ -6,20 +6,27 @@ import Loading from "../../layouts/Loading";
 import PersonIcon from "@mui/icons-material/Person";
 import EmailIcon from "@mui/icons-material/Email";
 import AttributionRoundedIcon from "@mui/icons-material/AttributionRounded";
+import Divider from "@mui/material/Divider";
+import {Button} from "@mui/material";
+import GoogleAuthService from "../../../services/base/ext/GoogleAuthService";
+import EventAvailableIcon from '@mui/icons-material/EventAvailable';
+import EventBusyIcon from '@mui/icons-material/EventBusy';
 
 const UserProfileBox = () => {
     const [user, setUser] = useState()
 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-
+    const [isConnected, setIsConnected] = useState(false);
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
             try {
                 const response = await UserService.getMyUser()
+                const response2 = await GoogleAuthService.isConnected()
 
                 setUser(response)
+                setIsConnected(response2)
             } catch (error) {
                 setError(error);
             } finally {
@@ -29,6 +36,26 @@ const UserProfileBox = () => {
 
         fetchData();
     }, []);
+
+    const handleConnect = async () => {
+        try {
+            const response = await GoogleAuthService.connect();
+            window.location.href = response;
+            setIsConnected(true);
+        } catch (error) {
+            console.error("Failed to connect Google Calendar:", error);
+        }
+    };
+
+    const handleDisconnect = async () => {
+        try {
+            await GoogleAuthService.revoke();
+            setIsConnected(false);
+        } catch (error) {
+            console.error("Failed to disconnect Google Calendar:", error);
+        }
+    };
+
 
     if (loading) {
         return <Loading/>;
@@ -76,6 +103,19 @@ const UserProfileBox = () => {
                     <Typography sx={{fontSize: 14.75,}}>
                         {user.role}
                     </Typography>
+                </Box>
+
+                <Divider sx={{width:'100%', my: 1.5}}/>
+
+                <Box sx={{display: 'flex', alignItems: 'center', gap: 0.375}}>
+                    {isConnected ?
+                        <Button variant="contained" color="primary" sx={{ height: 32, borderRadius: 10 }} onClick={handleDisconnect}>
+
+                            <EventBusyIcon sx={{mr: 0.5}}/> Disconnect Google Calendar
+                        </Button> :
+                        <Button variant="contained" color="primary" sx={{ height: 32, borderRadius: 10 }} onClick={handleConnect}>
+                            <EventAvailableIcon sx={{mr: 0.5}}/> Connect Google Calendar
+                        </Button>}
                 </Box>
 
             </Box>

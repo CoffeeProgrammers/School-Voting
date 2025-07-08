@@ -25,7 +25,7 @@ public class GoogleCalendarEventMapper {
                 .setSummary("PETITION: " + petition.getName())
                 .setDescription(petition.getDescription());
 
-        LocalDateTime startLdt = petition.getEndTime().minusDays(45);
+        LocalDateTime startLdt = petition.getCreationTime();
         LocalDateTime endLdt = petition.getEndTime();
 
         String timezone = "Europe/Kyiv";

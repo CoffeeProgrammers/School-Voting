@@ -15,7 +15,6 @@ import com.project.backend.models.enums.Status;
 import com.project.backend.models.petition.Comment;
 import com.project.backend.models.petition.Petition;
 import com.project.backend.services.inter.ClassService;
-import com.project.backend.services.inter.SchoolService;
 import com.project.backend.services.inter.UserService;
 import com.project.backend.services.inter.google.GoogleCalendarService;
 import com.project.backend.services.inter.petition.CommentService;
@@ -38,7 +37,6 @@ public class PetitionController {
 
     private final GoogleCalendarService googleCalendarService;
     private final SimpMessagingTemplate messagingTemplate;
-    private final SchoolService schoolService;
     private final ClassService classService;
     private final PetitionService petitionService;
     private final PetitionMapper petitionMapper;
@@ -153,6 +151,7 @@ public class PetitionController {
                                 Authentication auth) {
         log.info("Controller: Support petition with id {}", petitionId);
         long newCount = petitionService.support(petitionId, userService.findUserByAuth(auth));
+        log.info("New count {}", newCount);
         messagingTemplate.convertAndSend("/topic/petitions/" + petitionId + "/counter", newCount);
     }
 

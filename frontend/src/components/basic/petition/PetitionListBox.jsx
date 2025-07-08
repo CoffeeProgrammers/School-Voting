@@ -52,16 +52,13 @@ const PetitionListBox = ({petition}) => {
                 </Typography>
             </Box>
             <Box>
-                <Box mt={2}>
+                <Box>
                     <PetitionStatisticsInListPage
                         countSupported={petition.countSupported}
                         countNeeded={petition.countNeeded}
                         status={petition.status}
+                        petitionId={petition.id}
                     />
-
-                </Box>
-                <Box mt={0.75} display="flex" alignItems="center">
-                    {Utils.getStatus(petition.status, {mr: 0.25, fontSize: 18}, {fontSize: 13})}
                 </Box>
                 <Box mt={1.5} display="flex" justifyContent="space-between" alignItems="center">
                     {petition.status === 'ACTIVE' ? (

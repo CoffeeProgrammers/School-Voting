@@ -32,8 +32,8 @@ const CreateVoting = () => {
     const levelTypeOptions = [
         {value: 'SCHOOL', label: 'School'},
         isStudent && {value: 'CLASS', label: 'Class'},
-        isTeacher && {value: 'GROUP_OF_TEACHERS', label: 'Group of Teachers'},
-        (isStudent || isParent) && {value: 'GROUP_OF_PARENTS_AND_STUDENTS', label: 'Group of Parents and Students'}
+        // isTeacher && {value: 'GROUP_OF_TEACHERS', label: 'Group of Teachers'},
+        // (isStudent || isParent) && {value: 'GROUP_OF_PARENTS_AND_STUDENTS', label: 'Group of Parents and Students'}
     ].filter(Boolean);
 
     const navigate = useNavigate()
@@ -43,6 +43,16 @@ const CreateVoting = () => {
     const handleSubmit = async () => {
         try {
             setLoading(true);
+            console.log({
+                name: name,
+                description: description,
+                levelType: levelType,
+                startTime: startTime,
+                endTime: endTime,
+                answers: answers,
+                targetIds: userIds
+
+            })
             const createdVoting = await VotingService.createVoting({
                 name: name,
                 description: description,

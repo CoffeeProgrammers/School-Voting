@@ -52,7 +52,7 @@ class VotingService extends BaseService {
             ...(notStarted !== null && {notStarted}),
         };
         const schoolId = Cookies.get("schoolId")
-        return this.get(`{schoolId}/votings/createdByMe`, {params});
+        return this.get(`/${schoolId}/votings/createdByMe`, {params});
     }
 
     getVotingForDirector({page, size, name = null, now = null}) {
@@ -63,7 +63,7 @@ class VotingService extends BaseService {
             ...(now !== null && {now}),
         };
         const schoolId = Cookies.get("schoolId")
-        return this.get(`{schoolId}/votings/forDirector`, {params});
+        return this.get(`/${schoolId}/votings/forDirector`, {params});
     }
 }
 

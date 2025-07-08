@@ -123,11 +123,17 @@ const PetitionPage = () => {
             </Button>
         );
 
-        const renderTab = () => {
-            if (tab === "Description") {
-                return <Typography variant="body1" mt={1.25}>{petition.description}</Typography>;
-            }
+    const renderTab = () => {
+        switch (tab) {
+            case 'Description':
+                return (
+                    <Typography variant='body1' mt={1.25}>
+                        {petition.description}
+                    </Typography>)
+            case 'Comments':
+                return <Box mt={2.5}>Comments</Box>
         }
+    }
 
 
         if (loading) {
@@ -136,10 +142,6 @@ const PetitionPage = () => {
 
         if (error) {
             return <Typography color={"error"}>Error: {error.message}</Typography>;
-        }
-
-        if (tab === "Comments") {
-            return <Box mt={2.5}>Comments</Box>;
         }
 
         return (

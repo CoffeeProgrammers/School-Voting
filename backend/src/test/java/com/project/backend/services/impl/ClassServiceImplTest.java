@@ -52,6 +52,7 @@ class ClassServiceImplTest {
 
         User user = new User();
         user.setId(2L);
+        user.setMyClass(null);
 
         when(userService.findById(2L)).thenReturn(user);
         when(schoolService.findById(1L)).thenReturn(school);
@@ -116,13 +117,16 @@ class ClassServiceImplTest {
 
     @Test
     void testAssignUserToClass() {
-        Class clazz = new Class();
+        School school = TestUtil.createSchool("S");
+        Class clazz = TestUtil.createClass("S");
         clazz.setId(1L);
         clazz.setUsers(new HashSet<>());
+        clazz.setSchool(school);
 
-        User user = new User();
+        User user = TestUtil.createUser("STUDENT", "som");
         user.setId(2L);
-        user.setRole("STUDENT");
+        user.setMyClass(null);
+        user.setSchool(school);
 
         when(classRepository.findById(1L)).thenReturn(Optional.of(clazz));
         when(userService.findById(2L)).thenReturn(user);
@@ -134,12 +138,57 @@ class ClassServiceImplTest {
     }
 
     @Test
+    void testAssignUserToClass_Un2() {
+        School school = TestUtil.createSchool("S");
+        Class clazz = TestUtil.createClass("S");
+        clazz.setId(1L);
+        clazz.setUsers(new HashSet<>());
+        clazz.setSchool(school);
+
+        User user = TestUtil.createUser("STUDENT", "som");
+        user.setId(2L);
+        user.setMyClass(TestUtil.createClass("So"));
+        user.setSchool(school);
+
+        when(classRepository.findById(1L)).thenReturn(Optional.of(clazz));
+        when(userService.findById(2L)).thenReturn(user);
+
+        classService.assignUserToClass(1L, List.of(2L));
+
+        assertFalse(clazz.getUsers().contains(user));
+    }
+
+
+    @Test
+    void testAssignUserToClass_Un1() {
+        School school = TestUtil.createSchool("S");
+        School school2 = TestUtil.createSchool("S");
+
+        Class clazz = TestUtil.createClass("S");
+        clazz.setId(1L);
+        clazz.setUsers(new HashSet<>());
+        clazz.setSchool(school);
+
+        User user = TestUtil.createUser("STUDENT", "som");
+        user.setId(2L);
+        user.setSchool(school2);
+
+        when(classRepository.findById(1L)).thenReturn(Optional.of(clazz));
+        when(userService.findById(2L)).thenReturn(user);
+
+        classService.assignUserToClass(1L, List.of(2L));
+
+        assertFalse(clazz.getUsers().contains(user));
+    }
+
+    @Test
     void testUnassignUserFromClass() {
         Class clazz = new Class();
         clazz.setId(1L);
         User user = new User();
         user.setId(2L);
         user.setRole("STUDENT");
+        user.setMyClass(clazz);
 
         clazz.setUsers(new HashSet<>(Set.of(user)));
 

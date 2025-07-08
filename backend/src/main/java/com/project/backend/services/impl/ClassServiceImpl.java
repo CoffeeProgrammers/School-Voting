@@ -20,6 +20,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -42,11 +43,12 @@ public class ClassServiceImpl implements ClassService {
     @Override
     public Class create(Class classRequest, List<Long> userIds, long schoolId) {
         log.info("Service: Creating Class {} with users {} for school {}", classRequest.getName(), userIds, schoolId);
-        Set<User> users = userIds.stream().map(userService::findById).collect(Collectors.toSet());
+        Set<User> users = userIds.stream().map(userService::findById).filter(user -> user.getMyClass() == null).collect(Collectors.toSet());
         classRequest.setSchool(schoolService.findById(schoolId));
         classRequest.setUsers(users);
         Class clazz = classRepository.save(classRequest);
-        users.stream().forEach(u -> {
+        users.forEach(u -> {
+            log.info("Add user {} to class with id {}", u, clazz.getId());
             u.setMyClass(clazz);
             userService.save(u);
         });
@@ -69,7 +71,7 @@ public class ClassServiceImpl implements ClassService {
         for (Class clazz : classes) {
             delete(clazz.getId(), true);
         }
-        log.info("Service: All classes from school with id {} deleted",  schoolId);
+        log.info("Service: All classes from school with id {} deleted", schoolId);
     }
 
     @Override
@@ -95,22 +97,33 @@ public class ClassServiceImpl implements ClassService {
     }
 
     @Override
-    public void assignUserToClass(long classId, List<Long> userIds) {
+    public List<Long> assignUserToClass(long classId, List<Long> userIds) {
         log.info("Service: Assigning Users with id {} to Class with id {}", userIds, classId);
         Class clazz = findById(classId);
         User user;
+        List<Long> addedUserIds = new ArrayList<>();
         if (userIds.isEmpty()) {
-            return;
+            return new ArrayList<>();
         }
         for (Long userId : userIds) {
             user = userService.findById(userId);
+            if (user.getMyClass() != null) {
+                log.warn("Service: Can`t assign Users with id {} to Class with id {}", userId, classId);
+                continue;
+            }
+            if (user.getSchool().getId() != clazz.getSchool().getId()) {
+                log.warn("Service: Can`t assign Users with id {} to Class with id {} because they are in different schools", userId, classId);
+                continue;
+            }
             if (user.getRole().equals("STUDENT")) {
                 clazz.getUsers().add(user);
                 userService.assignClassToUser(clazz, user);
+                addedUserIds.add(user.getId());
             }
         }
         classRepository.save(clazz);
         log.info("Service: Assigned Users with id {} to Class with id {}", userIds, classId);
+        return addedUserIds;
     }
 
     @Override
@@ -123,6 +136,10 @@ public class ClassServiceImpl implements ClassService {
         }
         for (Long userId : userIds) {
             user = userService.findById(userId);
+            if (user.getMyClass().getId() != classId) {
+                log.warn("Service: Can`t unassign Users with id {} from Class with id {} because this user not in this class", userId, classId);
+                continue;
+            }
             if (user.getRole().equals("STUDENT")) {
                 clazz.getUsers().remove(user);
                 userService.unassignClassFromUser(user);

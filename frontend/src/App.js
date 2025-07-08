@@ -21,6 +21,8 @@ import PetitionsReviewPage from "./pages/petitions/PetitionsReviewPage";
 import PrivateRoute from "./security/PrivateRoute";
 import Callback from "./security/callback/Callback";
 import Cookies from "js-cookie";
+import CreatePetition from "./pages/petitions/CreatePetition";
+import CreateVoting from "./pages/voting/CreateVoting";
 
 const InitNavigation = ({children}) => {
     const navigate = useNavigate();
@@ -44,9 +46,13 @@ function App() {
 
         (isStudent || isDirector) && {path: "/petitions", element: <PetitionsListPage/>},
         (isStudent || isDirector) && {path: "/petitions/:id", element: <PetitionPage/>},
+        (isStudent) && {path: "/petitions/create", element: <CreatePetition/>},
+
 
         {path: "/voting", element: <VotingListPage/>},
         {path: "/voting/:id", element: <VotingPage/>},
+        {path: "/voting/create", element: <CreateVoting/>},
+
 
         isDirector && {path: "/petitions-review", element: <PetitionsReviewPage/>},
 

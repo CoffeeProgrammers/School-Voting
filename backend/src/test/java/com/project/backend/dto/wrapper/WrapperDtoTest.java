@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 
 class WrapperDtoTest {
@@ -19,6 +20,7 @@ class WrapperDtoTest {
         dto2.setTotalPages(dto1.getTotalPages());
         dto2.setContent(dto1.getContent());
 
+        assertNotEquals(dto1, null);
         assertEquals(dto1, dto2);
         assertEquals(dto1.toString(), dto2.toString());
         assertEquals(dto1.hashCode(), dto2.hashCode());
@@ -32,6 +34,7 @@ class WrapperDtoTest {
         StringRequest dto2 = new StringRequest();
         dto2.setText(dto1.getText());
 
+        assertNotEquals(dto1, null);
         assertEquals(dto1, dto2);
         assertEquals(dto1.toString(), dto2.toString());
         assertEquals(dto1.hashCode(), dto2.hashCode());
@@ -45,6 +48,7 @@ class WrapperDtoTest {
         LongResponse dto2 = new LongResponse();
         dto2.setCount(dto1.getCount());
 
+        assertNotEquals(dto1, null);
         assertEquals(dto1, dto2);
         assertEquals(dto1.toString(), dto2.toString());
         assertEquals(dto1.hashCode(), dto2.hashCode());
@@ -60,6 +64,7 @@ class WrapperDtoTest {
         dto2.setOldPassword(dto1.getOldPassword());
         dto2.setNewPassword(dto1.getNewPassword());
 
+        assertNotEquals(dto1, null);
         assertEquals(dto1, dto2);
         assertEquals(dto1.toString(), dto2.toString());
         assertEquals(dto1.hashCode(), dto2.hashCode());

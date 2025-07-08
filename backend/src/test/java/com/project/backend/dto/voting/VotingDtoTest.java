@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class VotingDtoTest {
 
@@ -33,6 +34,7 @@ public class VotingDtoTest {
         dto2.setMyAnswerId(dto1.getMyAnswerId());
         dto2.setStatistics(dto1.getStatistics());
 
+        assertNotEquals(dto1, null);
         assertEquals(dto1, dto2);
         assertEquals(dto1.hashCode(), dto2.hashCode());
         assertEquals(dto1.toString(), dto2.toString());
@@ -54,6 +56,7 @@ public class VotingDtoTest {
         dto2.setStartTime(dto1.getStartTime());
         dto2.setIsAnswered(dto1.getIsAnswered());
 
+        assertNotEquals(dto1, null);
         assertEquals(dto1, dto2);
         assertEquals(dto1.hashCode(), dto2.hashCode());
         assertEquals(dto1.toString(), dto2.toString());
@@ -77,6 +80,7 @@ public class VotingDtoTest {
         dto2.setLevelType(dto1.getLevelType());
         dto2.setAnswers(dto1.getAnswers());
 
+        assertNotEquals(dto1, null);
         assertEquals(dto1, dto2);
         assertEquals(dto1.hashCode(), dto2.hashCode());
         assertEquals(dto1.toString(), dto2.toString());
@@ -94,6 +98,7 @@ public class VotingDtoTest {
         dto2.setDescription(dto1.getDescription());
         dto2.setAnswers(dto1.getAnswers());
 
+        assertNotEquals(dto1, null);
         assertEquals(dto1, dto2);
         assertEquals(dto1.hashCode(), dto2.hashCode());
         assertEquals(dto1.toString(), dto2.toString());
@@ -111,6 +116,7 @@ public class VotingDtoTest {
         dto2.setCountAnswered(dto1.getCountAnswered());
         dto2.setAnswers(dto1.getAnswers());
 
+        assertNotEquals(dto1, null);
         assertEquals(dto1, dto2);
         assertEquals(dto1.hashCode(), dto2.hashCode());
         assertEquals(dto1.toString(), dto2.toString());

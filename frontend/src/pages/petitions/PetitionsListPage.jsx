@@ -6,16 +6,15 @@ import Divider from "@mui/material/Divider";
 import theme from "../../assets/theme";
 import Box from "@mui/material/Box";
 import PetitionList from "../../components/basic/petition/PetitionList";
-import {useError} from "../../contexts/ErrorContext";
 import PetitionService from "../../services/base/ext/PetitionService";
 import Loading from "../../components/layouts/Loading";
 import Cookies from "js-cookie";
 import PaginationBox from "../../components/layouts/list/PaginationBox";
+import {useNavigate} from "react-router-dom";
 
 const PetitionsListPage = () => {
-    const {showError} = useError()
-
     const role = Cookies.get('role')
+    const navigate = useNavigate()
 
     const [petitions, setPetitions] = useState([])
 
@@ -95,7 +94,8 @@ const PetitionsListPage = () => {
                         sx={{mr: 1.5}}
                     />
 
-                    <Button variant="contained" color="primary" sx={{height: 32, borderRadius: 10}}>
+                    <Button onClick={() => navigate('create')} variant="contained" color="primary"
+                            sx={{height: 32, borderRadius: 10}}>
                         Create a petition
                     </Button>
                 </Box>

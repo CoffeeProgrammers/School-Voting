@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class ModelsTests {
 
@@ -42,6 +43,8 @@ public class ModelsTests {
         user2.setUserPetitionEvents(user1.getUserPetitionEvents());
         user2.setUserVotingEvents(user1.getUserVotingEvents());
 
+        assertNotEquals(user1, TestUtil.createComment("New comment"));
+        assertNotEquals(user1, null);
         assertEquals(user1, user2);
         assertEquals(user1.toString(), user2.toString());
         assertEquals(user1.hashCode(), user2.hashCode());
@@ -56,6 +59,7 @@ public class ModelsTests {
         school2.setDirector(school1.getDirector());
         school2.setClasses(school1.getClasses());
 
+        assertNotEquals(school1, null);
         assertEquals(school1, school2);
         assertEquals(school1.toString(), school2.toString());
         assertEquals(school1.hashCode(), school2.hashCode());
@@ -71,6 +75,7 @@ public class ModelsTests {
         class2.setUsers(class1.getUsers());
         class2.setSchool(class1.getSchool());
 
+        assertNotEquals(class1, null);
         assertEquals(class1, class2);
         assertEquals(class1.toString(), class2.toString());
         assertEquals(class1.hashCode(), class2.hashCode());
@@ -91,7 +96,9 @@ public class ModelsTests {
         voting2.setLevelType(voting1.getLevelType());
         voting2.setUserVotingEvents(voting1.getUserVotingEvents());
         voting2.setTargetId(voting1.getTargetId());
+        voting2.setSchool(voting1.getSchool());
 
+        assertNotEquals(voting1, null);
         assertEquals(voting1, voting2);
         assertEquals(voting1.toString(), voting2.toString());
         assertEquals(voting1.hashCode(), voting2.hashCode());
@@ -110,6 +117,7 @@ public class ModelsTests {
         votingUser2.setVoting(votingUser1.getVoting());
         votingUser2.setUser(votingUser1.getUser());
 
+        assertNotEquals(votingUser1, null);
         assertEquals(votingUser1, votingUser2);
         assertEquals(votingUser1.toString(), votingUser2.toString());
         assertEquals(votingUser1.hashCode(), votingUser2.hashCode());
@@ -124,6 +132,7 @@ public class ModelsTests {
         votingUserId2.setUserId(votingUserId1.getUserId());
         votingUserId2.setVotingId(votingUserId1.getVotingId());
 
+        assertNotEquals(votingUserId1, null);
         assertEquals(votingUserId1, votingUserId2);
         assertEquals(votingUserId1, votingUserId3);
         assertEquals(votingUserId1.toString(), votingUserId2.toString());
@@ -142,6 +151,7 @@ public class ModelsTests {
         answer2.setCount(answer1.getCount());
         answer2.setName(answer1.getName());
 
+        assertNotEquals(answer1, null);
         assertEquals(answer1, answer2);
         assertEquals(answer1.toString(), answer2.toString());
         assertEquals(answer1.hashCode(), answer2.hashCode());
@@ -158,6 +168,7 @@ public class ModelsTests {
         comment2.setPetition(comment1.getPetition());
         comment2.setCreatedTime(comment1.getCreatedTime());
 
+        assertNotEquals(comment1, null);
         assertEquals(comment1, comment2);
         assertEquals(comment1.toString(), comment2.toString());
         assertEquals(comment1.hashCode(), comment2.hashCode());
@@ -186,6 +197,7 @@ public class ModelsTests {
         petition2.incrementCount();
         petition2.decrementCount();
 
+        assertNotEquals(petition1, null);
         assertEquals(petition1, petition2);
         assertEquals(petition1.toString(), petition2.toString());
         assertEquals(petition1.hashCode(), petition2.hashCode());
@@ -203,6 +215,7 @@ public class ModelsTests {
         googleCalendarCredential2.setAccessToken(googleCalendarCredential1.getAccessToken());
         googleCalendarCredential2.setRefreshToken(googleCalendarCredential1.getRefreshToken());
 
+        assertNotEquals(googleCalendarCredential1, null);
         assertEquals(googleCalendarCredential1, googleCalendarCredential2);
         assertEquals(googleCalendarCredential1.toString(), googleCalendarCredential2.toString());
         assertEquals(googleCalendarCredential1.hashCode(), googleCalendarCredential2.hashCode());
@@ -217,6 +230,7 @@ public class ModelsTests {
         userCalendar2.setUser(userCalendar1.getUser());
         userCalendar2.setCalendarId(userCalendar1.getCalendarId());
 
+        assertNotEquals(userCalendar1, null);
         assertEquals(userCalendar1, userCalendar2);
         assertEquals(userCalendar1.toString(), userCalendar2.toString());
         assertEquals(userCalendar1.hashCode(), userCalendar2.hashCode());
@@ -233,6 +247,7 @@ public class ModelsTests {
         userPetitionEvent2.setReminderEventId(userPetitionEvent1.getReminderEventId());
         userPetitionEvent2.setEventId(userPetitionEvent1.getEventId());
 
+        assertNotEquals(userPetitionEvent1, null);
         assertEquals(userPetitionEvent1, userPetitionEvent2);
         assertEquals(userPetitionEvent1.toString(), userPetitionEvent2.toString());
         assertEquals(userPetitionEvent1.hashCode(), userPetitionEvent2.hashCode());
@@ -248,6 +263,7 @@ public class ModelsTests {
         userPetitionEventId2.setPetitionId(userPetitionEventId1.getPetitionId());
         userPetitionEventId2.setUserId(userPetitionEventId1.getUserId());
 
+        assertNotEquals(userPetitionEventId1, null);
         assertEquals(userPetitionEventId1, userPetitionEventId2);
         assertEquals(userPetitionEventId1.toString(), userPetitionEventId2.toString());
         assertEquals(userPetitionEventId1.hashCode(), userPetitionEventId2.hashCode());
@@ -264,6 +280,7 @@ public class ModelsTests {
         userVotingEvent2.setReminderEventId(userVotingEvent1.getReminderEventId());
         userVotingEvent2.setEventId(userVotingEvent1.getEventId());
 
+        assertNotEquals(userVotingEvent1, null);
         assertEquals(userVotingEvent1, userVotingEvent2);
         assertEquals(userVotingEvent1.toString(), userVotingEvent2.toString());
         assertEquals(userVotingEvent1.hashCode(), userVotingEvent2.hashCode());
@@ -278,6 +295,7 @@ public class ModelsTests {
         userVotingEventId2.setUserId(userVotingEventId1.getUserId());
         userVotingEventId2.setVotingId(userVotingEventId1.getVotingId());
 
+        assertNotEquals(userVotingEventId1, null);
         assertEquals(userVotingEventId1, userVotingEventId2);
         assertEquals(userVotingEventId1.toString(), userVotingEventId2.toString());
         assertEquals(userVotingEventId1.hashCode(), userVotingEventId2.hashCode());

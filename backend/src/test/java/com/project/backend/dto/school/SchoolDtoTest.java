@@ -5,6 +5,7 @@ import com.project.backend.dto.user.UserListResponse;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class SchoolDtoTest {
 
@@ -18,6 +19,7 @@ public class SchoolDtoTest {
         dto2.setName(dto1.getName());
         dto2.setDirector(dto1.getDirector());
 
+        assertNotEquals(dto1, null);
         assertEquals(dto1, dto2);
         assertEquals(dto1.hashCode(), dto2.hashCode());
         assertEquals(dto1.toString(), dto2.toString());
@@ -33,6 +35,7 @@ public class SchoolDtoTest {
         dto2.setName(dto1.getName());
         dto2.setDirector(dto1.getDirector());
 
+        assertNotEquals(dto1, null);
         assertEquals(dto1, dto2);
         assertEquals(dto1.hashCode(), dto2.hashCode());
         assertEquals(dto1.toString(), dto2.toString());
@@ -46,6 +49,7 @@ public class SchoolDtoTest {
         SchoolUpdateRequest dto2 = new SchoolUpdateRequest();
         dto2.setName(dto1.getName());
 
+        assertNotEquals(dto1, null);
         assertEquals(dto1, dto2);
         assertEquals(dto1.hashCode(), dto2.hashCode());
         assertEquals(dto1.toString(), dto2.toString());

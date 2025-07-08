@@ -72,7 +72,7 @@ public class UserController {
         return userMapper.fromUserToFullResponse(userService.findUserByAuth(auth));
     }
 
-    @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and (@userSecurity.checkUserVoting(#auth, #votingId) or hasRole('DIRECTOR'))")
+    @PreAuthorize("@userSecurity.checkUserSchool(#auth, #schoolId) and (@userSecurity.checkUserVoting(#auth, #votingId) or hasRole('DIRECTOR') or @userSecurity.checkCreatorVoting(#auth, #votingId))")
     @GetMapping("/voting/{voting_id}")
     @ResponseStatus(HttpStatus.OK)
     public PaginationListResponse<UserListResponse> getUsersByVoting(

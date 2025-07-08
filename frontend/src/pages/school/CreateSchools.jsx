@@ -7,8 +7,10 @@ import FormWrapper from "../../components/layouts/FormWrapper";
 import SchoolService from "../../services/base/ext/SchoolService";
 import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
+import Cookies from "js-cookie";
 
 const CreateSchools = () => {
+
     const [firstName, setFirstName] = useState('')
     const [lastName, setLastName] = useState('')
     const [email, setEmail] = useState('')
@@ -20,6 +22,11 @@ const CreateSchools = () => {
     const [loading, setLoading] = useState(false);
 
     const handleSubmit = async () => {
+        Cookies.set('userId', '');
+        Cookies.set('accessToken', '')
+        Cookies.set('refreshToken', '');
+        Cookies.set('role', '');
+        Cookies.set('schoolId', '');
         try {
             setLoading(true);
             const createSchool = await SchoolService.createSchool({

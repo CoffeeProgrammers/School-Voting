@@ -1,6 +1,4 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {useParams} from "react-router-dom";
-import React, {useEffect, useState} from 'react';
 import {useNavigate, useParams} from "react-router-dom";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -13,7 +11,6 @@ import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
 import theme from "../../assets/theme";
 import Loading from "../../components/layouts/Loading";
 import PetitionService from "../../services/base/ext/PetitionService";
-import StatisticInPage from "../../components/basic/petition/StatisticInPage";
 import DeleteButton from "../../components/layouts/DeleteButton";
 import {useError} from "../../contexts/ErrorContext";
 import SockJS from 'sockjs-client';
@@ -22,54 +19,61 @@ import {CustomPieChart} from "../../components/layouts/statistics/CustomPieChart
 import Utils from "../../utils/Utils";
 
 const PetitionPage = () => {
-    const {id} = useParams();
-    const {showError} = useError()
-    const navigate = useNavigate()
-    const [tab, setTab] = useState("Description")
+        const {id} = useParams();
+        const {showError} = useError()
+        const navigate = useNavigate()
+        const [tab, setTab] = useState("Description")
 
-    const [petition, setPetition] = useState()
-    const [viewDate, setViewDate] = useState()
-    ;
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [supportCount, setSupportCount] = useState(0);
-    const [petitionStatus, setPetitionStatus] = useState(null);
+        const [petition, setPetition] = useState()
+        const [viewDate, setViewDate] = useState()
+        ;
+        const [loading, setLoading] = useState(true);
+        const [error, setError] = useState(null);
+        const [supportCount, setSupportCount] = useState(0);
+        const [petitionStatus, setPetitionStatus] = useState(null);
 
-    const stompClientRef = useRef(null);
+        const stompClientRef = useRef(null);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            setLoading(true);
-            try {
-                const response = await PetitionService.getPetition(id);
-                setPetition(response);
-                setSupportCount(response.countSupported);
-                setPetitionStatus(response.status);
-                setViewDate(Utils.getDaysLeft(response.endTime) + ' days left');
-            } catch (error) {
-                setError(error);
-            } finally {
-                setLoading(false);
-            }
-        };
+        useEffect(() => {
+            const fetchData = async () => {
+                setLoading(true);
+                try {
+                    const response = await PetitionService.getPetition(id);
+                    setPetition(response);
+                    setSupportCount(response.countSupported);
+                    setPetitionStatus(response.status);
+                    setViewDate(Utils.getDaysLeft(response.endTime) + ' days left');
+                } catch (error) {
+                    setError(error);
+                } finally {
+                    setLoading(false);
+                }
+            };
 
-        fetchData();
-    }, [id]);
+            fetchData();
+        }, [id]);
 
-    useEffect(() => {
-        if (!petition) return;
+        useEffect(() => {
+            if (!petition) return;
 
-        const socket = new SockJS('http://localhost:8081/ws');
-        const stompClient = Stomp.over(socket);
-        stompClientRef.current = stompClient;
+            const socket = new SockJS('http://localhost:8081/ws');
+            const stompClient = Stomp.over(socket);
+            stompClientRef.current = stompClient;
 
-        stompClient.connect({}, () => {
-            stompClient.subscribe(`/topic/petitions/${petition.id}/counter`, (message) => {
-                const body = JSON.parse(message.body);
-                setSupportCount(body.count.toString());
-                setPetitionStatus(body.status);
+            stompClient.connect({}, () => {
+                stompClient.subscribe(`/topic/petitions/${petition.id}/counter`, (message) => {
+                    const body = JSON.parse(message.body);
+                    setSupportCount(body.count.toString());
+                    setPetitionStatus(body.status);
+                });
             });
-        });
+
+            return () => {
+                if (stompClientRef.current?.connected) {
+                    stompClientRef.current.disconnect();
+                }
+            };
+        }, [petition]);
 
         const handleDelete = async () => {
             try {
@@ -83,173 +87,158 @@ const PetitionPage = () => {
             }
         };
 
-        return () => {
-            if (stompClientRef.current?.connected) {
-                stompClientRef.current.disconnect();
-            }
-        };
-    }, [petition]);
-
-    const renderSuccessSupportButton = () => (
-        <Button
-            disabled
-            startIcon={<ThumbUpAltIcon color="success" />}
-            variant="contained"
-            color="success"
-            sx={{
-                height: 32,
-                borderRadius: 10,
-                fontWeight: 500,
-                "&.Mui-disabled": {
-                    backgroundColor: blueGrey[50],
-                    color: theme => theme.palette.success.main,
-                    opacity: 1,
-                }
-            }}
-        >
-            Supported
-        </Button>
-    );
-
-    const renderTabButton = (title, width) => (
-        <Button onClick={() => setTab(title)} sx={{ height: 33, borderRadius: 0, width }}>
-            <Typography
-                variant="body1"
-                color={tab === title ? "primary" : "text.secondary"}
+        const renderSuccessSupportButton = () => (
+            <Button
+                disabled
+                startIcon={<ThumbUpAltIcon color="success"/>}
+                variant="contained"
+                color="success"
                 sx={{
-                    borderBottom: "2.5px solid",
-                    borderBottomColor: tab === title ? theme.palette.primary.main : "transparent",
+                    height: 32,
+                    borderRadius: 10,
+                    fontWeight: 500,
+                    "&.Mui-disabled": {
+                        backgroundColor: blueGrey[50],
+                        color: theme => theme.palette.success.main,
+                        opacity: 1,
+                    }
                 }}
             >
-                {title}
-            </Typography>
-        </Button>
-    );
+                Supported
+            </Button>
+        );
 
-    const renderTab = () => {
-        if (tab === "Description") {
-            return <Typography variant="body1" mt={1.25}>{petition.description}</Typography>;
+        const renderTabButton = (title, width) => (
+            <Button onClick={() => setTab(title)} sx={{height: 33, borderRadius: 0, width}}>
+                <Typography
+                    variant="body1"
+                    color={tab === title ? "primary" : "text.secondary"}
+                    sx={{
+                        borderBottom: "2.5px solid",
+                        borderBottomColor: tab === title ? theme.palette.primary.main : "transparent",
+                    }}
+                >
+                    {title}
+                </Typography>
+            </Button>
+        );
+
+        const renderTab = () => {
+            if (tab === "Description") {
+                return <Typography variant="body1" mt={1.25}>{petition.description}</Typography>;
+            }
         }
-    }
 
 
-    if (loading) {
-        return <Loading/>;
-    }
+        if (loading) {
+            return <Loading/>;
+        }
 
-    if (error) {
-        return <Typography color={"error"}>Error: {error.message}</Typography>;
-    }
+        if (error) {
+            return <Typography color={"error"}>Error: {error.message}</Typography>;
+        }
 
         if (tab === "Comments") {
             return <Box mt={2.5}>Comments</Box>;
         }
-        return null;
-    };
 
-    return (
-        <Box
-            sx={{
-                display: 'grid',
-                gridTemplateColumns: '3fr 1.3fr',
-                paddingX: 5,
-                paddingTop: 2,
-                paddingBottom: 4
-            }}
-        >
-            <Box paddingRight={4} mt={4.5}>
-                <DeleteButton
-                    text={'Are you sure you want to delete this petition?'}
-                    deleteFunction={handleDelete}
-                    fontSize={20}
-                />
-                <Typography variant='h4'>
-                    {petition.name}
-                </Typography>
-                <Typography variant="h4">{petition.name}</Typography>
+        return (
+            <Box
+                sx={{
+                    display: 'grid',
+                    gridTemplateColumns: '3fr 1.3fr',
+                    paddingX: 5,
+                    paddingTop: 2,
+                    paddingBottom: 4
+                }}
+            >
+                <Box paddingRight={4} mt={4.5}>
+                    <DeleteButton
+                        text={'Are you sure you want to delete this petition?'}
+                        deleteFunction={handleDelete}
+                        fontSize={20}
+                    />
+                    <Typography variant='h4'>
+                        {petition.name}
+                    </Typography>
 
-                <Stack direction="column" sx={{ mb: 4, mt: 1.2, gap: 0.5, px: 1 }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                        <AccountCircleIcon sx={{ fontSize: 20, color: 'primary' }} />
-                        <Typography color="primary" sx={{ fontSize: 13 }}>
-                            {petition.creator.firstName} {petition.creator.lastName}
-                        </Typography>
-                        <Divider orientation="vertical" sx={{ height: 15, mx: 0.5 }} />
-                        <Typography color="primary" sx={{ fontSize: 13 }}>
-                            {petition.creator.email}
-                        </Typography>
+                    <Stack direction="column" sx={{mb: 4, mt: 1.2, gap: 0.5, px: 1}}>
+                        <Box sx={{display: 'flex', alignItems: 'center', gap: 0.5}}>
+                            <AccountCircleIcon sx={{fontSize: 20, color: 'primary'}}/>
+                            <Typography color="primary" sx={{fontSize: 13}}>
+                                {petition.creator.firstName} {petition.creator.lastName}
+                            </Typography>
+                            <Divider orientation="vertical" sx={{height: 15, mx: 0.5}}/>
+                            <Typography color="primary" sx={{fontSize: 13}}>
+                                {petition.creator.email}
+                            </Typography>
 
-                    </Box>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                        <Groups2Icon sx={{ fontSize: 20, color: 'primary' }} />
-                        <Typography color="primary" sx={{ fontSize: 13 }}>
-                            {petition.levelType === 'class' ? 'Class' : 'School'}
-                        </Typography>
-                    </Box>
-                </Stack>
+                        </Box>
+                        <Box sx={{display: 'flex', alignItems: 'center', gap: 0.5}}>
+                            <Groups2Icon sx={{fontSize: 20, color: 'primary'}}/>
+                            <Typography color="primary" sx={{fontSize: 13}}>
+                                {petition.levelType === 'class' ? 'Class' : 'School'}
+                            </Typography>
+                        </Box>
+                    </Stack>
 
-                <Stack direction="row" width="100%">
-                    {renderTabButton('Description', 105)}
-                    {renderTabButton('Comments', 100)}
-                </Stack>
+                    <Stack direction="row" width="100%">
+                        {renderTabButton('Description', 105)}
+                        {renderTabButton('Comments', 100)}
+                    </Stack>
 
-                <Divider />
+                    <Divider/>
 
-                <Box px={1}>{renderTab()}</Box>
-            </Box>
+                    <Box px={1}>{renderTab()}</Box>
+                </Box>
 
-            <Box>
-                <Box sx={{ border: '1px solid #ddd', borderRadius: 5, p: 2, mx: 1 }}>
-                    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                        <CustomPieChart //TODO color
-                            supportedCount={supportCount}
-                            totalCount={petition.countNeeded}
-                            status={petitionStatus}
-                        />
-                    </Box>
-
-                    <Box mt={1.5} textAlign="center">
-                        <Typography variant="body2" color="textSecondary">
-                            Supported by: {supportCount} from {petition.countNeeded}
-                        </Typography>
-                    </Box>
-
-                    <Box mt={0.25} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                        <Box display="flex" alignItems="center">
-                            {Utils.getStatus(
-                                petitionStatus,
-                                { mr: 0.5, fontSize: 20 },
-                                { fontSize: 14.5 }
-                            )}
+                <Box>
+                    <Box sx={{border: '1px solid #ddd', borderRadius: '5px', p: '15px', mx: 1}}>
+                        <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                            <CustomPieChart
+                                supportedCount={supportCount}
+                                totalCount={petition.countNeeded}
+                                status={petitionStatus}
+                            />
                         </Box>
 
-                        {petitionStatus === 'ACTIVE' ? (
-                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                                <Typography mt={0.55}>{viewDate}</Typography>
-                                {petition.supportedByCurrentId ? (
+                        <Box mt={0.25} sx={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                            <Box display="flex" alignItems="center">
+                                {Utils.getStatus(
+                                    petitionStatus,
+                                    {mr: 0.5, fontSize: 20},
+                                    {fontSize: 14.5}
+                                )}
+                            </Box>
+
+                            {petitionStatus === 'ACTIVE' ? (
+                                <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                                    <Typography mt={0.55}>{viewDate}</Typography>
+                                    {petition.supportedByCurrentId ? (
+                                        <Box mt={5} mb={1.5} display="flex" justifyContent="center" alignItems="center">
+                                            {renderSuccessSupportButton()}
+                                        </Box>
+                                    ) : (
+                                        <Box mt={5} mb={1.5} display="flex" justifyContent="center" alignItems="center">
+                                            <Button variant="contained" color="primary" sx={{height: 32, borderRadius: 10}}>
+                                                Support petition
+                                            </Button>
+                                        </Box>
+                                    )}
+                                </Box>
+                            ) : (
+                                petition.supportedByCurrentId && (
                                     <Box mt={5} mb={1.5} display="flex" justifyContent="center" alignItems="center">
                                         {renderSuccessSupportButton()}
                                     </Box>
-                                ) : (
-                                    <Box mt={5} mb={1.5} display="flex" justifyContent="center" alignItems="center">
-                                        <Button variant="contained" color="primary" sx={{ height: 32, borderRadius: 10 }}>
-                                            Support petition
-                                        </Button>
-                                    </Box>
-                                )}
-                            </Box>
-                        ) : (
-                            petition.supportedByCurrentId && (
-                                <Box mt={5} mb={1.5} display="flex" justifyContent="center" alignItems="center">
-                                    {renderSuccessSupportButton()}
-                                </Box>
-                            )
-                        )}
+                                )
+                            )}
+                        </Box>
                     </Box>
                 </Box>
             </Box>
-        </Box>
-    );
-};
+        );
+    }
+;
 
 export default PetitionPage;

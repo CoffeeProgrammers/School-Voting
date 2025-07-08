@@ -7,8 +7,12 @@ import theme from "../../assets/theme";
 import BuildCircleOutlinedIcon from "@mui/icons-material/BuildCircleOutlined";
 import Cookies from "js-cookie";
 import UserService from "../../services/base/ext/UserService";
+import {useError} from "../../contexts/ErrorContext";
+import {useNavigate} from "react-router-dom";
 
 const ControlPanel = () => {
+    const {showError} = useError()
+    const navigate = useNavigate();
     const isDirector = Cookies.get('role') === 'DIRECTOR';
 
     const [role, setRole] = useState("Student")
@@ -58,6 +62,15 @@ const ControlPanel = () => {
         fetchStudents();
     }, [role, searchFirstName, searchLastName, searchEmail, page]);
 
+    const handleDeleteUser = async (userId) => {
+        try {
+            await UserService.deleteUser(userId)
+            setUsers(users.filter(user => user.id !== userId))
+        } catch (error) {
+            showError(error);
+        }
+    }
+
     if (error) {
         return <Typography color={"error"}>Error: {error.message}</Typography>;
     }
@@ -85,17 +98,22 @@ const ControlPanel = () => {
                         <Typography variant={"h5"} fontWeight={'bold'}>Control panel</Typography>
                     </Box>
 
-                    {isDirector && (
-                        <Stack direction="row" width={'100%'} ml={1.25}>
-                            {renderTabButton('Student', 100)}
-                            {renderTabButton('Teacher', 100)}
-                        </Stack>
-                    )}
+
+                    <Stack direction="row" width={'100%'} ml={1.25}>
+                        {renderTabButton('Student', 100)}
+                        {renderTabButton('Parent', 100)}
+                        {isDirector && (
+                            renderTabButton('Teacher', 100)
+                        )}
+                    </Stack>
+
                     <Divider/>
 
                     <UserList
                         users={users}
                         actions={true}
+                        addToListFunction={() => navigate('/control-panel/createUsers')}
+                        deleteFromListFunction={handleDeleteUser}
                         loading={loading}
                         page={page}
                         setPage={setPage}

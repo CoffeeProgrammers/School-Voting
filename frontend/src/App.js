@@ -24,6 +24,7 @@ import Cookies from "js-cookie";
 import CreatePetition from "./pages/petitions/CreatePetition";
 import CreateVoting from "./pages/voting/CreateVoting";
 import CreateClass from "./pages/class/CreateClass";
+import CreateUsers from "./pages/user/CreateUsers";
 
 const InitNavigation = ({children}) => {
     const navigate = useNavigate();
@@ -62,6 +63,7 @@ function App() {
         (isTeacher || isDirector) && {path: "/school/class/create", element: <CreateClass/>},
 
         (isTeacher || isDirector) && {path: "/control-panel", element: <ControlPanel/>},
+        (isTeacher || isDirector) && {path: "/control-panel/createUsers", element: <CreateUsers/>},
 
         {path: "/profile", element: <Profile/>},
 

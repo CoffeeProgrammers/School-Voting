@@ -17,6 +17,7 @@ const SchoolPageWrapper = ({children}) => {
             setLoading(true);
             try {
                 const response = await SchoolService.getMySchool()
+                console.log(response)
                 setSchool(response)
             } catch (error) {
                 setError(error);

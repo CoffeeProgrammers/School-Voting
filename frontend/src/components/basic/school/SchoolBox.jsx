@@ -47,7 +47,7 @@ const SchoolBox = ({school}) => {
                 <HomeWorkIcon color='primary' sx={{fontSize: 140,}}/>
                 <Typography variant='h4' fontWeight='bold'>School</Typography>
             </Box>
-            {Cookies.get("role") === "TEACHER" || Cookies.get("role") === "DIRECTOR" ? (
+            {Cookies.get("role") === "DIRECTOR" ? (
                 <Box display="flex" alignItems="center" justifyContent={'center'} gap={1} mb={1}>
                     <DeleteButton
                         text={'Are you sure you want to delete this school?'}

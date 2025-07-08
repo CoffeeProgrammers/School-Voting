@@ -277,11 +277,11 @@ const PetitionPage = () => {
                             <Box mt={0.25} sx={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
                                 <Button variant="contained" color="success" sx={{height: 32, borderRadius: 10, mx: 1}}
                                         onClick={approve}>
-                                    Approve petition
+                                    Approve
                                 </Button>
                                 <Button variant="contained" color="error" sx={{height: 32, borderRadius: 10, mx: 1}}
                                         onClick={reject}>
-                                    Reject petition
+                                    Reject
                                 </Button>
                             </Box> : ""}
                         </Box>

@@ -57,15 +57,20 @@ const SchoolPage = () => {
 
     return (
         <SchoolPageWrapper>
-            <Box sx={{border: '1px solid #ddd', borderRadius: '5px', marginY: '5px', paddingTop: '15px'}}>
-                {isStudent ? (
+            {isStudent ? (
+                <Box sx={{border: '1px solid #ddd', borderRadius: '5px', marginY: '5px', paddingTop: '15px'}}>
                     <ClassBox isMy={true}/>
-                ) : (
-                    <ClassListView/>
-                )}
+                </Box>
+            ) : (
+                role !== "PARENT" && (
+                    <Box sx={{border: '1px solid #ddd', borderRadius: '5px', marginY: '5px', paddingTop: '15px'}}>
+                        <ClassListView/>
+                    </Box>
+                )
 
-            </Box>
-        </SchoolPageWrapper>
+            )}
+
+        < /SchoolPageWrapper>
     )
         ;
 };

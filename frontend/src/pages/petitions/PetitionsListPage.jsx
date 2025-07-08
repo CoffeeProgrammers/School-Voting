@@ -94,10 +94,13 @@ const PetitionsListPage = () => {
                         sx={{mr: 1.5}}
                     />
 
-                    <Button onClick={() => navigate('create')} variant="contained" color="primary"
-                            sx={{height: 32, borderRadius: 10}}>
-                        Create a petition
-                    </Button>
+                    {role === 'STUDENT' && (
+                        <Button onClick={() => navigate('create')} variant="contained" color="primary"
+                                sx={{height: 32, borderRadius: 10}}>
+                            Create a petition
+                        </Button>
+                    )}
+
                 </Box>
 
             </Stack>

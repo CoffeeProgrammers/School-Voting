@@ -11,6 +11,16 @@ administrators to engage in school governance processes, enhancing transparency,
 
 ---
 
+## Screenshots
+
+| Home | Voting results |
+|---|---|
+| ![Home page](docs/screenshots/home.png) | ![Voting with live results](docs/screenshots/voting-results.png) |
+| **Votings** | **Petition review (director)** |
+| ![List of votings](docs/screenshots/votings.png) | ![Petition waiting for the director's decision](docs/screenshots/petition.png) |
+
+---
+
 ## Team and my role
 
 Team: [Artem Moseichenko](https://github.com/dexipua) (team lead), [Vladyslav](https://github.com/Vladobrod),

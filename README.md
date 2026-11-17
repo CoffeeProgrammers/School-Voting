@@ -34,9 +34,9 @@ Team: [Artem Moseichenko](https://github.com/dexipua) (team lead), [Vladyslav](h
 - Built the core backend: voting and petition services and REST controllers, filtering with JPA Specifications,
   global exception handling.
 - Integrated **Keycloak** for authentication and user management (realm config, admin client, JWT role converter).
-- Added **Google Calendar** sync: Google OAuth plus automatic calendar events for votings and petitions.
+- Helped with the **Google Calendar** sync (built mainly by Vladyslav).
 - Added real-time updates with **WebSocket** on the backend and frontend.
-- Wrote unit tests for services and DTOs.
+- Wrote most of the backend tests (services and DTOs).
 - Built frontend pages for petitions, votings and school management.
 
 ---

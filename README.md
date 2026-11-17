@@ -1,10 +1,31 @@
-# School Governance
+# School Governance (School-Voting)
+
+Voting and petitions platform for schools. Built by team **CoffeeProgrammers** for the All-Ukrainian Team Programming
+Tournament 2025, where the team took **1st place**.
 
 ## Overview
 
 School Governance is a Java-based application designed to simplify and streamline voting and petition management within
 a school environment. It provides a structured and user-friendly platform for students, teachers, parents, and
 administrators to engage in school governance processes, enhancing transparency, participation, and collaboration.
+
+---
+
+## Team and my role
+
+Team: [Artem Moseichenko](https://github.com/dexipua) (team lead), [Vladyslav](https://github.com/Vladobrod),
+[Yaroslav Holobyn](https://github.com/Yaroslav-Holobyn), [Alya Kravets](https://github.com/aliakravets).
+
+**Artem Moseichenko, team lead and backend developer** (about half of all commits):
+
+- Planned the project, designed the architecture and database schema, split the tasks and reviewed code.
+- Built the core backend: voting and petition services and REST controllers, filtering with JPA Specifications,
+  global exception handling.
+- Integrated **Keycloak** for authentication and user management (realm config, admin client, JWT role converter).
+- Added **Google Calendar** sync: Google OAuth plus automatic calendar events for votings and petitions.
+- Added real-time updates with **WebSocket** on the backend and frontend.
+- Wrote unit tests for services and DTOs.
+- Built frontend pages for petitions, votings and school management.
 
 ---
 
@@ -54,14 +75,14 @@ administrators to engage in school governance processes, enhancing transparency,
 
 ## Technologies Used
 
-- Java: 21
-- Spring Boot: 3.5.3
-- React: 19.0.0
-- MUI: library of React components
-- H2: database for our project tests
-- PostgresSQL: database for our project
-- Keycloak: microservice for security
-- Docker: for start servers and creating containers in one system
+- **Backend:** Java 21, Spring Boot 3.5 (Web, Data JPA, Validation, OAuth2 Resource Server, WebSocket), MapStruct,
+  Lombok, Flyway
+- **Security:** Keycloak (OAuth2 / JWT), Google OAuth
+- **Integrations:** Google Calendar API
+- **Database:** PostgreSQL (H2 for tests)
+- **Frontend:** React 19, MUI, MUI X Charts, Schedule-X calendar, STOMP / SockJS
+- **Testing:** JUnit, Spring Boot Test, Instancio
+- **DevOps:** Docker, Docker Compose
 
 ---
 

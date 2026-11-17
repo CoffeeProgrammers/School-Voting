@@ -104,13 +104,16 @@ Team: [Artem Moseichenko](https://github.com/dexipua) (team lead), [Vladyslav](h
    ```
    cd School-Voting
    ```
-5. Build the project:
+5. (Optional) For "Sign in with Google" and Google Calendar sync, copy `.env.example` to `.env` and put your own
+   Google OAuth client ID and secret there. The app runs without it.
+
+6. Build the project:
    ```
     docker-compose up --build
    ```
-6. Open your browser and go to http://localhost:3000 to access the application.
+7. Open your browser and go to http://localhost:3000 to access the application.
 
-7. Base user:
+8. Base user:
     - email: bulakovskijvladislav@gmail.com (DIRECTOR of Greenwood High School)
     - password (For all base users): passWord1
 

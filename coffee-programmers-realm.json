@@ -1642,12 +1642,12 @@
     "hideOnLogin" : false,
     "firstBrokerLoginFlowAlias" : "browser",
     "config" : {
-      "clientId" : "716028690880-44mpq4lt4rg4t4g6d4sjg1magcareteg.apps.googleusercontent.com",
+      "clientId" : "${GOOGLE_CLIENT_ID}",
       "acceptsPromptNoneForwardFromClient" : "false",
       "disableUserInfo" : "true",
       "syncMode" : "LEGACY",
       "filteredByClaim" : "false",
-      "clientSecret" : "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",
+      "clientSecret" : "${GOOGLE_CLIENT_SECRET}",
       "caseSensitiveOriginalUsername" : "false"
     }
   } ],

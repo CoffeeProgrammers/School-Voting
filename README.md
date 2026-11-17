@@ -1,5 +1,7 @@
 # School Governance (School-Voting)
 
+[![CI](https://github.com/CoffeeProgrammers/School-Voting/actions/workflows/ci.yml/badge.svg)](https://github.com/CoffeeProgrammers/School-Voting/actions/workflows/ci.yml)
+
 Voting and petitions platform for schools. Built by team **CoffeeProgrammers** for the All-Ukrainian Team Programming
 Tournament 2025, where the team took **1st place**.
 
